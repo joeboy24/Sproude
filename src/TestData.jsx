@@ -1,0 +1,83 @@
+
+export const TABLE_ROWS = [
+  {
+    item: "Sachet Water",
+    description: "Single Bag",
+    quantity: "3",
+    price: "7",
+  },
+  {
+    item: "Bottle Water",
+    description: "1 Pack",
+    quantity: "5",
+    price: "24",
+  },
+  {
+    item: "Cranberry Juice",
+    description: "1 Pack",
+    quantity: "2",
+    price: "32",
+  },
+  {
+    item: "Cookies",
+    description: "1 Bowl",
+    quantity: "12",
+    price: "17",
+  },
+];
+
+
+export const ItemsArray = [
+  {
+    "id": 1,
+    product_id: "J3790UOI21",
+    image: "https://w7.pngwing.com/pngs/99/750/png-transparent-pure-water-blue-splash-text-thumbnail.png",
+    name: "Sproude Sachet Water",
+    description: "Single Bag",
+    category: "Water",
+    brand: "Sproude",
+    qty: "400",
+    price: "7",
+    publish: "yes",
+    del: "no",
+  },
+  {
+    "id": 2,
+    product_id: "Q279IZOI21",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdtbVfXD2_lOCgwBdbxSJ4uxUfn3p8THrhCpQoJaAUXGsCXu8UKSPLxQMpPZQHRr7ihH8&usqp=CAU",
+    name: "Sproude Bottle Water",
+    description: "Single Pack",
+    category: "Water",
+    brand: "Sproude",
+    qty: "700",
+    price: "24",
+    publish: "yes",
+    del: "no",
+  },
+  {
+    "id": 3,
+    product_id: "M2745UOK18",
+    image: "https://w7.pngwing.com/pngs/371/831/png-transparent-mineral-water-mineral-water-bottles-mineral-water-pure-water.png",
+    name: "Sproude Bottle Water",
+    description: "Single Item (1 Bottle)",
+    category: "Water",
+    brand: "Sproude",
+    qty: "120",
+    price: "3",
+    publish: "yes",
+    del: "no",
+  },
+  {
+    "id": 4,
+    product_id: "VN90UOYI0X",
+    image: "https://www.oceanspray.com/-/media/Project/OS/Brand-Sites/OceanSpray/Master/Intl-Master/Products/Category/juices-group2x.ashx?h=590&w=516&la=en&hash=D22CB4D4DA60DF05165BB5C3AC65783A49731765",
+    name: "Cranberry Juice",
+    description: "Single Package",
+    category: "Wine",
+    brand: "Ocean Spray",
+    qty: "70",
+    price: "35",
+    publish: "yes",
+    del: "no",
+  },
+];

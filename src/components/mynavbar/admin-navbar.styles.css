@@ -1,0 +1,51 @@
+
+.navbar-container {
+    @apply flex w-full max-h-40 border-b 
+    px-2 bg-white
+    /* py-3 shadow-md */
+    ;
+}
+
+.icon-btn2 {
+    @apply bg-red-400 p-3 rounded-lg;
+}
+
+.icon-btn {
+    @apply bg-transparent text-gray-800 shadow-none hover:border hover:border-gray-100;
+}
+
+.increment-btn {
+    @apply bg-transparent text-blue-gray-500 shadow-none hover:text-black hover:bg-blue-gray-50/50 border-blue-gray-100;
+}
+
+.nav-actions-container {
+    @apply min-w-min px-2 mx-2 border-r;
+}
+
+.nav-col-1 {
+    @apply px-2;
+}
+
+.nav-col-1 p {
+    @apply uppercase tracking-widest font-medium text-lg mt-1 leading-4;
+}
+
+.nav-col-1 span {
+    @apply uppercase tracking-wide text-gray-500 font-light text-xs;
+}
+
+.nav-col-2 {
+    @apply grow;
+}
+
+.nav-col-3 {
+    @apply flex right-0;
+}
+
+.welcome-user {
+    @apply bg-red-700 pt-2;
+}
+
+.hello-user {
+    @apply flex items-center gap-3 text-sm py-0 px-4 font-light capitalize tracking-normal outline-none;
+}

@@ -3,11 +3,24 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+ 
+import { ThemeProvider } from "@material-tailwind/react";
+import { BrowserRouter } from 'react-router-dom';
+import { ProductsProvider } from './context/product.context';
+import { CartProvider } from './context/cart.context';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <ThemeProvider>
+      <BrowserRouter>
+        <ProductsProvider>
+          <CartProvider>
+            <App />
+          </CartProvider>
+        </ProductsProvider>
+      </BrowserRouter>
+    </ThemeProvider>
   </React.StrictMode>
 );
 

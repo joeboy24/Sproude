@@ -1,0 +1,13 @@
+
+
+.myBtn {
+    @apply m-2 px-5 py-2 text-white rounded-md border justify-center;
+}
+
+.myBtn-primary {
+    // @apply bg-slate-700 text-white hover:bg-white border-slate-700 hover:bg-opacity-90 hover:text-slate-700 hover:border hover:border-slate-700;
+}
+
+.myBtn-primary-inverse {
+    // @apply bg-white bg-opacity-80 text-slate-700 border-slate-700 hover:bg-slate-700 hover:text-white hover:border;
+}

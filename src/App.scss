@@ -1,4 +1,7 @@
+
+
 .App {
+  @apply bg-violet-600;
   text-align: center;
 }
 
@@ -14,7 +17,7 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  /* background-color: #282c34; */
   min-height: 100vh;
   display: flex;
   flex-direction: column;

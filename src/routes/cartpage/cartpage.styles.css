@@ -1,0 +1,126 @@
+
+.cartpage-container {
+    @apply w-full grid place-items-center mb-10;
+}
+
+.cartpage-content {
+    width: 800px;
+    @apply my-5;
+}
+
+.cartpage-content th {
+    @apply text-sm;
+}
+
+.cart-top {
+    @apply w-full border mb-10 rounded-t-lg;
+}
+
+.xform-input {
+    @apply m-1;
+}
+
+.inv-tbl {
+    @apply w-[calc(100%-24px)] mx-3 my-1 text-sm font-light;
+    /* border: 1px solid #ccc; */
+}
+
+.inv-tbl tr {
+    @apply border-b border-b-gray-200;
+    /* border-bottom: 1px solid #ccc; */
+}
+
+.inv-tbl tr:last-child {
+    @apply border-none;
+}
+
+.inv-tbl td {
+    @apply px-3 py-1;
+    /* border: 1px solid #ccc; */
+}
+
+.inv-tbl-left {
+    @apply w-1/3 bg-gray-100;
+}
+
+.cart-header {
+    @apply flex bg-blue-gray-100 px-5 py-3 rounded-t-lg;
+}
+
+.basket {
+    @apply w-10 h-10;
+}
+
+.basket-container {
+    @apply mr-4;
+}
+
+.cart-tbl th {
+    @apply border-b border-blue-gray-100 bg-blue-gray-50 px-4 py-3 font-light leading-none opacity-70;
+}
+
+.cart-text {
+    @apply my-2 text-3xl font-extralight uppercase text-blue-gray-500 tracking-wide ;
+}
+
+.pay-mode {
+    @apply w-full bg-blue-gray-800 my-2 px-1 py-3 rounded-b-lg mb-5;
+}
+
+.input-element {
+    @apply text-white border-green-400 outline-white;
+}
+
+.myInput-dark {
+    @apply text-white border border-blue-gray-600 bg-transparent rounded-md px-5 py-3 placeholder:text-blue-gray-500 
+    outline-none focus:border-blue-gray-300 min-w-[calc(100%/3-8px)];
+}
+
+.myInput-dark2 {
+    @apply text-white bg-transparent rounded-md placeholder:text-blue-gray-500
+    /* min-w-[calc(100%/3-8px)] */
+    ;
+}
+
+.search-list {
+    width: 700px;
+    @apply m-1 bg-green-400;
+}
+
+.search-list-card {
+    background: rgb(243, 245, 247);
+    @apply w-4/6 p-2 rounded-t-none absolute z-10 shadow-xl;
+}
+
+.search-list-card p {
+    @apply text-sm text-blue-gray-600 font-extralight border-b border-b-blue-gray-100 hover:bg-blue-gray-50/50 px-2 py-1
+    hover:border-b-blue-gray-400;
+}
+
+/* .search-list-card span {
+    @apply -mb-4;
+} */
+
+.search-item-img {
+    @apply w-6 rounded-md mr-3 float-left border border-blue-gray-100;
+}
+
+.item-name {
+    @apply text-sm;
+}
+
+.item-description {
+    @apply text-xs font-light text-blue-gray-600;
+}
+
+.myBtn {
+    @apply hover:opacity-80;
+}
+  
+.del-btn {
+    @apply p-1.5 m-0.5 rounded-md bg-transparent text-gray-800 hover:shadow-lg border border-blue-gray-100 hover:border hover:border-red-500 hover:text-red-500 float-right;
+}
+  
+.action-btn {
+    @apply p-1.5 m-0.5 rounded-md bg-transparent text-gray-800 hover:shadow-lg border border-blue-gray-100 hover:border hover:border-blue-gray-500 hover:bg-white float-right;
+}

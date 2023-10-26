@@ -1,0 +1,8 @@
+
+.general-container-size {
+    @apply w-full grid place-items-center mb-10;
+}
+
+.nav-components-container {
+    @apply w-2/5 bg-white;
+}
