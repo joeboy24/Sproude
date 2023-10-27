@@ -55,6 +55,10 @@
     @apply mr-4;
 }
 
+.cart-tbl {
+    @apply w-full;
+}
+
 .cart-tbl th {
     @apply border-b border-blue-gray-100 bg-blue-gray-50 px-4 py-3 font-light leading-none opacity-70;
 }
@@ -123,4 +127,23 @@
   
 .action-btn {
     @apply p-1.5 m-0.5 rounded-md bg-transparent text-gray-800 hover:shadow-lg border border-blue-gray-100 hover:border hover:border-blue-gray-500 hover:bg-white float-right;
+}
+
+.table-container {
+    width: 100%;
+    height: 100%;
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+    @apply p-2 bg-violet-500;
+}
+.table-container::-webkit-scrollbar { 
+    display: none;  /* Safari and Chrome */
+}
+
+.table-child {
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+    padding-right: 17px; /* Increase/decrease this value for cross-browser compatibility */
+    box-sizing: content-box; /* So the width will be 100% + 17px */
 }

@@ -1,12 +1,13 @@
 import { Drawer, Button, IconButton, Typography, ButtonGroup } from '@material-tailwind/react';
 import React, { useContext, useState } from 'react'
-import { BiExpand } from 'react-icons/bi';
+import { BiEditAlt, BiExpand } from 'react-icons/bi';
+import { GrEdit } from 'react-icons/gr';
 import { FaMinus, FaPlus, FaTimes } from 'react-icons/fa';
 import { CartContext } from '../../context/cart.context';
 import ExpandDrawer from './expand-drawer-content.components';
 
-const XcartSalesRow = ({ c, product, classes }) => {
-    const { name, description, quantity, price } = product;
+const XcartSalesRow = ({ i, order, classes }) => {
+    const { id, user, item_details, total, paid_debt, pay_mode, buyer_name, buyer_contact, discount, amt_paid, del_status, created_at, updated_at } = order;
     const { cartItems, addItemsToCart, decreaseItemQty, removeCartItem } = useContext(CartContext);
 
     const [openBottom, setOpenBottom] = useState(false);
@@ -14,38 +15,48 @@ const XcartSalesRow = ({ c, product, classes }) => {
     const closeDrawerBottom = () => setOpenBottom(false);
 
     const removeFunc = () => {
-        if (window.confirm("Are you sure you want to delete item from cart?")) { 
-            removeCartItem(product);
+        if (window.confirm("Are you sure you want to delete item from orders?")) { 
+            removeCartItem(order);
         }
     }
     
     return (
         <>
         <tr className="even:bg-blue-gray-50/30">
-            <td className='item-description pl-4 pr-2'>{c}</td>
+            <td className='item-description pl-4 pr-2'>{i}</td>
             <td className={classes}>
-                {/* <Typography variant="small" color="blue-gray" className="font-light">
-                    {name}
-                </Typography> */}
-                <p className='item-name'>{name}</p>
-                <p className='item-description'>{description}</p>
+                <p className='item-name'>{id}</p>
+                <p className='item-description'>User: {user}</p>
+                {
+                    del_status === 'yes' 
+                    ? <p className='item-description'>Delivered</p> 
+                    : <p className='item-description'>Not Delivered</p>
+                }
             </td>
             <td className={classes}>
-                <ButtonGroup size='sm' variant="outlined">
-                    <IconButton className='increment-btn' onClick={() => decreaseItemQty(product)}><FaMinus size='12'/></IconButton>
-                    <IconButton className='increment-btn'>{quantity}</IconButton>
-                    <IconButton className='increment-btn' onClick={() => addItemsToCart(product, 0)}><FaPlus /></IconButton>
-                </ButtonGroup>
+                <p className='item-name'>{pay_mode}</p>
+                <p className='item-description'>Paid: {amt_paid}</p>
+                <p className='item-description'>Discount: {discount}</p>
+                <p className='item-description'>Change: {total - amt_paid < 0 ? total - amt_paid : null}</p>
             </td>
             <td className={classes}>
-                {/* <Typography variant="small" color="blue-gray" className="font-light">
-                    {price}
-                </Typography> */}
-                <p className='item-name text-center'>{price}</p>
+                <p className='item-name'>{buyer_name}</p>
+                <p className='item-description'>{buyer_contact}</p>
+            </td>
+            <td className={classes}>
+                <p className='item-name text-center'>{total}</p>
+                <p className='item-description text-center'>Bal.: {paid_debt}</p>
+            </td>
+            <td className={classes}>
+                <p className='item-name'>Monday</p>
+                <p className='item-description'>12/12/12</p>
+                {/* <p className='item-name'>{created_at}</p>
+                <p className='item-description'>{updated_at}</p> */}
             </td>
             <td className={classes}>
                 <button className='action-btn' onClick={openDrawerBottom}><BiExpand size='12'/></button>
-                <button className='del-btn' onClick={removeFunc}><FaTimes size='12'/></button>
+                <button className='del-btn' onClick={removeFunc}><GrEdit size='12'/></button>
+                {/* <button className='del-btn' onClick={removeFunc}><FaTimes size='12'/></button> */}
             </td>
         </tr>
 
@@ -53,7 +64,7 @@ const XcartSalesRow = ({ c, product, classes }) => {
             <IconButton variant="text" color="blue-gray" onClick={closeDrawerBottom}>
                 <FaTimes />
             </IconButton>
-            <ExpandDrawer order={product} />
+            <ExpandDrawer orderedItems={item_details} />
         </Drawer>
         </>
     );

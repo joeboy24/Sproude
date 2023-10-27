@@ -39,6 +39,7 @@ export const ItemsArray = [
     qty: "400",
     price: "7",
     publish: "yes",
+    barcode: "217523576",
     del: "no",
   },
   {
@@ -52,6 +53,7 @@ export const ItemsArray = [
     qty: "700",
     price: "24",
     publish: "yes",
+    barcode: "1752435772",
     del: "no",
   },
   {
@@ -65,6 +67,7 @@ export const ItemsArray = [
     qty: "120",
     price: "3",
     publish: "yes",
+    barcode: "747522231",
     del: "no",
   },
   {
@@ -78,6 +81,7 @@ export const ItemsArray = [
     qty: "70",
     price: "35",
     publish: "yes",
+    barcode: "387523762",
     del: "no",
   },
 ];

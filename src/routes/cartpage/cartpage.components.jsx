@@ -10,12 +10,14 @@ import { ProductsContext } from '../../context/product.context';
 import { CartContext } from '../../context/cart.context';
 import XcartItemRow from './cart-item-row.components';
 import XcartSalesRow from './cart-sales-row.component';
+import { createSalesDoc } from '../../utils/firebase/firebase.utils';
  
 
 
 const XcartPage = () => {
     var c = 1;
-    const { cartItems, cartCount, cartTotal, addItemsToCart, saveToLocal, retrieveFromLocal } = useContext(CartContext);
+    var i = 1;
+    const { cartItems, cartCount, cartTotal, salesRecords, addItemsToCart, saveToLocal, retrieveFromLocal, addSalesRecord } = useContext(CartContext);
 
     console.log('System has started');
     // console.log(localStorage.getItem("aaxy"));
@@ -73,20 +75,22 @@ const XcartPage = () => {
     // const checkMeOut = () => addItemsToCart(products[0]);
     const checkMeOut = () => {
         // saveToLocal();
-        const storedVal = JSON.parse(localStorage.getItem("localCart"));
-        console.log(storedVal);   
-        // localStorage.setItem('localCartItems', 'local storage checks');
-        // console.log(localStorage.getItem("localCartItems"));
+        // const storedVal = JSON.parse(localStorage.getItem("localCart"));
+        // console.log(storedVal); 
 
-        // localStorage.setItem('localCartItems2', JSON.stringify(products));
-        // const storedCartValues = JSON.parse(localStorage.getItem("localCartItems2"));
-        // console.log(storedCartValues);
+        // const sendDoc = {"id":"Mbl3v433qhq","user":"Code80","item_details":[{"item_id":4,"price":"35","quantity":19,"purchase_total":1076},{"item_id":1,"price":"7","quantity":24,"purchase_total":1076},{"item_id":3,"price":"3","quantity":17,"purchase_total":1076},{"item_id":2,"price":"24","quantity":8,"purchase_total":1076}],"total":1066,"paid_debt":0,"pay_mode":"momo","buyer_name":"dafdf","buyer_contact":"41546387590","discount":"10","amt_paid":"6000","del_status":"no","created_at":"2023-10-27T00:40:16.555Z","updated_at":null}
+        // createSalesDoc(sendDoc);
+        // console.log(sendDoc);
     };
 
 
     useEffect(() => {
         retrieveFromLocal();
     }, [])
+
+    // useEffect(() => {
+    //     console.log('Purchase complete..!')
+    // }, [salesRecords])
 
 
     // Handle Payment and Order insert
@@ -103,13 +107,26 @@ const XcartPage = () => {
 
     const handlePay = (event) => {
         event.preventDefault();
+        const orderId = 'M'+Math.random().toString(36).slice(2);
+        var dis = event.target.discount.value;
+        var tot = cartTotal;
+        if (dis > 0) {
+            tot = cartTotal - dis;
+        }
         const payInputs = {
+            id: orderId,
+            user: 'Code80',
+            item_details: [],
+            total: tot,
+            paid_debt: 0,
             pay_mode: event.target.pay_mode.value,
             buyer_name: event.target.buyer_name.value,
             buyer_contact: event.target.buyer_contact.value,
-            discount: event.target.discount.value,
+            discount: dis,
             amt_paid: event.target.amt_paid.value,
             del_status: event.target.del_status.value,
+            created_at: new Date(),
+            updated_at: null,
         };
         if (payInputs.pay_mode == 0) {
             return alert('Oops..! Select `Payment Mode` to proceed');
@@ -117,9 +134,9 @@ const XcartPage = () => {
             return alert('Oops..! Select `Delivery Status` to proceed');
         }
 
-        console.log(payInputs);
+        addSalesRecord(payInputs);
         // setPayDetails(payInputs);
-        // console.log(payDetails);
+        // console.log(payInputs);
     }
 
 
@@ -210,10 +227,10 @@ const XcartPage = () => {
                             <td></td>
                             <td className='px-4 text-right'>
                                 <p className='item-name'>Total :</p>
-                                <p className='item-description'>Amount Payable</p>
+                                <p className='item-description'>Qty. / Amount Payable</p>
                             </td>
-                            <td className='pl-14 py-3'><p className='item-name'>{cartCount}</p></td>
-                            <td className='px-4 text-center'><p className='item-name'>{cartTotal}</p></td>
+                            <td className='pl-14 py-3'><p className='item-description'>{cartCount}</p></td>
+                            <td className='px-4 text-center'><p className='item-name'>{cartTotal.toLocaleString()}</p></td>
                             <td></td>
                         </tr>
                         </tbody>
@@ -237,7 +254,7 @@ const XcartPage = () => {
                         </div> */}
                         <input className='xform-input myInput-dark' name='buyer_name' placeholder="Buyer's Name" required/>
                         <input type='number' min='0' className='xform-input myInput-dark' name='buyer_contact' placeholder="Contact" required/>
-                        <input type='number' min='0' className='xform-input myInput-dark' name='discount' placeholder="Discount eg. 10" value='0' required/>
+                        <input type='number' min='0' className='xform-input myInput-dark' name='discount' placeholder="Discount eg. 10" required/>
                         <input type='number' min='0' className='xform-input myInput-dark' name='amt_paid' placeholder="Amount Paid" required/>
                         {/* <div className='flex'>
                             <XformInput type='number' name='discount' min='0' className='xform-input w-[calc(100%/3-8px)] my-2' elementClass='myInput-dark2' size='lg' label='Discount' value='0' required/>
@@ -259,45 +276,75 @@ const XcartPage = () => {
             </CardBody>
         </Card>
 
-        <Card className='cartpage-content'>
-            <CardBody>
-                { cartItems.length > 0 ?
-                    <table className="cart-tbl w-full min-w-max table-auto text-left">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Item Details</th>
-                                <th>Quantity</th>
-                                <th className='text-center'>Price (Gh₵)</th>
-                                <th className='text-right'>Actions</th>
-                            </tr>
-                        </thead>
+        { salesRecords.length > 0 ?
+            <Card className='cartpage-content'>
+                <CardBody>
+                    <div className='table-container1 overflow-auto'>
+                        {/* <div className='table-child'>
+                            <p>
+                            Lorem ipsum dollar sit amit Lorem ipsum dollar sit amit Lorem ipsum dollar sit amit Lorem ipsum dollar sit amit 
+                            LoremipsumdollarsitamitLoremipsumdollarsitamitLoremipsumdollarsitamitLoremipsumdollarsitamitLoremipsumdollarsitamitLoremipsumdollarsitamitLoremipsumdollarsitamit
+                            </p>
+                        </div>
+                        <table className="cart-tbl border border-orange-400 w-calc[100%-100px] bg-green-500 min-w-max table-auto text-left">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>ORDER NO.</th>
+                                    <th>PAYMENT</th>
+                                    <th>BUYER</th>
+                                    <th className='text-center'>TOTAL GH₵</th>
+                                    <th>DATE CREATED</th>
+                                    <th>DATE CREATED</th>
+                                    <th>DATE CREATED</th>
+                                    <th className='text-right'>ACTIONS</th>
+                                </tr>
+                            </thead>
+                        </table> */}
 
-                        <tbody>
-                        {cartItems.map((product, index) => {
-                            const isLast = index === cartItems.length - 1;
-                            const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
-                            return(
-                                <XcartSalesRow c={c++} key={product.id} product={product} classes={classes} />
-                            );
-                        })}
-                        <tr>
-                            <td></td>
-                            <td className='px-4 text-right'>
-                                <p className='item-name'>Total :</p>
-                                <p className='item-description'>Amount Payable</p>
-                            </td>
-                            <td className='pl-14 py-3'><p className='item-name'>{cartCount}</p></td>
-                            <td className='px-4 text-center'><p className='item-name'>{cartTotal}</p></td>
-                            <td></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    : null
-                    // <p>No items in cart</p>
-                }
-            </CardBody>
-        </Card>
+                        <table className="cart-tbl w-calc[100%-100px] min-w-max table-auto text-left">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>ORDER NO.</th>
+                                    <th>PAYMENT</th>
+                                    <th>BUYER</th>
+                                    <th className='text-center'>TOTAL GH₵</th>
+                                    <th>DATE</th>
+                                    <th className='text-right'>ACTIONS</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                            {salesRecords.map((order, index) => {
+                                const isLast = index === cartItems.length - 1;
+                                const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
+                                return(
+                                    <>
+                                    <tr></tr>
+                                    <XcartSalesRow i={i++} key={order.id} order={order} classes={classes} />
+                                    </>
+                                );
+                            })}
+                            <tr>
+                                <td></td>
+                                <td className='px-4 text-right'>
+                                    <p className='item-name'>Total :</p>
+                                    <p className='item-description'>Records / Amount</p>
+                                </td>
+                                <td className='pl-14 py-3'><p className='item-description'>{cartCount}</p></td>
+                                <td className='pl-14 py-3'></td>
+                                <td className='px-4 text-center'><p className='item-name'>{(salesRecords.reduce((total, item) => total + item.total, 0)).toFixed(2).toLocaleString()}</p></td>
+                                <td></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </CardBody>
+            </Card>
+            : null
+            // <p>No items in cart</p>
+        }
     </div>
     </>
   )
@@ -306,60 +353,60 @@ const XcartPage = () => {
 
 
 
-export const AlertMsg = () => { 
+// export const AlertMsg = () => { 
 
-    const [openBottom, setOpenBottom] = useState(false);
-    const openDrawerBottom = () => setOpenBottom(true);
-    const closeDrawerBottom = () => setOpenBottom(false);
+//     const [openBottom, setOpenBottom] = useState(false);
+//     const openDrawerBottom = () => setOpenBottom(true);
+//     const closeDrawerBottom = () => setOpenBottom(false);
 
-    useEffect(() => {
-        openDrawerBottom();
-    }, []);
-    // alert('Works Perfect');
+//     useEffect(() => {
+//         openDrawerBottom();
+//     }, []);
+//     // alert('Works Perfect');
 
-    <Drawer
-        placement="bottom"
-        open={openBottom}
-        onClose={closeDrawerBottom}
-        className="p-4"
-    >
-        <div className="mb-6 flex items-center justify-between">
-        <Typography variant="h5" color="blue-gray">
-            Material Tailwind
-        </Typography>
-        <IconButton
-            variant="text"
-            color="blue-gray"
-            onClick={closeDrawerBottom}
-        >
-            <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={2}
-            stroke="currentColor"
-            className="h-5 w-5"
-            >
-            <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-            />
-            </svg>
-        </IconButton>
-        </div>
-        <Typography color="gray" className="mb-8 pr-4 font-normal">
-        Material Tailwind features multiple React and HTML components, all
-        written with Tailwind CSS classes and Material Design guidelines.
-        </Typography>
-        <div className="flex gap-2">
-        <Button size="sm" variant="outlined">
-            Documentation
-        </Button>
-        <Button size="sm">Get Started</Button>
-        </div>
-    </Drawer>
+//     <Drawer
+//         placement="bottom"
+//         open={openBottom}
+//         onClose={closeDrawerBottom}
+//         className="p-4"
+//     >
+//         <div className="mb-6 flex items-center justify-between">
+//         <Typography variant="h5" color="blue-gray">
+//             Material Tailwind
+//         </Typography>
+//         <IconButton
+//             variant="text"
+//             color="blue-gray"
+//             onClick={closeDrawerBottom}
+//         >
+//             <svg
+//             xmlns="http://www.w3.org/2000/svg"
+//             fill="none"
+//             viewBox="0 0 24 24"
+//             strokeWidth={2}
+//             stroke="currentColor"
+//             className="h-5 w-5"
+//             >
+//             <path
+//                 strokeLinecap="round"
+//                 strokeLinejoin="round"
+//                 d="M6 18L18 6M6 6l12 12"
+//             />
+//             </svg>
+//         </IconButton>
+//         </div>
+//         <Typography color="gray" className="mb-8 pr-4 font-normal">
+//         Material Tailwind features multiple React and HTML components, all
+//         written with Tailwind CSS classes and Material Design guidelines.
+//         </Typography>
+//         <div className="flex gap-2">
+//         <Button size="sm" variant="outlined">
+//             Documentation
+//         </Button>
+//         <Button size="sm">Get Started</Button>
+//         </div>
+//     </Drawer>
 
-};
+// };
 
 export default XcartPage

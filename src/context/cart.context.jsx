@@ -1,4 +1,5 @@
 import { createContext, useEffect, useState } from "react";
+import { createSalesDoc } from "../utils/firebase/firebase.utils";
 
 
 const processIncrement = (cartItems, itemToAdd, curQty) => {
@@ -33,12 +34,27 @@ const processDecrement = (cartItems, itemToDecrease) => {
 }
 
 
+const processSalesInsert = (cartTotal, cartItems, payInputs, salesRecords) => {
+    // Create doc insert object
+    const crt = cartItems.map(ct => ct.id !== 0
+        ? {item_id: ct.id, price: ct.price, quantity: ct.quantity, purchase_total: cartTotal}
+        : null
+    );
+    payInputs['item_details'] = crt;
+    console.log(payInputs);
+    return payInputs;
+    // return payInputs;
+}
+
+
 export const CartContext = createContext({
     cartItems: [],
+    salesRecords: [],
     cartCount: 0,
     cartTotal: 0,
     addItemsToCart: () => {},
-    decreaseItemQty: () => {}
+    decreaseItemQty: () => {},
+    addSalesRecord: () => {}
 })
 
 
@@ -46,6 +62,7 @@ export const CartProvider = ({children}) => {
     const [ cartItems, setCartItems ] = useState([]);
     const [ cartCount, setCartCount ] = useState([]);
     const [ cartTotal, setCartTotal ] = useState([]);
+    const [ salesRecords, setSalesRecords ] = useState([]);
 
     // Add item to cart or perform increment
     const addItemsToCart = (itemToAdd, curQty) => {
@@ -63,6 +80,18 @@ export const CartProvider = ({children}) => {
     const removeCartItem = (itemToRemove) => {
         const newCart = cartItems.filter(item => item.id !== itemToRemove.id);
         setCartItems(newCart);
+    }
+
+    // Add payInputs to sales record insert
+    const addSalesRecord = (payInputs) => {
+        retrieveFromLocal();
+        setSalesRecords(processSalesInsert(cartTotal, cartItems, payInputs, salesRecords));
+
+        // Save to db here
+        createSalesDoc(salesRecords);
+
+        // Add to sales records display on successfull insert
+        console.log('Yeh..! Purchase complete')
     }
 
     // UseEffect to stage changes anytime cartItems state changes
@@ -91,21 +120,19 @@ export const CartProvider = ({children}) => {
         if (cartItems.length > 0) {
             localStorage.setItem('localCart', JSON.stringify(cartItems))
             // const storedVal = JSON.parse(localStorage.getItem("localCart"));
-            // console.log('from saveToLocal Stored Value = '+storedVal[0].name+' - qty = '+storedVal[0].quantity);   
         }
     };
     
-
+    // Retrieve from local
     const retrieveFromLocal = () => {
         if(localStorage.getItem('localCart')) {
             const storedVal = JSON.parse(localStorage.getItem("localCart"));
             setCartItems(storedVal);
-            // console.log('cartContext localCart => '+storedVal);
         }
     }
 
     // Capture responses as a value object to be saved in context
-    const value = { cartItems, cartCount, cartTotal, addItemsToCart, decreaseItemQty, saveToLocal, retrieveFromLocal, removeCartItem };
+    const value = { cartItems, cartCount, cartTotal, salesRecords, addItemsToCart, decreaseItemQty, saveToLocal, retrieveFromLocal, removeCartItem, addSalesRecord };
     // const value = { cartItems, cartCount, cartTotal, addItemsToCart, decreaseItemQty, removeCartItem };
 
     return <CartContext.Provider value={value}>{children}</CartContext.Provider>

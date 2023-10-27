@@ -5,7 +5,7 @@ import { Bs0Circle, BsClipboardCheck } from 'react-icons/bs'
 import { NavbarWithMegaMenu } from './components/navbar-check.components';
 import { Outlet, Route, Routes } from 'react-router-dom';
 import Homepage from './routes/home/homepage.components';
-import XcartPage from './routes/cartpage/cartpage.compnents';
+import XcartPage from './routes/cartpage/cartpage.components';
 
 function App() { 
   return (

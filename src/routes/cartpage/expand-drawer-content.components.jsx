@@ -1,9 +1,9 @@
 
 import React from 'react'
 
-const ExpandDrawer = ({ order }) => {
+const ExpandDrawer = ({ orderedItems }) => {
   return (
-    <div>ExpandDrawer {order.name}</div>
+    <div>ExpandDrawer {orderedItems[0].price}</div>
   )
 }
 
