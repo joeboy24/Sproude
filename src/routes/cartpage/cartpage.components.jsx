@@ -1,4 +1,4 @@
-import { Drawer, Button, IconButton, Typography, Card, CardBody } from '@material-tailwind/react';
+import { Drawer, Button, IconButton, Typography, Card, CardBody, MenuHandler, MenuList, MenuItem, Menu } from '@material-tailwind/react';
 import React, { useContext, useEffect, useState } from 'react'
 import XformInput from '../../components/form/forminput.component';
 import './cartpage.styles.css'
@@ -10,7 +10,9 @@ import { ProductsContext } from '../../context/product.context';
 import { CartContext } from '../../context/cart.context';
 import XcartItemRow from './cart-item-row.components';
 import XcartSalesRow from './cart-sales-row.component';
-import { createSalesDoc } from '../../utils/firebase/firebase.utils';
+import { createSalesDoc, getProductsDocuments } from '../../utils/firebase/firebase.utils';
+import { FaCalendarAlt, FaPlus, FaTimes } from 'react-icons/fa';
+import CustomRadio from '../../components/form/custom-radio.components';
  
 
 
@@ -20,7 +22,7 @@ const XcartPage = () => {
     const { cartItems, cartCount, cartTotal, salesRecords, addItemsToCart, saveToLocal, retrieveFromLocal, addSalesRecord } = useContext(CartContext);
 
     console.log('System has started');
-    // console.log(localStorage.getItem("aaxy"));
+    console.log(cartItems);
     // const storedVal = JSON.parse(localStorage.getItem("localCartItems"));
     // console.log(storedVal);
 
@@ -33,35 +35,41 @@ const XcartPage = () => {
         category: "",
         brand: "",
         qty: "",
+        rtl_price: "",
+        whl_price: "",
+        qty: "",
         price: "",
+        rtl_price: "",
+        whl_price: "",
         publish: "",
         del: "",
     };
     
     // id: Math.random() * 1000
     const defaultExpand = 'John Doe';
-    const { products } = useContext(ProductsContext);
+    const { products, getProduct } = useContext(ProductsContext);
     const [ searchResult, setSearchResult ] = useState([]);
     const [ expandProduct, setExpandProduct ] = useState(dumProd);
     const [ NewCartItem, setNewCartItem ] = useState([]);
     const [ isDropOpen, setIsDropOpen ] = useState('');
+    const [ purchaseType, setPurchaseType ] = useState('RTL');
 
     const [ newSearchKey, setNewSearchKey ] = useState('');
     // const [ newSearchArray, setNewSearchArray ] = useState([]);
 
     const handleSearch = (event) => {
-        setIsDropOpen('yes');
         const { name, value } = event.target;
         setNewSearchKey(value.toLowerCase());
         const newArray = products.filter(product => product.name.toLowerCase().includes(newSearchKey));
         setSearchResult(newArray);
+        setIsDropOpen('yes');
     }
 
-    const handleSubmit = (event) => {
+    const handleItemSubmit = (event) => {
         event.preventDefault();
         const ProductToAdd = products.find(item => item.id === expandProduct.id);
         
-        addItemsToCart(ProductToAdd, NewCartItem.qty);
+        addItemsToCart(ProductToAdd, NewCartItem);
         setExpandProduct(dumProd);
         setNewSearchKey('');
     }
@@ -69,12 +77,12 @@ const XcartPage = () => {
 
     const handleQtyChange = (event) => {
         const { value } = event.target;
-        setNewCartItem({ id: expandProduct.id, qty: value });
+        setNewCartItem({ id: expandProduct.id, qty: value, purchase_type: purchaseType });
     }
 
     // const checkMeOut = () => addItemsToCart(products[0]);
     const checkMeOut = () => {
-        // saveToLocal();
+        getProduct();
         // const storedVal = JSON.parse(localStorage.getItem("localCart"));
         // console.log(storedVal); 
 
@@ -128,9 +136,9 @@ const XcartPage = () => {
             created_at: new Date(),
             updated_at: null,
         };
-        if (payInputs.pay_mode == 0) {
+        if (payInputs.pay_mode === 0) {
             return alert('Oops..! Select `Payment Mode` to proceed');
-        } else if (payInputs.del_status == 0) {
+        } else if (payInputs.del_status === 0) {
             return alert('Oops..! Select `Delivery Status` to proceed');
         }
 
@@ -142,23 +150,49 @@ const XcartPage = () => {
 
   return (
     <>
-    <AdminNavbar />
+    {/* <AdminNavbar />
     <MenuStrip />
-    <div className='cartpage-container'>
-        <Card className='cartpage-content'>
+    <div className='general-container-wrapper'> */}
+        <Card className='general-container-size'>
             <CardBody>
+                <div className='flex mb-3 w-full h-7'>
+                    <div className="flex gap-3">
+                        { purchaseType === 'RTL'
+                        ? <><CustomRadio onClick={() => {setPurchaseType('RTL')}} radioText='Retail' defaultChecked/>
+                            <CustomRadio onClick={() => {setPurchaseType('WHL')}} radioText='Wholesale' /></> 
+                        : <><CustomRadio onClick={() => {setPurchaseType('RTL')}} radioText='Retail'/>
+                            <CustomRadio onClick={() => {setPurchaseType('WHL')}} radioText='Wholesale' defaultChecked /></> 
+                        }
+                    </div>
+
+                    <div className='absolute right-7'>
+                        <Menu>
+                            <MenuHandler>
+                                <p className='radio-text h-7 px-3 py-1 bg-blue-gray-50 rounded-sm hover:opacity-80'><FaCalendarAlt size='16' className='float-left mr-2 mt-0.5' /> Change Date</p>
+                            </MenuHandler>
+                            <MenuList>
+                                {/* <MenuItem> */}
+                                    <XformInput type='date' size='sm' label='Change Date'/>
+                                {/* </MenuItem> */}
+                            </MenuList>
+                        </Menu>
+                    </div>
+                </div>
+                
                 <div className='cart-top'>
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={handleItemSubmit}>
                     <div className='flex w-full'>
-                        <input type="hidden" name='id' value={expandProduct.id} />
+                        <input type="hidden" name='id' onChange={()=>{}} value={expandProduct.id} />
                         <XformInput id='searchInput' onChange={handleSearch} value={newSearchKey} className='xform-input w-4/6' size='md' label={ expandProduct.name } required/>
-                        <XformInput id='reference' value={ expandProduct.product_id } className='xform-input w-2/6' size='md' label='Reference' required/>
+                        <XformInput id='reference' onChange={()=>{}} value={ expandProduct.product_id } className='xform-input w-2/6' size='md' label='Reference' required/>
                     </div>
                     <div className='search-list'>
                         { isDropOpen === '' ? null :
                         <Card className='search-list-card'>
+                            <IconButton className='icon-btn float-right' onClick={() => setIsDropOpen('')}><FaTimes size='16'/></IconButton>
                             {
-                                searchResult.map(el => (
+                                searchResult.length > 0 ?
+                                searchResult.map(el => 
                                     <p onClick={() => {
                                         // alert(el.name);
                                         setExpandProduct(el);
@@ -167,28 +201,39 @@ const XcartPage = () => {
                                         // console.log(expandProduct);
                                     }} key={el.id}>
                                         <img className='search-item-img' src={el.image} alt={el.name} />
-                                        <span>{el.name}</span>
+                                        <span>{el.name} - {el.description}</span>
                                     </p>
-                                ))
+                                )
+                                : <p>No records found</p>
                             }
                         </Card>
                         }
                     </div>
                     {/* GH₵ */}
                     <div className='flex w-full'>
-                        <XformInput className='xform-input w-2/6' size='md' label='Price' value={ expandProduct.price }/>
-                        <XformInput name='qty' className='xform-input w-2/6' type='number' onChange={handleQtyChange} min='1' max={ expandProduct.qty } size='md' label='Qty.' required/>
+                        <XformInput className='xform-input w-2/6' size='md' onChange={()=>{}} label='Price' value={ purchaseType === 'RTL' ? expandProduct.rtl_price : expandProduct.whl_price }/>
+                        <XformInput name='qty' className='xform-input w-2/6' type='number' onChange={handleQtyChange} min='1' max={ purchaseType === 'RTL' ? expandProduct.rtl_qty : expandProduct.whl_qty } size='md' label='Qty.' required/>
                         <Button className='w-2/6 m-1 myBtn' type='submit'><BsPlusCircle size='18' className='float-left'/><span>Add to Cart</span></Button>
                     </div>
                     {/* <p>{ NewCartItem.qty } - { NewCartItem.id }</p>
                     <p>{cartTotal}</p> */}
                     </form>
-                    <button onClick={checkMeOut}>Try</button>
+                    {/* <button onClick={checkMeOut}>Try</button>
+                    <p>Length: {products.length}</p>
+                    <p> - {purchaseType} </p>
+                    { products.length > 0 ?
+                        <div>
+                        {products.map(el => 
+                            <p key={el.id}>{el.id} - {el.name}</p>
+                        )}
+                        </div>
+                    : null
+                    } */}
                     
                     { expandProduct.product_id === '' ? null :
                     <table className='inv-tbl'>
                         <tbody>
-                            <tr><td className='inv-tbl-left'>Qty. Available</td><td>{ expandProduct.qty }</td></tr>
+                            <tr><td className='inv-tbl-left'>Qty. Available</td><td>{ purchaseType === 'RTL' ? expandProduct.rtl_qty : expandProduct.whl_qty }</td></tr>
                             <tr><td className='inv-tbl-left'>Item Brand</td><td>{ expandProduct.brand }</td></tr>
                             <tr><td className='inv-tbl-left'>Description</td><td>{ expandProduct.description }</td></tr>
                         </tbody>
@@ -240,7 +285,7 @@ const XcartPage = () => {
                 }
 
                 <form onSubmit={handlePay}>
-                    <div className='pay-mode'>
+                    <div className='pay-mode'> 
                         {/* <div className='flex'> */}
                             <select name='pay_mode' className='xform-input myInput-dark'>
                                 <option value="0">-- Payment Mode --</option>
@@ -272,7 +317,6 @@ const XcartPage = () => {
                         <Button type='submit' className='float-right' size='sm' variant="outlined">&nbsp;<BsBagCheck size='18' className='float-left mr-2'/> Pay Now &nbsp;</Button>
                     : null }
                 </form>
-
             </CardBody>
         </Card>
 
@@ -306,7 +350,7 @@ const XcartPage = () => {
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>ORDER NO.</th>
+                                    <th>ORDER REF#</th>
                                     <th>PAYMENT</th>
                                     <th>BUYER</th>
                                     <th className='text-center'>TOTAL GH₵</th>
@@ -316,27 +360,26 @@ const XcartPage = () => {
                             </thead>
 
                             <tbody>
-                            {salesRecords.map((order, index) => {
-                                const isLast = index === cartItems.length - 1;
-                                const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
-                                return(
-                                    <>
-                                    <tr></tr>
-                                    <XcartSalesRow i={i++} key={order.id} order={order} classes={classes} />
-                                    </>
-                                );
-                            })}
-                            <tr>
-                                <td></td>
-                                <td className='px-4 text-right'>
-                                    <p className='item-name'>Total :</p>
-                                    <p className='item-description'>Records / Amount</p>
-                                </td>
-                                <td className='pl-14 py-3'><p className='item-description'>{cartCount}</p></td>
-                                <td className='pl-14 py-3'></td>
-                                <td className='px-4 text-center'><p className='item-name'>{(salesRecords.reduce((total, item) => total + item.total, 0)).toFixed(2).toLocaleString()}</p></td>
-                                <td></td>
-                            </tr>
+                                {salesRecords.map((order, index) => {
+                                    const isLast = index === cartItems.length - 1;
+                                    const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
+                                    return(
+                                        <>
+                                        <XcartSalesRow key={order.id} i={i++} order={order} classes={classes} />
+                                        </>
+                                    );
+                                })}
+                                <tr>
+                                    <td></td>
+                                    <td className='px-4 text-right'>
+                                        <p className='item-name'>Total :</p>
+                                        <p className='item-description'>Records / Amount</p>
+                                    </td>
+                                    <td className='pl-14 py-3'><p className='item-description'>{cartCount}</p></td>
+                                    <td className='pl-14 py-3'></td>
+                                    <td className='px-4 text-center'><p className='item-name'>{(salesRecords.reduce((total, item) => total + item.total, 0)).toFixed(2).toLocaleString()}</p></td>
+                                    <td></td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -345,7 +388,7 @@ const XcartPage = () => {
             : null
             // <p>No items in cart</p>
         }
-    </div>
+    {/* </div> */}
     </>
   )
 }

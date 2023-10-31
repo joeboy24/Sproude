@@ -18,23 +18,23 @@ const MenuStrip = () => {
                 <TiHomeOutline className='p-0 -mb-1.5' size='32'/>
                 <span>&nbsp;Home&nbsp;</span>
             </div></a>
-            <a href="/2"><div className='menu-link'>
+            <a href="/stock"><div className='menu-link'>
                 <HiOutlineClipboardDocumentList className='p-0 -mb-1.5' size='32'/>
-                <span>&nbsp;Items &nbsp;</span>
+                <span>&nbsp;Stock &nbsp;</span>
             </div></a>
             <a href="/sales"><div className='menu-link'>
                 <BsCart4 className='p-0 -mb-1.5' size='32'/>
                 <span>Sales</span>
             </div></a>
-            <a href="/4"><div className='menu-link'>
+            <a href="/expenses"><div className='menu-link'>
                 <LiaFileInvoiceDollarSolid className='p-0 -mb-1.5' size='32'/>
                 <span>Expenses</span>
             </div></a>
-            <a href="/5"><div className='menu-link'>
+            <a href="/reports"><div className='menu-link'>
                 <BsFileEarmarkBarGraph className='p-0 -mb-1.5' size='32'/>
                 <span>Report</span>
             </div></a>
-            <a href="/5"><div className='menu-link'>
+            <a href="/scan-doc"><div className='menu-link'>
                 <RiBarcodeBoxLine className='p-0 -mb-1.5' size='32'/>
                 <span>Scan</span>
             </div></a>

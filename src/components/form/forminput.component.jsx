@@ -13,4 +13,3 @@ const XformInput = ({ size, label, className, elementClass, ...otherProps}) => {
 }
 
 export default XformInput;
-

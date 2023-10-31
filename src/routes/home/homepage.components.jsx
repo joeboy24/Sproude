@@ -10,20 +10,7 @@ import './homepage.styles.css'
 const Homepage = () => {
   return (
     <>
-    {/* <SideBar /> */}
-    <div className='nav-components-container'>
-      <AdminNavbar />
-      <MenuStrip />
-    </div>
-    <div className='general-container-size'>
-        <h1>Homepage</h1>
-        {/* <StickyNavbar />
-        <StickyNavbar /> */}
-        
-        {/* <div className='cart-page'>
-          <XcartPage />
-        </div> */}
-    </div>
+      <h1>Homepage</h1>
     </>
   )
 }

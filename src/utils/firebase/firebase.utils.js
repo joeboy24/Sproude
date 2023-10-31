@@ -2,7 +2,7 @@
 import { initializeApp } from "firebase/app";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
-import { doc, getDoc , setDoc, getFirestore, collection, addDoc } from "firebase/firestore";
+import { doc, getDoc , setDoc, getFirestore, collection, addDoc, getDocs, query } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -31,7 +31,40 @@ export const createSalesDoc = async (docToAdd) => {
     
 }
 
-export const getProductsDoc = async () => {
-    // const prodValRef = doc(db, 'products');
-    // await getDoc(prodValRef);
+export const getProductsDocuments = async () => {
+    
+    const collRef = collection(db, 'products');
+    const querySnapshot = await getDocs(query(collRef));
+    // const getIt = await getDocs(query(collection(db, 'products')));
+    const getProductsFromFirebase = [];
+
+    // const productsMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
+    //     const { title, items } = docSnapshot.data();
+    //     acc[title.toLowercase()] = items;
+    //     return acc;
+    // }, {})
+
+    const productsMap = () => querySnapshot.forEach((doc) => {
+        getProductsFromFirebase.push({
+            ...doc.data(), id: doc.id
+        })
+    });
+    productsMap();
+    console.log(getProductsFromFirebase);
+    return getProductsFromFirebase;
+
+}
+
+export const getSalesDocuments = async () => {
+
+    const salesReceiver = [];
+    const querySnapshot = await getDocs(query(collection(db, 'sales')));
+
+    const salesMap = () => querySnapshot.forEach((doc) => {
+        salesReceiver.push({...doc.data(), id: doc.id});
+    });
+    salesMap();
+    // console.log(salesReceiver);
+    return salesReceiver;
+
 }

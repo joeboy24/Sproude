@@ -2,3 +2,8 @@
 /* .xform-input {
     @apply bg-green-700 my-2;
 } */
+
+.radio-text {
+    font-size: 0.8em;
+    @apply w-auto uppercase tracking-wider text-blue-gray-500;
+}

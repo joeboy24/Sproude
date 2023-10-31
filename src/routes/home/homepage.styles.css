@@ -1,8 +1,13 @@
 
 .general-container-size {
+    width: 800px;
+    @apply my-5;
+}
+
+.general-container-wrapper {
     @apply w-full grid place-items-center mb-10;
 }
 
-.nav-components-container {
+/* .nav-components-container {
     @apply w-2/5 bg-white;
-}
+} */

@@ -1,10 +1,17 @@
 import { createContext, useEffect, useState } from "react";
-import { createSalesDoc } from "../utils/firebase/firebase.utils";
+import { createSalesDoc, getSalesDocuments } from "../utils/firebase/firebase.utils";
 
 
-const processIncrement = (cartItems, itemToAdd, curQty) => {
+const processIncrement = (cartItems, itemToAdd, typeNqty) => {
     // Item exist
-    // const { id, qty } = itemToAdd;
+    const curQty = typeNqty.qty;
+    const purchaseType = typeNqty.purchase_type
+    if (purchaseType == 'RTL') {
+        var usedPrice = itemToAdd.rtl_price;
+    } else {
+        var usedPrice = itemToAdd.whl_price;
+    }
+
     var qtyPlus = 1;
     if (curQty != 0) {
         qtyPlus = +curQty;
@@ -18,8 +25,7 @@ const processIncrement = (cartItems, itemToAdd, curQty) => {
     }
 
     // Item does not exist
-    return [...cartItems, {...itemToAdd, quantity: +curQty}];
-    // return [cartItems, {...itemToAdd, qty: itemToAdd.qty}];
+    return [...cartItems, {...itemToAdd, quantity: +curQty, purchase_type: purchaseType, used_price: usedPrice, barcode: '3298971278965'}];
 }
 
 
@@ -37,7 +43,7 @@ const processDecrement = (cartItems, itemToDecrease) => {
 const processSalesInsert = (cartTotal, cartItems, payInputs, salesRecords) => {
     // Create doc insert object
     const crt = cartItems.map(ct => ct.id !== 0
-        ? {item_id: ct.id, price: ct.price, quantity: ct.quantity, purchase_total: cartTotal}
+        ? {item_id: ct.id, price: ct.price, quantity: ct.quantity, purchase_total: ct.quantity * (+ct.price)}
         : null
     );
     payInputs['item_details'] = crt;
@@ -65,34 +71,50 @@ export const CartProvider = ({children}) => {
     const [ salesRecords, setSalesRecords ] = useState([]);
 
     // Add item to cart or perform increment
-    const addItemsToCart = (itemToAdd, curQty) => {
-        setCartItems(processIncrement(cartItems, itemToAdd, curQty));
+    const addItemsToCart = (itemToAdd, typeNqty) => {
+        setCartItems(processIncrement(cartItems, itemToAdd, typeNqty));
         // saveToLocal();
-        // console.log(cartItems);
     }
 
     // Perform diminution
     const decreaseItemQty = (itemToDecrease) => {
         setCartItems(processDecrement(cartItems, itemToDecrease));
+        // console.log(itemToDecrease);
     }
 
     // Remove item from cart
     const removeCartItem = (itemToRemove) => {
         const newCart = cartItems.filter(item => item.id !== itemToRemove.id);
+        saveToLocal(newCart);
         setCartItems(newCart);
     }
 
     // Add payInputs to sales record insert
-    const addSalesRecord = (payInputs) => {
-        retrieveFromLocal();
-        setSalesRecords(processSalesInsert(cartTotal, cartItems, payInputs, salesRecords));
+    const addSalesRecord = async (payInputs) => {
+        const sendNewSalesRecord = processSalesInsert(cartTotal, cartItems, payInputs, salesRecords);
+        await createSalesDoc(sendNewSalesRecord);
+        getSalesRecord();
 
-        // Save to db here
-        createSalesDoc(salesRecords);
+        // retrieveFromLocal();
+        // setSalesRecords(processSalesInsert(cartTotal, cartItems, payInputs, salesRecords));
 
-        // Add to sales records display on successfull insert
-        console.log('Yeh..! Purchase complete')
+        // // Save to db here
+        // createSalesDoc(salesRecords);
+
+        // // Add to sales records display on successfull insert
+        // console.log('Yeh..! Purchase complete')
     }
+
+    const getSalesRecord = async () => {
+        const salesMap = await getSalesDocuments();
+        setSalesRecords(salesMap);
+    }
+
+    useEffect(() => {
+        getSalesRecord();
+        // saveToLocal();
+        // console.log('--- Get sales records ---');
+    },[]);
 
     // UseEffect to stage changes anytime cartItems state changes
     useEffect(() => {
@@ -105,20 +127,22 @@ export const CartProvider = ({children}) => {
 
         // Calculate cart count
         const sum = cartItems.reduce(
-            (total, item) => total + ((+item.quantity) * (+item.price)), 0
+            (total, item) => total + (+item.used_price * item.quantity), 0
         );
         setCartTotal(sum);
 
-        // // Save cartItems in local storage
-        // localStorage.setItem('localCartItems', JSON.stringify(cartItems));
-        saveToLocal();
+        // Save cartItems in local storage
+        saveToLocal(cartItems);
+        console.log('.....................');
+        console.log(cartItems);
+        console.log('.....................');
 
     }, [cartItems])
 
     // Save cartItems in local storage
-    const saveToLocal = () => {
+    const saveToLocal = (newCart) => {
         if (cartItems.length > 0) {
-            localStorage.setItem('localCart', JSON.stringify(cartItems))
+            localStorage.setItem('localCart', JSON.stringify(newCart))
             // const storedVal = JSON.parse(localStorage.getItem("localCart"));
         }
     };

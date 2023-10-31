@@ -1,0 +1,45 @@
+
+
+.image-title {
+    @apply w-1/6;
+}
+
+.input-group-left{
+    @apply w-[calc(30%-1px)] px-3 font-medium py-2;
+}
+
+.input-group-right {
+    @apply w-[calc(60%-1px)] p-1;
+}
+
+.items-input-group {
+    @apply w-[calc(80%-1px)] ml-[calc(10%-1px)] mr-[calc(10%-1px)] my-3;
+}
+
+.items-input-group p {
+    @apply text-sm font-normal text-right;
+}
+
+.card-header-top {
+    @apply text-4xl mb-5 font-thin text-blue-gray-500 text-center border-b pb-5;
+}
+
+.radio-text2 {
+    font-size: 0.7em;
+    transition: all .4s ease-in-out;
+    /* color: #ff9000;
+    background: #064b6c; */
+    @apply w-auto m-1 uppercase tracking-wider bg-transparent border border-blue-gray-400 text-blue-gray-700
+    px-7 py-2 rounded-md hover:bg-blue-gray-700 hover:text-white hover:border-blue-gray-800 hover:scale-125;
+}
+
+
+
+
+
+
+@media (max-width: 800px) {
+    .image-title {
+        @apply w-3/6;
+    }
+}

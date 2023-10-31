@@ -1,8 +1,4 @@
 
-.cartpage-container {
-    @apply w-full grid place-items-center mb-10;
-}
-
 .cartpage-content {
     width: 800px;
     @apply my-5;
@@ -21,7 +17,7 @@
 }
 
 .inv-tbl {
-    @apply w-[calc(100%-24px)] mx-3 my-1 text-sm font-light;
+    @apply w-[calc(100%-16px)] mx-2 my-1 text-sm font-light;
     /* border: 1px solid #ccc; */
 }
 
@@ -68,7 +64,9 @@
 }
 
 .pay-mode {
-    @apply w-full bg-blue-gray-800 my-2 px-1 py-3 rounded-b-lg mb-5;
+    /* background: #064b6c; */
+    /* background: rgb(112, 112, 112); */
+    @apply w-full my-2 px-1 py-3 bg-blue-gray-700 rounded-b-lg mb-5;
 }
 
 .input-element {
@@ -76,7 +74,7 @@
 }
 
 .myInput-dark {
-    @apply text-white border border-blue-gray-600 bg-transparent rounded-md px-5 py-3 placeholder:text-blue-gray-500 
+    @apply text-white border border-blue-gray-500 bg-transparent rounded-md px-5 py-3 placeholder:text-blue-gray-500 
     outline-none focus:border-blue-gray-300 min-w-[calc(100%/3-8px)];
 }
 
@@ -146,4 +144,14 @@
     overflow-y: scroll;
     padding-right: 17px; /* Increase/decrease this value for cross-browser compatibility */
     box-sizing: content-box; /* So the width will be 100% + 17px */
+}
+
+.delivered-btn {
+    font-size: 0.7em;
+    @apply w-auto bg-green-500 rounded-md text-white text-center font-medium py-1 px-2.5 my-1 uppercase;
+}
+
+.not-delivered-btn {
+    font-size: 0.7em;
+    @apply w-auto bg-red-500/90 rounded-md text-white text-center font-medium py-1 px-2.5 my-1 uppercase;
 }

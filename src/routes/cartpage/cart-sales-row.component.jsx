@@ -2,9 +2,10 @@ import { Drawer, Button, IconButton, Typography, ButtonGroup } from '@material-t
 import React, { useContext, useState } from 'react'
 import { BiEditAlt, BiExpand } from 'react-icons/bi';
 import { GrEdit } from 'react-icons/gr';
-import { FaMinus, FaPlus, FaTimes } from 'react-icons/fa';
+import { FaCheck, FaMinus, FaPlus, FaTimes } from 'react-icons/fa';
 import { CartContext } from '../../context/cart.context';
 import ExpandDrawer from './expand-drawer-content.components';
+import { BsCheck2Square, BsCheckCircle, BsCheckCircleFill, BsCheckSquare } from 'react-icons/bs';
 
 const XcartSalesRow = ({ i, order, classes }) => {
     const { id, user, item_details, total, paid_debt, pay_mode, buyer_name, buyer_contact, discount, amt_paid, del_status, created_at, updated_at } = order;
@@ -22,15 +23,15 @@ const XcartSalesRow = ({ i, order, classes }) => {
     
     return (
         <>
-        <tr className="even:bg-blue-gray-50/30">
+        <tr key={id} className="even:bg-blue-gray-50/30">
             <td className='item-description pl-4 pr-2'>{i}</td>
             <td className={classes}>
-                <p className='item-name'>{id}</p>
+                <p className='item-name'>{id.substring(2, 14)}</p>
                 <p className='item-description'>User: {user}</p>
                 {
                     del_status === 'yes' 
-                    ? <p className='item-description'>Delivered</p> 
-                    : <p className='item-description'>Not Delivered</p>
+                    ? <p className='item-description delivered-btn'><FaCheck className='float-left mt-0.5' />&nbsp;<span>Delivered</span></p> 
+                    : <p className='item-description not-delivered-btn'><FaTimes className='float-left mt-0.5' />&nbsp;<span>Not Delivered</span></p>
                 }
             </td>
             <td className={classes}>

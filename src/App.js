@@ -6,13 +6,26 @@ import { NavbarWithMegaMenu } from './components/navbar-check.components';
 import { Outlet, Route, Routes } from 'react-router-dom';
 import Homepage from './routes/home/homepage.components';
 import XcartPage from './routes/cartpage/cartpage.components';
+import StockPage, { StockIndex } from './routes/stockpage/stockpage.components';
+import NewItem from './routes/stockpage/new-item.components';
+import NavigationPage from './routes/navigation.components';
+import ExpensesPage from './routes/expenses-page/expenses.components';
+import ScanPage from './routes/scanpage/scanpage.components';
 
 function App() { 
   return (
     <>
     <Routes>
-      <Route path='/' element={<Homepage />}/>
-      <Route path='/sales' element={<XcartPage />}/>
+      <Route path='/' element={<NavigationPage />}>
+        <Route index element={<Homepage />}/>
+        <Route path='stock' element={<StockPage />}>
+          <Route index element={<StockIndex />}/>
+          <Route path='add-new-item' element={<NewItem />}/>
+        </Route>
+        <Route path='sales' element={<XcartPage />}/>
+        <Route path='expenses' element={<ExpensesPage />}/>
+        <Route path='scan-doc' element={<ScanPage />}/>
+      </Route>
     </Routes> 
     </>
     // <div className="App">
