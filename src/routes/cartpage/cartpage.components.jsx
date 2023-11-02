@@ -14,7 +14,7 @@ import { createSalesDoc, getProductsDocuments } from '../../utils/firebase/fireb
 import { FaCalendarAlt, FaPlus, FaTimes } from 'react-icons/fa';
 import CustomRadio from '../../components/form/custom-radio.components';
  
-
+ 
 
 const XcartPage = () => {
     var c = 1;
@@ -22,7 +22,6 @@ const XcartPage = () => {
     const { cartItems, cartCount, cartTotal, salesRecords, addItemsToCart, saveToLocal, retrieveFromLocal, addSalesRecord } = useContext(CartContext);
 
     console.log('System has started');
-    console.log(cartItems);
     // const storedVal = JSON.parse(localStorage.getItem("localCartItems"));
     // console.log(storedVal);
 
@@ -115,23 +114,32 @@ const XcartPage = () => {
 
     const handlePay = (event) => {
         event.preventDefault();
-        const orderId = 'M'+Math.random().toString(36).slice(2);
+        var orderId = 'M'+Math.random().toString(36).slice(2);
         var dis = event.target.discount.value;
+        var pay_mode = event.target.pay_mode.value;
+        var amt_paid = event.target.amt_paid.value;
         var tot = cartTotal;
+        var paid_debt = amt_paid;
+
         if (dis > 0) {
             tot = cartTotal - dis;
         }
+        if (amt_paid < cartTotal) {
+            pay_mode = 'post_pay';
+        }
+
         const payInputs = {
-            id: orderId,
+            id: orderId.toUpperCase(),
             user: 'Code80',
             item_details: [],
             total: tot,
-            paid_debt: 0,
-            pay_mode: event.target.pay_mode.value,
+            debt_bal: cartTotal - amt_paid,
+            paid_debt: paid_debt,
+            pay_mode: pay_mode,
             buyer_name: event.target.buyer_name.value,
             buyer_contact: event.target.buyer_contact.value,
             discount: dis,
-            amt_paid: event.target.amt_paid.value,
+            amt_paid: amt_paid,
             del_status: event.target.del_status.value,
             created_at: new Date(),
             updated_at: null,
@@ -188,8 +196,8 @@ const XcartPage = () => {
                     </div>
                     <div className='search-list'>
                         { isDropOpen === '' ? null :
-                        <Card className='search-list-card'>
-                            <IconButton className='icon-btn float-right' onClick={() => setIsDropOpen('')}><FaTimes size='16'/></IconButton>
+                        <Card className='search-list-card relative'>
+                            <IconButton className='icon-btn absolute right-1' onClick={() => setIsDropOpen('')}><FaTimes size='16'/></IconButton>
                             {
                                 searchResult.length > 0 ?
                                 searchResult.map(el => 

@@ -2,13 +2,14 @@ import { Drawer, Button, IconButton, Typography, ButtonGroup } from '@material-t
 import React, { useContext, useState } from 'react'
 import { BiEditAlt, BiExpand } from 'react-icons/bi';
 import { GrEdit } from 'react-icons/gr';
+import { FaPrint } from 'react-icons/fa6';
 import { FaCheck, FaMinus, FaPlus, FaTimes } from 'react-icons/fa';
 import { CartContext } from '../../context/cart.context';
 import ExpandDrawer from './expand-drawer-content.components';
 import { BsCheck2Square, BsCheckCircle, BsCheckCircleFill, BsCheckSquare } from 'react-icons/bs';
 
 const XcartSalesRow = ({ i, order, classes }) => {
-    const { id, user, item_details, total, paid_debt, pay_mode, buyer_name, buyer_contact, discount, amt_paid, del_status, created_at, updated_at } = order;
+    const { id, user, item_details, total, paid_debt, debt_bal, pay_mode, buyer_name, buyer_contact, discount, amt_paid, del_status, purchase_type, created_at, updated_at } = order;
     const { cartItems, addItemsToCart, decreaseItemQty, removeCartItem } = useContext(CartContext);
 
     const [openBottom, setOpenBottom] = useState(false);
@@ -43,10 +44,11 @@ const XcartSalesRow = ({ i, order, classes }) => {
             <td className={classes}>
                 <p className='item-name'>{buyer_name}</p>
                 <p className='item-description'>{buyer_contact}</p>
+                <p className='item-description'>{purchase_type}</p>
             </td>
             <td className={classes}>
                 <p className='item-name text-center'>{total}</p>
-                <p className='item-description text-center'>Bal.: {paid_debt}</p>
+                <p className='item-description text-center'>Bal.: {debt_bal}</p>
             </td>
             <td className={classes}>
                 <p className='item-name'>Monday</p>
@@ -56,16 +58,14 @@ const XcartSalesRow = ({ i, order, classes }) => {
             </td>
             <td className={classes}>
                 <button className='action-btn' onClick={openDrawerBottom}><BiExpand size='12'/></button>
-                <button className='del-btn' onClick={removeFunc}><GrEdit size='12'/></button>
+                <button className='action-btn'><FaPrint size='12'/></button>
+                <button className='action-btn'><GrEdit size='12'/></button>
                 {/* <button className='del-btn' onClick={removeFunc}><FaTimes size='12'/></button> */}
             </td>
         </tr>
 
         <Drawer placement="bottom" open={openBottom} onClose={closeDrawerBottom} className="p-4 overflow-auto">
-            <IconButton variant="text" color="blue-gray" onClick={closeDrawerBottom}>
-                <FaTimes />
-            </IconButton>
-            <ExpandDrawer orderedItems={item_details} />
+            <ExpandDrawer order={order} total={total} amt_paid={amt_paid} orderedItems={item_details} />
         </Drawer>
         </>
     );

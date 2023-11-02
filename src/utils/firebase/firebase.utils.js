@@ -25,6 +25,16 @@ export const createSalesDoc = async (docToAdd) => {
     try {
         await addDoc(salesRefValue, docToAdd);
     } catch (error) {
+        alert('Internet Disconnected');
+        // switch (error.code) {
+        //   case ('auth/popup-closed-by-user'):
+        //       alert('Popup Closed..!');
+        //     break;
+        
+        //   default:
+        //       alert('An error occured: '+error.code);
+        //     break;
+        // }
         console.log('Error occoured: ', error.message);
     }
     // console.log('Inside: '+JSON.stringify(docToAdd));
@@ -66,5 +76,32 @@ export const getSalesDocuments = async () => {
     salesMap();
     // console.log(salesReceiver);
     return salesReceiver;
+
+}
+
+
+// Expenses
+
+export const createExpensesDoc = async (docToAdd) => {
+    const expRefValue = collection(db, 'expenses');
+    try {
+        await addDoc(expRefValue, docToAdd);
+    } catch (error) {
+        console.log('Error occoured at Expenses: ', error.message);
+    }
+    
+}
+
+export const getExpensesDocs = async () => {
+
+    const expReceiver = [];
+    const querySnapshot = await getDocs(query(collection(db, 'expenses')));
+
+    const expMap = () => querySnapshot.forEach((doc) => {
+        expReceiver.push({...doc.data(), id: doc.id});
+    });
+    expMap();
+    // console.log(salesReceiver);
+    return expReceiver;
 
 }

@@ -19,7 +19,7 @@ const processIncrement = (cartItems, itemToAdd, typeNqty) => {
     const existingItem = cartItems.find((el) => el.id === itemToAdd.id)
     if (existingItem) {
         return cartItems.map((item) => item.id === itemToAdd.id 
-        ? {...item, quantity: item.quantity + qtyPlus } 
+        ? {...item, quantity: item.quantity + qtyPlus, purchase_type: purchaseType, used_price: usedPrice } 
         : item
         );
     }
@@ -43,7 +43,7 @@ const processDecrement = (cartItems, itemToDecrease) => {
 const processSalesInsert = (cartTotal, cartItems, payInputs, salesRecords) => {
     // Create doc insert object
     const crt = cartItems.map(ct => ct.id !== 0
-        ? {item_id: ct.id, price: ct.price, quantity: ct.quantity, purchase_total: ct.quantity * (+ct.price)}
+        ? {item_id: ct.id, price: ct.used_price, quantity: ct.quantity, purchase_type: ct.purchase_type, purchase_total: ct.quantity * (+ct.used_price)}
         : null
     );
     payInputs['item_details'] = crt;
@@ -70,6 +70,8 @@ export const CartProvider = ({children}) => {
     const [ cartTotal, setCartTotal ] = useState([]);
     const [ salesRecords, setSalesRecords ] = useState([]);
 
+    console.log('----- Cart context loaded -----');
+
     // Add item to cart or perform increment
     const addItemsToCart = (itemToAdd, typeNqty) => {
         setCartItems(processIncrement(cartItems, itemToAdd, typeNqty));
@@ -94,6 +96,8 @@ export const CartProvider = ({children}) => {
         const sendNewSalesRecord = processSalesInsert(cartTotal, cartItems, payInputs, salesRecords);
         await createSalesDoc(sendNewSalesRecord);
         getSalesRecord();
+        localStorage.setItem('localCart','');
+        setCartItems('');
 
         // retrieveFromLocal();
         // setSalesRecords(processSalesInsert(cartTotal, cartItems, payInputs, salesRecords));
@@ -133,9 +137,9 @@ export const CartProvider = ({children}) => {
 
         // Save cartItems in local storage
         saveToLocal(cartItems);
-        console.log('.....................');
-        console.log(cartItems);
-        console.log('.....................');
+        // console.log('.....................');
+        // console.log(cartItems);
+        // console.log('.....................');
 
     }, [cartItems])
 

@@ -1,6 +1,6 @@
 
 import { createContext, useEffect, useState } from 'react'
-import { getProductsDocuments, getSalesDocuments } from '../utils/firebase/firebase.utils';
+import { createExpensesDoc, getExpensesDocs, getProductsDocuments, getSalesDocuments } from '../utils/firebase/firebase.utils';
 import { ItemsArray } from '../TestData.jsx'
 
 
@@ -18,19 +18,22 @@ export const ProductsContext = createContext({
   products: [],
   getProduct: () => {},
   sales: [],
-  getSales: () => {}
+  getSales: () => {},
+  expenses: [],
+  addExpensesRecord: () => {}
 });
 
 
 export const ProductsProvider = ({children}) => {
   const [ products, setProducts ] = useState(ItemsArray);
   const [ sales, setSales ] = useState([]);
+  const [ expenses, setExpenses ] = useState([]);
 
   console.log('----- Products and Sales context loaded -----');
 
     useEffect(() => {
 
-      console.log('Im Here..!');
+      // console.log('Im Here..!');
       // getProduct();
       getSales();
 
@@ -49,8 +52,25 @@ export const ProductsProvider = ({children}) => {
 
 
 
+    // Expenses 
+    const addExpensesRecord = async (expInputs) => {
 
-    const value = { products, sales, getProduct, getSales };
+      const crt = sales.map(ct => ct.id !== 0
+        ? {item_id: ct.id, buyer_name: ct.buyer_name}
+        : null
+      );
+      // expInputs['obj'] = crt;
+      await createExpensesDoc(expInputs);
+      console.log(expInputs);
+    }
+
+    const getExpensesRecords = async () => {
+      const expMap = await getExpensesDocs();
+      setExpenses(expMap);
+    }
+
+
+    const value = { products, getProduct, sales, getSales, expenses, addExpensesRecord, getExpensesRecords };
   return (<ProductsContext.Provider value={value}>{children}</ProductsContext.Provider>)
 }
 

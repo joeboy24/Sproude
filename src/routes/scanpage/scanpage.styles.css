@@ -1,0 +1,95 @@
+
+
+.scanner-top {
+    @apply mb-12;
+}
+
+.scan-input {
+    /* height: 48px; */
+    @apply pl-5 pr-32;
+}    
+
+.receipt-container {
+    /* width: 400px; */
+    @apply w-1/3 px-4 py-7 mb-5 border font-normal;
+}
+
+.receipt-container table {
+    @apply w-full border-b border-b-gray-300;
+}
+
+.receipt-container tbody {
+    font-size: 0.7em;
+    @apply w-full font-light uppercase;
+}
+
+.invoice-container {
+    @apply w-full border px-4 pt-7 pb-36 text-gray-800 m-0;
+    
+}
+
+
+
+
+.invoice-top {
+    @apply w-full mb-24;
+    /* @apply w-full flex mt-12 mb-24; */
+}
+
+.company-details-left {
+    @apply pt-4;
+}
+
+.company-details-left img {
+    @apply w-1/6 border rounded-md float-left mr-2;
+}
+
+.company-details-left h2 {
+    @apply text-3xl text-black font-bold pt-2;
+}
+
+.company-details-left p {
+    @apply w-4/5 text-lg text-gray-700 font-normal uppercase;
+}
+
+.company-details-right {
+    @apply w-1/3 text-xs text-black text-right capitalize;
+}
+
+
+
+
+.invoice-center-top {
+    @apply text-xs;
+}
+
+.invoice-center-top td {
+    @apply p-0;
+}
+
+.blue-head {
+    color: rgb(1, 128, 232);
+    @apply capitalize;
+}
+
+.amount-focus {
+    @apply text-2xl absolute right-0;
+}
+
+.invoice-center {
+    @apply text-xs text-right mb-5;
+}
+
+.invoice-center tr {
+    @apply border-b border-b-gray-300/80;
+}
+
+.invoice-center td {
+    @apply p-2;
+}
+
+.blue-head-with-top-padd td {
+    color: rgb(1, 128, 232);
+    border-top: 3px solid rgb(3, 139, 251);
+    @apply !pt-4 capitalize;
+}
