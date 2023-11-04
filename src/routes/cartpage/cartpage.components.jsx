@@ -176,7 +176,7 @@ const XcartPage = () => {
                     <div className='absolute right-7'>
                         <Menu>
                             <MenuHandler>
-                                <p className='radio-text h-7 px-3 py-1 bg-blue-gray-50 rounded-sm hover:opacity-80'><FaCalendarAlt size='16' className='float-left mr-2 mt-0.5' /> Change Date</p>
+                                <p className='change-date-link'><FaCalendarAlt size='16' className='float-left mr-2 mt-0.5' /> Change Date</p>
                             </MenuHandler>
                             <MenuList>
                                 {/* <MenuItem> */}
@@ -271,7 +271,7 @@ const XcartPage = () => {
                         <tbody>
                         {cartItems.map((product, index) => {
                             const isLast = index === cartItems.length - 1;
-                            const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
+                            const classes = isLast ? "p-4" : "p-4 border-blue-gray-50";
                             return(
                                 <XcartItemRow c={c++} key={product.id} product={product} classes={classes} />
                             );
@@ -370,13 +370,13 @@ const XcartPage = () => {
                             <tbody>
                                 {salesRecords.map((order, index) => {
                                     const isLast = index === cartItems.length - 1;
-                                    const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
+                                    const classes = isLast ? "p-4" : "p-4 border-blue-gray-50";
                                     return(
                                         <>
                                         <XcartSalesRow key={order.id} i={i++} order={order} classes={classes} />
                                         </>
                                     );
-                                })}
+                                }).reverse()}
                                 <tr>
                                     <td></td>
                                     <td className='px-4 text-right'>

@@ -1,14 +1,11 @@
 
 import { createContext, useEffect, useState } from 'react'
-import { createExpensesDoc, getExpensesDocs, getProductsDocuments, getSalesDocuments } from '../utils/firebase/firebase.utils';
+import { createExpensesDoc, createProductDoc, deleteExpensesDoc, deleteProductDoc, getExpensesDocs, getProductsDocuments, getSalesDocuments, updateExpensesDoc, updateProductDoc } from '../utils/firebase/firebase.utils';
 import { ItemsArray } from '../TestData.jsx'
 
 
 const processProducts = async () => {
   const productMap = await getProductsDocuments();
-  console.log('+++++++++++++++++++++++++');
-  console.log(productMap);
-  console.log('+++++++++++++++++++++++++');
   return (productMap);
 }
 
@@ -16,11 +13,15 @@ const processProducts = async () => {
 
 export const ProductsContext = createContext({
   products: [],
+  addProduct: () => {},
   getProduct: () => {},
+  updateProduct: () => {},
   sales: [],
   getSales: () => {},
   expenses: [],
-  addExpensesRecord: () => {}
+  addExpensesRecord: () => {},
+  getExpensesRecords: () => {},
+  updateExpensesRecord: () => {}
 });
 
 
@@ -29,27 +30,48 @@ export const ProductsProvider = ({children}) => {
   const [ sales, setSales ] = useState([]);
   const [ expenses, setExpenses ] = useState([]);
 
-  console.log('----- Products and Sales context loaded -----');
+  // console.log('----- Products and Sales context loaded -----');
 
     useEffect(() => {
 
-      // console.log('Im Here..!');
-      // getProduct();
+      getProduct();
       getSales();
+      getExpensesRecords();
 
     },[]);
+
+
+    // Products
+    const addProduct = async (docToAdd) => {
+      await createProductDoc(docToAdd).then(
+        getProduct()
+      );
+    }
 
     const getProduct = async () => {
       const productMap = await getProductsDocuments();
       setProducts(productMap);
     }
 
+    const delProduct = async (docId, delString) => {
+      await deleteProductDoc(docId, delString).then(
+        getProduct()
+      );
+    }
 
+    const updateProduct = async (docToUpdate) => {
+      await updateProductDoc(docToUpdate).then(
+        getProduct()
+      );
+    }
+
+
+
+    // Sales
     const getSales = async () => {
       const salesMap = await getSalesDocuments();
       setSales(salesMap);
     }
-
 
 
     // Expenses 
@@ -61,7 +83,7 @@ export const ProductsProvider = ({children}) => {
       );
       // expInputs['obj'] = crt;
       await createExpensesDoc(expInputs);
-      console.log(expInputs);
+      getExpensesRecords();
     }
 
     const getExpensesRecords = async () => {
@@ -69,8 +91,21 @@ export const ProductsProvider = ({children}) => {
       setExpenses(expMap);
     }
 
+    const updateExpensesRecord = async (num) => {
+      await updateExpensesDoc(num);
+      getExpensesRecords();
+    }
 
-    const value = { products, getProduct, sales, getSales, expenses, addExpensesRecord, getExpensesRecords };
+    const delExpRecord = async (docId) => {
+      await deleteExpensesDoc(docId);
+      getExpensesRecords();
+    }
+
+    // useEffect(() => {
+    // },[expenses]);
+
+
+    const value = { products, addProduct, getProduct, updateProduct, delProduct, sales, getSales, expenses, addExpensesRecord, getExpensesRecords, updateExpensesRecord, delExpRecord };
   return (<ProductsContext.Provider value={value}>{children}</ProductsContext.Provider>)
 }
 

@@ -36,7 +36,9 @@ const ExpandDrawer = ({ order, orderedItems }) => {
                   const product = products.find(el => el.id === item_id);
                   return (
                     <tr>
-                        <td className='text-left'>{product.name}<p className='item-description'>{purchase_type} - {product.description}</p></td>
+                        <td className='text-left'>
+                          {product.name}<p className='item-description'>{purchase_type} - {product.description}</p>
+                          </td>
                         <td>{price}</td>
                         <td className='text-center'>{quantity}</td>
                         <td>{purchase_total}</td>

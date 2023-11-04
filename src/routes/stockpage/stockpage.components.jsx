@@ -33,7 +33,6 @@ export const StockIndex = () => {
       <a href="#"><p className='radio-text2'><FaDownload size='16' className='float-left mr-2 mt-0.5' /> Downlod Stock CSV</p></a>
       <a href="#"><p className='radio-text2'><BiTransferAlt size='16' className='float-left mr-2 mt-0.5' /> Transfer Stock</p></a>
       <a href="#"><p className='radio-text2'><AiOutlineFolderOpen size='16' className='float-left mr-2 mt-0.5' /> View Stock</p></a>
-      
     </>
   )
 }

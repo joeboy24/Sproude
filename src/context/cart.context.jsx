@@ -70,7 +70,7 @@ export const CartProvider = ({children}) => {
     const [ cartTotal, setCartTotal ] = useState([]);
     const [ salesRecords, setSalesRecords ] = useState([]);
 
-    console.log('----- Cart context loaded -----');
+    // console.log('----- Cart context loaded -----');
 
     // Add item to cart or perform increment
     const addItemsToCart = (itemToAdd, typeNqty) => {
@@ -137,9 +137,6 @@ export const CartProvider = ({children}) => {
 
         // Save cartItems in local storage
         saveToLocal(cartItems);
-        // console.log('.....................');
-        // console.log(cartItems);
-        // console.log('.....................');
 
     }, [cartItems])
 

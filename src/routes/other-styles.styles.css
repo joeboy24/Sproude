@@ -1,0 +1,14 @@
+
+
+.dialog-top {
+    @apply w-full bg-green-500 text-center text-sm tracking-wide font-normal uppercase text-white p-4;
+}
+
+.custom-select {
+    @apply w-full border border-blue-gray-200 px-2 py-2.5 outline-none rounded-md placeholder:text-blue-gray-400 text-sm;
+}
+
+.dialog-body-container {
+    height: 70vh;
+    @apply overflow-auto;
+}

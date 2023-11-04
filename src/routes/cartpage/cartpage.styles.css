@@ -56,7 +56,13 @@
 }
 
 .cart-tbl th {
-    @apply border-b border-blue-gray-100 bg-blue-gray-50 px-4 py-3 font-light leading-none opacity-70;
+    @apply border-b text-xs tracking-widest border-blue-gray-100 bg-blue-gray-50 px-4 py-3 font-light leading-none opacity-70;
+}
+
+.cart-tbl tr {
+    @apply border-b hover:bg-blue-gray-50/20 hover:!border-b hover:border-b-orange-600/60
+    /* hover:border-b-2 hover:border-b-light-blue-300 */
+    ;
 }
 
 .cart-text {
@@ -154,4 +160,10 @@
 .not-delivered-btn {
     font-size: 0.7em;
     @apply w-auto bg-red-500/90 rounded-md text-white text-center font-medium py-1 px-2.5 my-1 uppercase;
+}
+
+.change-date-link {
+    font-size: 0.8em;
+    @apply w-auto border border-blue-gray-100 uppercase tracking-wider text-blue-gray-500 px-3 py-1.5 
+    bg-blue-gray-50 rounded-md hover:opacity-80;
 }

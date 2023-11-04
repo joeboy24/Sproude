@@ -2,7 +2,7 @@
 import { initializeApp } from "firebase/app";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
-import { doc, getDoc , setDoc, getFirestore, collection, addDoc, getDocs, query } from "firebase/firestore";
+import { doc, getDoc , setDoc, getFirestore, collection, addDoc, getDocs, query, updateDoc, deleteDoc } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -55,12 +55,10 @@ export const getProductsDocuments = async () => {
     // }, {})
 
     const productsMap = () => querySnapshot.forEach((doc) => {
-        getProductsFromFirebase.push({
-            ...doc.data(), id: doc.id
-        })
+        getProductsFromFirebase.push({...doc.data(), id: doc.id});
     });
     productsMap();
-    console.log(getProductsFromFirebase);
+    // console.log(getProductsFromFirebase);
     return getProductsFromFirebase;
 
 }
@@ -101,7 +99,57 @@ export const getExpensesDocs = async () => {
         expReceiver.push({...doc.data(), id: doc.id});
     });
     expMap();
-    // console.log(salesReceiver);
+    // console.log(expReceiver);
     return expReceiver;
 
+}
+
+export const updateExpensesDoc = async (docUpdate) => {
+    // return alert(docUpdate);
+    const expRefValue = doc(db, 'expenses', 'x3w4apJ4z4mrBZ5nQdOU');
+    try {
+        await updateDoc(expRefValue, { branch_id: docUpdate });
+        // await setDoc(userDocRef, {
+        //   displayName, email, createdAt, ...additionalinfo
+        // });
+    } catch (error) {
+        console.log('Error occoured at Expenses: ', error.message);
+    }
+    
+}
+
+export const deleteExpensesDoc = async (docId) => {
+    const expRef = doc(db, 'expenses', docId);
+    await deleteDoc(expRef);
+}
+
+
+// Products
+
+export const createProductDoc = async (docToAdd) => {
+    const prodRefValue = collection(db, 'products');
+    try {
+        await addDoc(prodRefValue, docToAdd);
+        console.log('Product document successfully added');
+    } catch (error) {
+        console.log('Error occoured at Products: ', error.message);
+    }
+}
+
+export const deleteProductDoc = async (docId, delString) => {
+    const upRefValue = doc(db, 'products', docId);
+    try {
+        await updateDoc(upRefValue, { del: delString });
+    } catch (error) {
+        console.log('Error occoured at products deletion: ', error.message);
+    }
+}
+
+export const updateProductDoc = async (docToUpdate) => {
+    const upRefValue = doc(db, 'products', docToUpdate.id);
+    try {
+        await updateDoc(upRefValue, docToUpdate);
+    } catch (error) {
+        console.log('Error occoured at products deletion: ', error.message);
+    }
 }
