@@ -5,9 +5,14 @@ import { BsBellFill, BsGearFill } from 'react-icons/bs'
 import { FaBell } from 'react-icons/fa'
 import { Menu, MenuHandler, MenuList, MenuItem, Button, } from "@material-tailwind/react";
 import { ChevronDownIcon } from '@heroicons/react/24/solid'
+import { HiRefresh } from 'react-icons/hi'
 
 const AdminNavbar = () => {
   const [openMenu, setOpenMenu] = React.useState(false);
+
+  const pageRefresh = () => {
+      window.location.reload();
+  }
 
   return (
     <div className="navbar-container">
@@ -23,7 +28,7 @@ const AdminNavbar = () => {
         
         <div class="nav-col-3">
           <div className='nav-actions-container'>
-            {/* <button className='icon-btn2'><BsGearFill size='18'/></button> */}
+            <IconButton onClick={pageRefresh} className='icon-btn'><HiRefresh size='20'/></IconButton>
             <IconButton className='icon-btn'><BsGearFill size='16'/></IconButton>
             {/* <Badge content="5"> */}
               <IconButton className='icon-btn'><FaBell size='16'/></IconButton>

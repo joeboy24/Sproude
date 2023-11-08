@@ -11,6 +11,8 @@ import NewItem from './routes/stockpage/new-item.components';
 import NavigationPage from './routes/navigation.components';
 import ExpensesPage from './routes/expenses-page/expenses.components';
 import ScanPage from './routes/scanpage/scanpage.components';
+import { Toaster, toast } from 'sonner'
+import PurchasesPage from './routes/stockpage/purchases.components';
 
 function App() { 
   return (
@@ -21,12 +23,14 @@ function App() {
         <Route path='stock' element={<StockPage />}>
           <Route index element={<StockIndex />}/>
           <Route path='add-new-item' element={<NewItem />}/>
+          <Route path='purchases' element={<PurchasesPage />}/>
         </Route>
         <Route path='sales' element={<XcartPage />}/>
         <Route path='expenses' element={<ExpensesPage />}/>
         <Route path='scan-doc' element={<ScanPage />}/>
       </Route>
     </Routes> 
+    <Toaster richColors/>
     </>
     // <div className="App">
     //   <header className="App-header">

@@ -164,6 +164,10 @@
 
 .change-date-link {
     font-size: 0.8em;
-    @apply w-auto border border-blue-gray-100 uppercase tracking-wider text-blue-gray-500 px-3 py-1.5 
+    @apply w-auto border border-blue-gray-100 uppercase tracking-wider text-blue-gray-500 px-3 m-0.5 py-1.5 
     bg-blue-gray-50 rounded-md hover:opacity-80;
+}
+
+.tooltip-style { 
+    @apply text-blue-gray-900 border border-blue-gray-100 bg-blue-gray-50/50 px-4 py-2 shadow-xl shadow-black/10;
 }

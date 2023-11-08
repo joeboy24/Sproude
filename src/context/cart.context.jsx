@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import { createSalesDoc, getSalesDocuments } from "../utils/firebase/firebase.utils";
+import { createSalesDoc, errorToast, getPurchasesDocs, getSalesDocuments, infoToast, successToast } from "../utils/firebase/firebase.utils";
 
 
 const processIncrement = (cartItems, itemToAdd, typeNqty) => {
@@ -18,6 +18,7 @@ const processIncrement = (cartItems, itemToAdd, typeNqty) => {
     }
     const existingItem = cartItems.find((el) => el.id === itemToAdd.id)
     if (existingItem) {
+        successToast('Item quantity increased')
         return cartItems.map((item) => item.id === itemToAdd.id 
         ? {...item, quantity: item.quantity + qtyPlus, purchase_type: purchaseType, used_price: usedPrice } 
         : item
@@ -25,14 +26,17 @@ const processIncrement = (cartItems, itemToAdd, typeNqty) => {
     }
 
     // Item does not exist
+
+    successToast('Item has been added to cart');
     return [...cartItems, {...itemToAdd, quantity: +curQty, purchase_type: purchaseType, used_price: usedPrice, barcode: '3298971278965'}];
 }
 
 
-const processDecrement = (cartItems, itemToDecrease) => {
+const processDecrement = (cartItems, itemToDecrease, cartCount) => {
     const existingItem = cartItems.find(el => el.id === itemToDecrease.id);
+
     if (existingItem) {
-        return cartItems.map(item => item.id === itemToDecrease.id 
+        return cartItems.map(item => item.id === itemToDecrease.id && itemToDecrease.quantity > 1
         ? { ...item, quantity: item.quantity - 1 } 
         : item
         );
@@ -47,7 +51,7 @@ const processSalesInsert = (cartTotal, cartItems, payInputs, salesRecords) => {
         : null
     );
     payInputs['item_details'] = crt;
-    console.log(payInputs);
+    // console.log(payInputs);
     return payInputs;
     // return payInputs;
 }
@@ -60,7 +64,9 @@ export const CartContext = createContext({
     cartTotal: 0,
     addItemsToCart: () => {},
     decreaseItemQty: () => {},
-    addSalesRecord: () => {}
+    addSalesRecord: () => {},
+    purchss: [],
+    getPurchases: () => {},
 })
 
 
@@ -69,19 +75,27 @@ export const CartProvider = ({children}) => {
     const [ cartCount, setCartCount ] = useState([]);
     const [ cartTotal, setCartTotal ] = useState([]);
     const [ salesRecords, setSalesRecords ] = useState([]);
+    const [ purchss, setPurchss ] = useState([]);
 
     // console.log('----- Cart context loaded -----');
 
     // Add item to cart or perform increment
     const addItemsToCart = (itemToAdd, typeNqty) => {
         setCartItems(processIncrement(cartItems, itemToAdd, typeNqty));
+        
+        // console.log(itemToAdd);
         // saveToLocal();
     }
 
     // Perform diminution
     const decreaseItemQty = (itemToDecrease) => {
-        setCartItems(processDecrement(cartItems, itemToDecrease));
-        // console.log(itemToDecrease);
+        const existingItem = cartItems.find(el => el.id === itemToDecrease.id);
+        if(existingItem.quantity > 1){
+            setCartItems(processDecrement(cartItems, itemToDecrease, cartCount));
+            successToast('Item quantity reduced')
+        } else {
+            errorToast('Item quantity cannot be less than 1. Delete from cart if you wish')
+        }
     }
 
     // Remove item from cart
@@ -89,30 +103,35 @@ export const CartProvider = ({children}) => {
         const newCart = cartItems.filter(item => item.id !== itemToRemove.id);
         saveToLocal(newCart);
         setCartItems(newCart);
+        successToast('Item removed from cart')
     }
 
     // Add payInputs to sales record insert
     const addSalesRecord = async (payInputs) => {
         const sendNewSalesRecord = processSalesInsert(cartTotal, cartItems, payInputs, salesRecords);
-        await createSalesDoc(sendNewSalesRecord);
-        getSalesRecord();
+        await createSalesDoc(sendNewSalesRecord).then(
+            getSalesRecord(),
+            successToast('Sales record successfully added')
+        );
         localStorage.setItem('localCart','');
-        setCartItems('');
-
-        // retrieveFromLocal();
-        // setSalesRecords(processSalesInsert(cartTotal, cartItems, payInputs, salesRecords));
-
-        // // Save to db here
-        // createSalesDoc(salesRecords);
-
-        // // Add to sales records display on successfull insert
-        // console.log('Yeh..! Purchase complete')
+        setCartItems({});
     }
 
     const getSalesRecord = async () => {
         const salesMap = await getSalesDocuments();
         setSalesRecords(salesMap);
     }
+
+    const getPurchases = async () => {
+      const purMap = await getPurchasesDocs();
+      setPurchss(purMap);
+      // infoToast('Inside PurchaseDocs2')
+      // console.log(purMap)
+      return purMap;
+    }
+
+    // useEffect(() => {
+    // },[salesRecords]);
 
     useEffect(() => {
         getSalesRecord();
@@ -122,22 +141,24 @@ export const CartProvider = ({children}) => {
 
     // UseEffect to stage changes anytime cartItems state changes
     useEffect(() => {
-        
-        // Calculate cart count
-        const count = cartItems.reduce(
-            (total, item) => total + item.quantity, 0
-        );
-        setCartCount(count);
+        if (cartItems.length > 0) {
+            
+            // Calculate cart count
+            const count = cartItems.reduce(
+                (total, item) => total + item.quantity, 0
+            );
+            setCartCount(count);
 
-        // Calculate cart count
-        const sum = cartItems.reduce(
-            (total, item) => total + (+item.used_price * item.quantity), 0
-        );
-        setCartTotal(sum);
+            // Calculate cart count
+            const sum = cartItems.reduce(
+                (total, item) => total + (+item.used_price * item.quantity), 0
+            );
+            setCartTotal(sum);
 
-        // Save cartItems in local storage
-        saveToLocal(cartItems);
+            // Save cartItems in local storage
+            saveToLocal(cartItems);
 
+        }
     }, [cartItems])
 
     // Save cartItems in local storage
@@ -157,7 +178,7 @@ export const CartProvider = ({children}) => {
     }
 
     // Capture responses as a value object to be saved in context
-    const value = { cartItems, cartCount, cartTotal, salesRecords, addItemsToCart, decreaseItemQty, saveToLocal, retrieveFromLocal, removeCartItem, addSalesRecord };
+    const value = { cartItems, cartCount, cartTotal, salesRecords, addItemsToCart, decreaseItemQty, saveToLocal, retrieveFromLocal, removeCartItem, addSalesRecord, purchss, getPurchases };
     // const value = { cartItems, cartCount, cartTotal, addItemsToCart, decreaseItemQty, removeCartItem };
 
     return <CartContext.Provider value={value}>{children}</CartContext.Provider>

@@ -88,7 +88,7 @@ export const ItemsArray = [
   {
     "id": 4,
     product_id: "VN90UOYI0X",
-    image: "https://www.oceanspray.com/-/media/Project/OS/Brand-Sites/OceanSpray/Master/Intl-Master/Products/Category/juices-group2x.ashx?h=590&w=516&la=en&hash=D22CB4D4DA60DF05165BB5C3AC65783A49731765",
+    image: "  ",
     name: "Cranberry Juice",
     description: "Single Package",
     category: "Wine",

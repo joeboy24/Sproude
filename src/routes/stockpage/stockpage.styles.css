@@ -33,6 +33,38 @@
     px-7 py-2 rounded-md hover:bg-blue-gray-700 hover:text-white hover:border-blue-gray-800 hover:scale-125;
 }
 
+.change-date-link-inverse {
+    font-size: 0.8em;
+    @apply w-auto border border-blue-gray-800 uppercase tracking-wider text-white px-3 m-0.5 py-1.5 
+    bg-blue-gray-800 rounded-md hover:opacity-80;
+}
+
+.add-purchases {
+    @apply flex w-full mt-2 mb-5 p-4 border rounded-md;
+}
+
+.add-purchases div {
+    @apply w-1/3;
+}
+
+.search-items-container, .purchased-items-container {
+    @apply flex mx-2 p-0.5 border-b rounded-sm overflow-auto;
+}
+
+.search-items {
+    @apply border min-w-max text-xs bg-blue-gray-50 rounded-md m-1 px-3 py-2 hover:border-blue-gray-500 hover:bg-white/70;
+}
+
+.added-items {
+    @apply border border-green-300 min-w-max text-xs bg-green-300 rounded-md m-1 px-3 py-2 hover:border-green-500 hover:bg-green-400;
+}
+
+
+
+
+
+
+
 
 
 

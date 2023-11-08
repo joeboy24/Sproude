@@ -4,24 +4,22 @@ import React, { useContext } from 'react'
 import { FaTimes } from 'react-icons/fa'
 import { ProductsContext } from '../../context/product.context';
 
-const ExpandDrawer = ({ order, orderedItems }) => {
+const ExpandDrawer = ({ order }) => {
   const { id, user, item_details, total, paid_debt, debt_bal, pay_mode, buyer_name, buyer_contact, discount, amt_paid, del_status, created_at, updated_at } = order;
   const { products } = useContext(ProductsContext);
-  const tot_qty = orderedItems.reduce(
+  const tot_qty = item_details.reduce(
     (total, item) => total + item.quantity, 0
   );
-  const tot_amt = orderedItems.reduce(
+  const tot_amt = item_details.reduce(
     (total, item) => total + item.purchase_total, 0
   );
 
+
   return (
     <>
+    {/* <div>ExpandDrawer {item_details[0].price}</div> */}
     <div className='general-container-wrapper'>
-      {/* <IconButton className='absolute' variant="text" color="blue-gray" onClick={closeDrawerBottom}>
-          <FaTimes className='right-0' />
-      </IconButton> */}
       <div className='general-container-size'>
-        {/* <div>ExpandDrawer {orderedItems[0].price}</div> */}
         <table className='w-full invoice-center'>
           <tbody>
               <tr className='blue-head-with-top-padd'>
@@ -31,11 +29,11 @@ const ExpandDrawer = ({ order, orderedItems }) => {
                   <td>Line Total</td>
               </tr>
               {
-                orderedItems.map((item) => {
+                item_details.map((item) => {
                   const { item_id, quantity, price, purchase_type, purchase_total } = item;
                   const product = products.find(el => el.id === item_id);
                   return (
-                    <tr>
+                    <tr key={product.id}>
                         <td className='text-left'>
                           {product.name}<p className='item-description'>{purchase_type} - {product.description}</p>
                           </td>
@@ -63,7 +61,7 @@ const ExpandDrawer = ({ order, orderedItems }) => {
               </tr>
               <tr>
                   <td>Amount Paid<p className='item-description'>Change</p></td>
-                  <td>{amt_paid}<p className='item-description'>{total - amt_paid < 0 ? total - amt_paid : null}</p></td>
+                  <td>{amt_paid}<p className='item-description'>{total - amt_paid <= 0 ? total - amt_paid : null}</p></td>
               </tr>
           </tbody>
         </table>

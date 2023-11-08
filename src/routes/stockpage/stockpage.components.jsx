@@ -9,6 +9,7 @@ import { Card, CardBody } from '@material-tailwind/react';
 import { BsFillClipboardPlusFill, BsFillPlusCircleFill, BsFillPlusSquareFill, BsPlusCircle } from 'react-icons/bs';
 import { FaDownload } from 'react-icons/fa6';
 import { FaPlusCircle } from 'react-icons/fa';
+import { TbShoppingBagSearch } from 'react-icons/tb';
 import { MdOutlineFileUpload } from 'react-icons/md';
 import { Outlet } from 'react-router-dom';
 import { BiTransferAlt } from 'react-icons/bi';
@@ -28,11 +29,11 @@ export const StockIndex = () => {
   return (
     <>
       <img className='image-title' src={vector2} alt="" />
-      <a href="/stock/add-new-item"><p className='radio-text2'><BsPlusCircle size='16' className='float-left mr-2 mt-0.5' /> New Item</p></a>
-      <a href="#"><p className='radio-text2'><MdOutlineFileUpload size='16' className='float-left mr-2 mt-0.5' /> Upload Items CSV</p></a>
+      <a href="/stock/add-new-item"><p className='radio-text2'><AiOutlineFolderOpen size='16' className='float-left mr-2 mt-0.5' /> Stock MGT.</p></a>
+      <a href="#"><p className='radio-text2'><MdOutlineFileUpload size='16' className='float-left mr-2 mt-0.5' /> Import Items CSV</p></a>
       <a href="#"><p className='radio-text2'><FaDownload size='16' className='float-left mr-2 mt-0.5' /> Downlod Stock CSV</p></a>
       <a href="#"><p className='radio-text2'><BiTransferAlt size='16' className='float-left mr-2 mt-0.5' /> Transfer Stock</p></a>
-      <a href="#"><p className='radio-text2'><AiOutlineFolderOpen size='16' className='float-left mr-2 mt-0.5' /> View Stock</p></a>
+      <a href="/stock/purchases"><p className='radio-text2'><TbShoppingBagSearch size='16' className='float-left mr-2 mt-0.5' /> Purchases</p></a>
     </>
   )
 }

@@ -15,15 +15,18 @@ import { ProductsContext } from '../../context/product.context';
 import InventoryRow from './inventory-row.component';
 import { IoWarningOutline } from 'react-icons/io5';
 import { LuClipboardSignature } from 'react-icons/lu';
+import { Toaster, toast } from 'sonner'
+import { infoToast } from '../../utils/firebase/firebase.utils';
 
 const NewItem = () => {
 
   // console.log('-- New Item Page Started --');
   var i = 1;
-  var pId = 'P'+Math.random().toString(36).slice(2);
+  var pId2 = 'P'+Math.random().toString(36).slice(2);
+  const pId = pId2.toUpperCase().substring(0, 7);
   const defaultFormValues = {
     // "id": 1,
-    product_id: pId.toUpperCase().substring(0, 7),
+    product_id: pId,
     image: "",
     name: "",
     description: "",
@@ -51,13 +54,20 @@ const NewItem = () => {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setFormFields({...formFields, [name]: value});
-    console.log(value);
-    console.log(formFields);
+    setFormFields({...formFields, [name]: value, product_id: pId, del: 'no'});
+    // console.log(value);
+    // console.log(formFields);
   }
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    formFields['publish'] = event.target.publish.value;
+    // console.log(formFields);
+    // return alert('done');
+    if (!formFields.category || formFields.category == '' || formFields.category == '-- Select --') {
+      return infoToast('Attention..! Category field is required')
+    }
+
     if (formFields.id) {
       // return alert(formFields.id);
       updateProduct(formFields).then(handleOpen);
@@ -76,176 +86,20 @@ const NewItem = () => {
     setFormFields(products.find(el => el.id == id));
   }
 
+  const handleAddNewItem = () => {
+    setShowHeader('new'); 
+    setFormFields({}); 
+    handleOpen();
+  }
+
+
+
+
+
 
   return (
     <>
       <Card className='general-container-size'>
-
-
-        {/* <Tabs value="dashboard">
-          <div className='flex float-right m-4'>
-            <HiOutlineClipboardDocumentList size='40' />
-          </div>
-
-          <TabsHeader className='w-4/5 m-4 float-left'>
-            <Tab key='1' value='1' onClick={() => {setShowHeader('Add new item')}}>
-              <div className="flex items-center p-0.5 gap-2 text-xs text-blue-gray-600 uppercase tracking-wider">
-                <BsPlusCircle size='18' /> Add Item
-              </div>
-            </Tab>
-
-            <Tab key='2' value='2' onClick={() => {setShowHeader('')}}>
-              <div className="flex items-center p-0.5 gap-2 text-xs text-blue-gray-600 uppercase tracking-wider">
-                <RiListSettingsLine size='18' /> Inventory
-              </div>
-            </Tab>
-          </TabsHeader>
-
-          <TabsBody>
-            { showHeader !== '' ? <h2 className='card-header-top'>{showHeader}</h2> : null}
-            
-            <TabPanel key='1' value='1'>
-
-                <div>
-                  <form onSubmit={handleSubmit}>
-                    <div className='items-input-group flex'>
-                      <div className='input-group-left'><p className='mt-2'>Item Name</p></div>
-                      <div className='input-group-right'><XformInput onChange={handleChange} name='name' type='text' size='lg' label='Name'/></div>
-                    </div>
-
-                    <div className='items-input-group flex'>
-                      <div className='input-group-left'><p>Type item brand name only</p></div>
-                      <div className='input-group-right'><XformInput onChange={handleChange} name='brand' type='text' size='lg' label='Brand Name'/></div>
-                    </div>
-
-                    <div className='items-input-group flex'>
-                      <div className='input-group-left'><p className='mt-2'>Scan item barcode</p></div>
-                      <div className='input-group-right'><XformInput onChange={handleChange} name='barcode' type='number' min='0' size='lg' label='Barcode'/></div>
-                    </div>
-
-                    <div className='items-input-group flex'>
-                      <div className='input-group-left'><p>Select Category from list below</p></div>
-                      <div className='input-group-right'>
-                        <select className='custom-select' size='lg' label="Select Category" name='category' onChange={handleChange}>
-                          <option defaultValue='0'>-- Select --</option>
-                          <option>Water</option>
-                          <option>Food</option>
-                          <option>Wine</option>
-                          <option>Sneaker</option>
-                          <option>Dress</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    <div className='items-input-group flex'>
-                      <div className='input-group-left'><p>Provide link to item image</p></div>
-                      <div className='input-group-right'><XformInput onChange={handleChange} name='image' type='text' size='lg' label='Image URL'/></div>
-                    </div>
-
-                    <div className='items-input-group flex'>
-                      <div className='input-group-left'><p>Short item description (max: 32 characters)</p></div>
-                      <div className='input-group-right'><Textarea onChange={handleChange} name='description' type='text' maxLength='32' size='lg' label='Item Description'/></div>
-                    </div>
-
-                    <div className='items-input-group flex'>
-                      <div className='input-group-left'><p className='mt-2'>General Quantity</p></div>
-                      <div className='input-group-right'><XformInput onChange={handleChange} name='qty' type='number' min='0' size='lg' label='Quantity'/></div>
-                    </div>
-
-                    <div className='items-input-group flex'>
-                      <div className='input-group-left'><p className='mt-2'>Retail Quantity</p></div>
-                      <div className='input-group-right'><XformInput onChange={handleChange} name='rtl_qty' type='number' min='0' size='lg' label='RTL Quantity'/></div>
-                    </div>
-
-                    <div className='items-input-group flex'>
-                      <div className='input-group-left'><p className='mt-2'>Wholesale Quantity</p></div>
-                      <div className='input-group-right'><XformInput onChange={handleChange} name='whl_qty' type='number' min='0' size='lg' label='WHL Quantity'/></div>
-                    </div>
-
-                    <div className='items-input-group flex'>
-                      <div className='input-group-left'><p className='mt-2'>Cost Price</p></div>
-                      <div className='input-group-right'><XformInput onChange={handleChange} name='price' type='number' min='0' size='lg' label='Price'/></div>
-                    </div>
-
-                    <div className='items-input-group flex'>
-                      <div className='input-group-left'><p className='mt-2'>Retail Price</p></div>
-                      <div className='input-group-right'><XformInput onChange={handleChange} name='rtl_price' type='number' min='0' size='lg' label='RTL Price'/></div>
-                    </div>
-
-                    <div className='items-input-group flex'>
-                      <div className='input-group-left'><p className='mt-2'>Wholesale Price</p></div>
-                      <div className='input-group-right'><XformInput onChange={handleChange} name='whl_price' type='number' min='0' size='lg' label='WHL Price'/></div>
-                    </div>
-
-                    <div className='items-input-group flex'>
-                      <div className='input-group-left'><p className='mt-2'>Select item expiry date</p></div>
-                      <div className='input-group-right'><XformInput onChange={handleChange} name='expiry' type='date' size='lg' label='Expiry Date'/></div>
-                    </div>
-
-                    <div className='items-input-group flex'>
-                      <div className='input-group-left'><p>Puts item on landing page</p></div>
-                      <div className='input-group-right'>
-                        <select className='custom-select' size='lg' label="Publish" name='publish' onChange={handleChange}>
-                          <option defaultValue='0'>No</option>
-                          <option>Yes</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    <hr className="my-2 border-blue-gray-50" />
-
-                    <div className='items-input-group flex'>
-                      <div className='input-group-left'></div>
-                      <div className='input-group-right'>
-                        <Button className='myBtn float-right' type='submit'>&nbsp;&nbsp;<BsCheckCircle size='18' className='float-left'/>&nbsp;&nbsp;<span>Submit</span>&nbsp;&nbsp;</Button>
-                      </div>
-                    </div>
-                  </form>
-                  
-
-                </div>
-                
-            </TabPanel>
-
-
-
-            <TabPanel key='2' value='2'>
-
-              { products.length > 0 ?
-                <table className="cart-tbl w-calc[100%-100px] min-w-max table-auto text-left">
-                  <thead>
-                      <tr>
-                          <th className='text-center'>#</th>
-                          <th>PRODUCT DETAILS</th>
-                          <th>STATUS</th>
-                          <th>QUANTITY</th>
-                          <th className=' text-right'>PRICE GH₵</th>
-                          <th className='text-right'>ACTIONS</th>
-                      </tr>
-                  </thead>
-
-                  <tbody>
-                      {products.map((product, index) => {
-                        var sendClass = '';
-                        const isLast = index === products.length - 1;
-                        const classes = isLast ? "p-4" : "p-4 border-blue-gray-50";
-                        if (product.del === 'no') {
-                          sendClass = 'even:bg-blue-gray-50/30';
-                        } else {
-                          sendClass = 'bg-red-100/80 !border-b-4 border-b-white';
-                        }
-                        return(
-                          <InventoryRow key={product.id} getId={pull_id} i={i++} product={product} classes={classes} sendClass={sendClass} openDialog={handleOpen}/>
-                        );
-                      }).reverse()}
-                  </tbody>
-                </table>
-              : <p className='item-description text-center uppercase'>Oops..! No items found</p>
-              }
-
-            </TabPanel>
-          </TabsBody>
-        </Tabs> */}
 
         <CardBody>
           <div className='flex float-right mb-2'>
@@ -253,7 +107,7 @@ const NewItem = () => {
             <HiOutlineClipboardDocumentList size='40' />
           </div>
 
-          <p onClick={handleOpen} className='change-date-link float-left'><BsPlusCircle size='16' className='float-left mr-2 mt-0.5' /> Add New Item</p>
+          <p onClick={handleAddNewItem} className='change-date-link float-left'><BsPlusCircle size='16' className='float-left mr-2 mt-0.5' /> Add New Item</p>
 
           { products.length > 0 ?
             <table className="cart-tbl w-calc[100%-100px] min-w-max table-auto text-left">
@@ -303,10 +157,6 @@ const NewItem = () => {
 
 
 
-
-      {/* <Button onClick={handleOpen} variant="gradient">
-        Open Dialog
-      </Button> */}
       
       <Dialog open={open} handler={handleOpen}>
         
@@ -321,14 +171,19 @@ const NewItem = () => {
 
           <DialogBody className='dialog-body-container'>
             <div>
+              {/* <div className='items-input-group flex'>
+                <div className='input-group-left'><p className='mt-2'>Product Id</p></div>
+                <div className='input-group-right'><XformInput onChange={handleChange} value={pId.toUpperCase().substring(0, 7)} name='product_id' type='text' size='lg' label='Product Id' readOnly required/></div>
+              </div> */}
+
               <div className='items-input-group flex'>
                 <div className='input-group-left'><p className='mt-2'>Item Name</p></div>
-                <div className='input-group-right'><XformInput onChange={handleChange} value={name} name='name' type='text' size='lg' label='Name'   /></div>
+                <div className='input-group-right'><XformInput onChange={handleChange} value={name} name='name' type='text' size='lg' label='Name' required/></div>
               </div>
 
               <div className='items-input-group flex'>
                 <div className='input-group-left'><p>Type item brand name only</p></div>
-                <div className='input-group-right'><XformInput onChange={handleChange} value={brand} name='brand' type='text' size='lg' label='Brand Name'   /></div>
+                <div className='input-group-right'><XformInput onChange={handleChange} value={brand} name='brand' type='text' size='lg' label='Brand Name' required/></div>
               </div>
 
               <div className='items-input-group flex'>
@@ -358,17 +213,17 @@ const NewItem = () => {
 
               <div className='items-input-group flex'>
                 <div className='input-group-left'><p>Short item description (max: 32 characters)</p></div>
-                <div className='input-group-right'><Textarea onChange={handleChange} value={description} name='description' type='text' maxLength='32' size='lg' label='Item Description'   /></div>
+                <div className='input-group-right'><Textarea onChange={handleChange} value={description} name='description' type='text' maxLength='32' size='lg' label='Item Description' required/></div>
               </div>
 
               <div className='items-input-group flex'>
                 <div className='input-group-left'><p className='mt-2'>General Quantity</p></div>
-                <div className='input-group-right'><XformInput onChange={handleChange} value={qty} name='qty' type='number' min='0' size='lg' label='Quantity'   /></div>
+                <div className='input-group-right'><XformInput onChange={handleChange} value={qty} name='qty' type='number' min='0' size='lg' label='Quantity' required/></div>
               </div>
 
               <div className='items-input-group flex'>
                 <div className='input-group-left'><p className='mt-2'>Retail Quantity</p></div>
-                <div className='input-group-right'><XformInput onChange={handleChange} value={rtl_qty} name='rtl_qty' type='number' min='0' size='lg' label='RTL Quantity'   /></div>
+                <div className='input-group-right'><XformInput onChange={handleChange} value={rtl_qty} name='rtl_qty' type='number' min='0' size='lg' label='RTL Quantity' required/></div>
               </div>
 
               <div className='items-input-group flex'>
@@ -378,26 +233,26 @@ const NewItem = () => {
 
               <div className='items-input-group flex'>
                 <div className='input-group-left'><p className='mt-2'>Cost Price</p></div>
-                <div className='input-group-right'><XformInput onChange={handleChange} value={price} name='price' type='number' min='0' size='lg' label='Price'   /></div>
+                <div className='input-group-right'><XformInput onChange={handleChange} value={price} step='any' name='price' type='number' min='0' size='lg' label='Price' required/></div>
               </div>
 
               <div className='items-input-group flex'>
                 <div className='input-group-left'><p className='mt-2'>Retail Price</p></div>
-                <div className='input-group-right'><XformInput onChange={handleChange} value={rtl_price} name='rtl_price' type='number' min='0' size='lg' label='RTL Price'   /></div>
+                <div className='input-group-right'><XformInput onChange={handleChange} value={rtl_price} step='any' name='rtl_price' type='number' min='0' size='lg' label='RTL Price' required/></div>
               </div>
 
               <div className='items-input-group flex'>
                 <div className='input-group-left'><p className='mt-2'>Wholesale Price</p></div>
-                <div className='input-group-right'><XformInput onChange={handleChange} value={whl_price} name='whl_price' type='number' min='0' size='lg' label='WHL Price'/></div>
+                <div className='input-group-right'><XformInput onChange={handleChange} value={whl_price} step='any' name='whl_price' type='number' min='0' size='lg' label='WHL Price'/></div>
               </div>
 
               <div className='items-input-group flex'>
                 <div className='input-group-left'><p className='mt-2'>Select item expiry date</p></div>
-                <div className='input-group-right'><XformInput onChange={handleChange} value={expiry} name='expiry' type='date' size='lg' label='Expiry Date'   /></div>
+                <div className='input-group-right'><XformInput onChange={handleChange} value={expiry} name='expiry' type='date' size='lg' label='Expiry Date' required/></div>
               </div>
 
               <div className='items-input-group flex'>
-                <div className='input-group-left'><p>Puts item on landing page</p></div>
+                <div className='input-group-left'><p>Put item on landing page</p></div>
                 <div className='input-group-right'>
                   <select className='custom-select' size='lg' label="Publish" name='publish' onChange={handleChange}>
                     <option defaultValue={publish}>No</option>

@@ -1,5 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
+import { Toaster, toast } from 'sonner'
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 import { doc, getDoc , setDoc, getFirestore, collection, addDoc, getDocs, query, updateDoc, deleteDoc } from "firebase/firestore";
@@ -20,12 +21,16 @@ const firebaseApp = initializeApp(firebaseConfig);
 
 export const db = getFirestore();
 
+// Sales
+
 export const createSalesDoc = async (docToAdd) => {
     const salesRefValue = collection(db, 'sales');
     try {
-        await addDoc(salesRefValue, docToAdd);
+        await addDoc(salesRefValue, docToAdd).then(
+            window.location.reload()
+        );
     } catch (error) {
-        alert('Internet Disconnected');
+        infoToast('Internet Disconnected');
         // switch (error.code) {
         //   case ('auth/popup-closed-by-user'):
         //       alert('Popup Closed..!');
@@ -41,28 +46,6 @@ export const createSalesDoc = async (docToAdd) => {
     
 }
 
-export const getProductsDocuments = async () => {
-    
-    const collRef = collection(db, 'products');
-    const querySnapshot = await getDocs(query(collRef));
-    // const getIt = await getDocs(query(collection(db, 'products')));
-    const getProductsFromFirebase = [];
-
-    // const productsMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
-    //     const { title, items } = docSnapshot.data();
-    //     acc[title.toLowercase()] = items;
-    //     return acc;
-    // }, {})
-
-    const productsMap = () => querySnapshot.forEach((doc) => {
-        getProductsFromFirebase.push({...doc.data(), id: doc.id});
-    });
-    productsMap();
-    // console.log(getProductsFromFirebase);
-    return getProductsFromFirebase;
-
-}
-
 export const getSalesDocuments = async () => {
 
     const salesReceiver = [];
@@ -75,6 +58,17 @@ export const getSalesDocuments = async () => {
     // console.log(salesReceiver);
     return salesReceiver;
 
+}
+
+export const updateSalesDoc = async (docToUpdate) => {
+    const upRefValue = doc(db, 'sales', docToUpdate.id);
+    try {
+        await updateDoc(upRefValue, docToUpdate).then(
+            successToast('Payment successful')
+        )
+    } catch (error) {
+        console.log('Error occoured at sales: ', error.message);
+    }
 }
 
 
@@ -136,6 +130,28 @@ export const createProductDoc = async (docToAdd) => {
     }
 }
 
+export const getProductsDocuments = async () => {
+    
+    const collRef = collection(db, 'products');
+    const querySnapshot = await getDocs(query(collRef));
+    // const getIt = await getDocs(query(collection(db, 'products')));
+    const getProductsFromFirebase = [];
+
+    // const productsMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
+    //     const { title, items } = docSnapshot.data();
+    //     acc[title.toLowercase()] = items;
+    //     return acc;
+    // }, {})
+
+    const productsMap = () => querySnapshot.forEach((doc) => {
+        getProductsFromFirebase.push({...doc.data(), id: doc.id});
+    });
+    productsMap();
+    // console.log(getProductsFromFirebase);
+    return getProductsFromFirebase;
+
+}
+
 export const deleteProductDoc = async (docId, delString) => {
     const upRefValue = doc(db, 'products', docId);
     try {
@@ -143,6 +159,14 @@ export const deleteProductDoc = async (docId, delString) => {
     } catch (error) {
         console.log('Error occoured at products deletion: ', error.message);
     }
+    const sendPromise = await updateDoc(upRefValue, { del: delString });
+    // toast.promise(updateDoc(upRefValue, { del: delString }), {
+    //     loading: 'Loading...',
+    //     success: (data) => {
+    //       return `${data.name} toast has been temporarity deleted`;
+    //     },
+    //     error: 'Oops..! Error encountered',
+    // });
 }
 
 export const updateProductDoc = async (docToUpdate) => {
@@ -152,4 +176,56 @@ export const updateProductDoc = async (docToUpdate) => {
     } catch (error) {
         console.log('Error occoured at products deletion: ', error.message);
     }
+}
+
+
+// Purchases
+
+export const createPurchasesDoc = async (docToAdd) => {
+    const purRefValue = collection(db, 'purchases');
+    try {
+        await addDoc(purRefValue, docToAdd);
+    } catch (error) {
+        console.log('Error occoured at Expenses: ', error.message);
+    }
+    
+}
+
+export const getPurchasesDocs = async () => {
+
+    const purReceiver = [];
+    const querySnapshot = await getDocs(query(collection(db, 'purchases')));
+
+    const purMap = () => querySnapshot.forEach((doc) => {
+        purReceiver.push({...doc.data(), id: doc.id});
+    });
+    purMap();
+    // infoToast('Inside PurchaseDocs')
+    // console.log(purReceiver)
+    return purReceiver;
+
+}
+
+
+// Toasts
+
+export const successToast = (message) => {
+  toast.success(message, {
+    position: 'top-left',
+    duration: '5000'
+  })
+}
+
+export const errorToast = (message) => {
+  toast.error(message, {
+    position: 'top-left',
+    duration: '5000'
+  })
+}
+
+export const infoToast = (message) => {
+  toast.info(message, {
+    position: 'top-left',
+    duration: '5000'
+  })
 }

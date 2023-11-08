@@ -1,9 +1,23 @@
 
-import React from 'react'
+import React, { useContext } from 'react'
 import './scanpage.styles.css'
+import { ProductsContext } from '../../context/product.context';
 
 
-const GenInvoice = () => {
+const GenInvoice = ({invoiceRecord}) => {
+    const { products } = useContext(ProductsContext);
+    const { id, user, item_details, total, paid_debt, debt_bal, pay_mode, buyer_name, buyer_contact, discount, amt_paid, del_status, created_at, updated_at } = invoiceRecord;
+    // const findProduct = products.find(el => el.id === item_id);
+    // console.log(invoiceRecord.created_at.seconds)
+    
+    const tot_qty = item_details.reduce(
+        (total, item) => total + item.quantity, 0
+    );
+    const tot_amt = item_details.reduce(
+        (total, item) => total + item.purchase_total, 0
+    );
+
+
   return (
     <div className='invoice-container'>
 
@@ -14,7 +28,7 @@ const GenInvoice = () => {
                 <p>Invoice</p>
             </div>
 
-            {/* <div className='company-details-right'>
+            <div className='company-details-right'>
                 <table className='w-full'>
                     <tbody>
                         <tr><td>Address</td><td>92 Cansas Street</td></tr>
@@ -23,7 +37,7 @@ const GenInvoice = () => {
                         <tr><td></td><td>Australia</td></tr>
                     </tbody>
                 </table>
-            </div> */}
+            </div>
         </div>
 
         <table className='w-full invoice-center-top'>
@@ -38,7 +52,7 @@ const GenInvoice = () => {
                     <td>John Doe</td>
                     <td>31/10/2023</td>
                     <td>A72339DGHS823</td>
-                    <td className='amount-focus text-right'>₵5,500.00</td>
+                    <td className='amount-focus text-right'>₵{total}</td>
                 </tr>
                 <tr>
                     <td>Nestle Ghana Ltd.</td>
@@ -54,7 +68,7 @@ const GenInvoice = () => {
                 </tr>
                 <tr>
                     <td>Behind marina Mall</td>
-                    <td>31/10/2023</td>
+                    <td>Date</td>
                     <td></td>
                     <td></td>
                 </tr>
@@ -69,30 +83,40 @@ const GenInvoice = () => {
                     <td className='w-1/6 text-center'>Qty.</td>
                     <td>Line Total</td>
                 </tr>
+                {
+                    item_details.map((item) => {
+                    const { item_id, quantity, price, purchase_type, purchase_total } = item;
+                    const product = products.find(el => el.id === item_id);
+                    return (
+                        <tr key={product.id}>
+                            <td className='text-left'>
+                            {product.name}<p className='item-description'>{purchase_type} - {product.description}</p>
+                            </td>
+                            <td>{price}</td>
+                            <td className='text-center'>{quantity}</td>
+                            <td>{purchase_total}</td>
+                        </tr>
+                    )
+                    })
+                }
                 <tr>
-                    <td className='text-left'>Sproude Bottle Water <p className='item-description'>Single Item</p></td>
-                    <td>3</td>
-                    <td className='text-center'>24</td>
-                    <td>₵72.00</td>
-                </tr>
-                <tr>
-                    <td className='text-left'>Sproude Sachet Water <p className='item-description'>Single Bag</p></td>
-                    <td>6</td>
-                    <td className='text-center'>15</td>
-                    <td>₵90.00</td>
+                    <td className='text-left'></td>
+                    <td>Subtotal:</td>
+                    <td className='text-center'>{tot_qty}</td>
+                    <td>{tot_amt}</td>
                 </tr>
             </tbody>
         </table>
 
         <table className='w-1/2 invoice-center float-right'>
             <tbody className='w-full'>
-                <tr className='pt-4'>
-                    <td>Total<p>Tax</p></td>
-                    <td>5,500.00<p>0.00</p></td>
-                </tr>
                 <tr>
                     <td>Amount Paid<p className='item-description'>Change</p></td>
-                    <td>5,750.00<p className='item-description'>250.00</p></td>
+                    <td>{amt_paid}<p className='item-description'>{total - amt_paid <= 0 ? total - amt_paid : null}</p></td>
+                </tr>
+                <tr className='pt-4'>
+                    <td><p>Discount</p><p>Tax</p><p className='pt-2'>Total</p></td>
+                    <td><p>{discount}</p><p>0.00</p><p className='text-xl font-semibold'>₵{total}</p></td>
                 </tr>
             </tbody>
         </table>
