@@ -107,7 +107,7 @@ const NewItem = () => {
             <HiOutlineClipboardDocumentList size='40' />
           </div>
 
-          <p onClick={handleAddNewItem} className='change-date-link float-left'><BsPlusCircle size='16' className='float-left mr-2 mt-0.5' /> Add New Item</p>
+          <p onClick={handleAddNewItem} className='change-date-link-inverse float-left'><BsPlusCircle size='16' className='float-left mr-2 mt-0.5' /> Add New Item</p>
 
           { products.length > 0 ?
             <table className="cart-tbl w-calc[100%-100px] min-w-max table-auto text-left">

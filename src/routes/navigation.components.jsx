@@ -12,7 +12,7 @@ import MenuStrip from '../components/menu-strip/menu-strip.components';
 const NavigationPage = () => {
   return (
     <>
-    <div className='nav-components-container'>
+    <div className='nav-components-container no-print'>
       <AdminNavbar />
       <MenuStrip />
     </div>

@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import './stockpage.styles.css';
 import AdminNavbar from '../../components/mynavbar/admin-navbar.components';
 import MenuStrip from '../../components/menu-strip/menu-strip.components';
-import { Button, Card, CardBody, Dialog, DialogBody, DialogFooter, DialogHeader, Input, Option, Select, Textarea } from '@material-tailwind/react';
+import { Button, Card, CardBody, Dialog, DialogBody, DialogFooter, DialogHeader, Drawer, Input, Option, Select, Textarea } from '@material-tailwind/react';
 import { BsBagPlus, BsCheck2Circle, BsCheckCircle, BsClipboardPlus, BsPlus, BsPlusCircle  } from 'react-icons/bs';
 import { FaPlusCircle, FaSearch } from 'react-icons/fa';
 import XformInput from '../../components/form/forminput.component';
@@ -17,8 +17,9 @@ import { TbShoppingBagPlus } from 'react-icons/tb';
 import { FcInfo } from 'react-icons/fc';
 import { MdAddTask } from 'react-icons/md';
 import { BiSolidCircle, BiSolidPlusSquare } from 'react-icons/bi';
-import PurchaseRow from '../scanpage/purchase-row.component';
 import { CartContext } from '../../context/cart.context';
+import PurchaseRow from './purchase-row.component';
+import PurchaseDrawer from './purchase-drawer.component';
 
 
 const PurchasesPage = () => {
@@ -48,14 +49,24 @@ const PurchasesPage = () => {
   const [ formFields, setFormFields ] = useState(defaultFormValues);
   const { supplier_name, supplier_contact, purchase_date, del_status, qty, cost, del } = formFields;
 
-  const [ localCart, setLocalCart ] = useState([]);
+  const [ localCart, setLocalCart ] = useState(purchss);
   const [ searchItems, setSearchItems ] = useState([]);
   const [ searchItemValue, setSearchItemValue ] = useState('');
-  const [ purchaseRecords, setPurchaseshResult ] = useState(getPurchases());
+  const [ purchaseRecords, setPurchaseshResult ] = useState(purchss);
   const [toggleRefresh, setToggleRefresh] = useState(false);
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(!open);
+
+  const [openBottom, setOpenBottom] = useState(false);
+  const openDrawerBottom = () => setOpenBottom(true);
+  const closeDrawerBottom = () => setOpenBottom(false);
+  const [ drawerRec, setDrawerRec ] = useState();
+
+  const pullDrawerId = (id) => {
+      openDrawerBottom();
+      setDrawerRec(purchss.find(el => el.id == id));
+  }
 
 
   const handleChange = (event) => {
@@ -125,7 +136,7 @@ const PurchasesPage = () => {
 
   useEffect(() => {
     // console.log(purchss)
-    console.log(getPurchases())
+    // console.log(getPurchases())
   },[purchaseRecords]);
 
 
@@ -194,109 +205,108 @@ const PurchasesPage = () => {
         <CardBody>
 
 
-            <p onClick={handleAddNewItem} className='change-date-link-inverse float-right'><LuUserPlus size='16' className='float-left mr-2 mt-0.5' /> Add Supplier</p>
-            <div className="relative flex w-2/3">
-                <Input
-                    type="text"
-                    label="Search Purchases"
-                    // value={newSearchKey}
-                    // onChange={handleSearch}
-                    className="scan-input rounded-md"
-                    containerProps={{
-                    className: "min-w-0",
-                    }} autoFocus
-                />
-                <Button
-                    size="sm"
-                    // onClick={reloadInvoiceInSalesView}
-                    // disabled={!newSearchKey}
-                    className={`${products ? "bg-gray-200" : "bg-blue-gray-800"} !absolute right-1 top-1 rounded`} 
-                    >
-                    <FaSearch size='14' className='float-left' />
-                </Button>
-            </div>
+          <p onClick={handleAddNewItem} className='change-date-link-inverse float-right'><LuUserPlus size='16' className='float-left mr-2 mt-0.5' /> Add Supplier</p>
+          <div className="relative flex w-2/3">
+              <Input
+                  type="text"
+                  label="Search Purchases"
+                  // value={newSearchKey}
+                  // onChange={handleSearch}
+                  className="scan-input rounded-md"
+                  containerProps={{
+                  className: "min-w-0",
+                  }} autoFocus
+              />
+              <Button
+                  size="sm"
+                  // onClick={reloadInvoiceInSalesView}
+                  // disabled={!newSearchKey}
+                  className={`${products ? "bg-gray-200" : "bg-blue-gray-800"} !absolute right-1 top-1 rounded`} 
+                  >
+                  <FaSearch size='14' className='float-left' />
+              </Button>
+          </div>
 
-            <div className='border py-3 mt-5 mb-2 rounded-md'>
-                <form onSubmit={handleSubmit}>
-                    <div className='flex w-full'>
-                        <XformInput className='xform-input w-2/6' onChange={handleChange} value={supplier_name} name='supplier_name' type='text' size='md' label="Supplier's Name" required/>
-                        <XformInput className='xform-input w-2/6' onChange={handleChange} value={supplier_contact} name='supplier_contact' type='number' min='0' size='md' label="Supplier's Contact" required/>
-                        <XformInput className='xform-input w-2/6' onChange={handleChange} value={purchase_date} name='purchase_date' type='date' size='md' label='Purchase Date' required/>
-                    </div>
-                    <div className='flex w-full'>
-                        <XformInput className='xform-input w-2/6' onChange={handleChange} value={qty} name='qty' type='number' min='0' size='md' label='Total Qty' required/>
-                        <XformInput className='xform-input w-2/6' onChange={handleChange} value={cost} name='cost' type='number' min='0' size='md' label='Total Cost' required/>
-                        <select className='xform-input w-2/6 custom-select' size='lg' label="Select status" name='del_status' onChange={handleChange}>
-                            <>
-                                <option defaultValue='0'>-- Delivery Status --</option>
-                                <option value='yes'>Delivered</option>
-                                <option value='no'>Pending</option>
-                            </>
-                        </select>
-                    </div>
-                    <hr className="my-3 border-blue-gray-100" />
+          <div className='border py-3 mt-5 mb-2 rounded-md'>
+              <form onSubmit={handleSubmit}>
+                  <div className='flex w-full'>
+                      <XformInput className='xform-input w-2/6' onChange={handleChange} value={supplier_name} name='supplier_name' type='text' size='md' label="Supplier's Name" required/>
+                      <XformInput className='xform-input w-2/6' onChange={handleChange} value={supplier_contact} name='supplier_contact' type='number' min='0' size='md' label="Supplier's Contact" required/>
+                      <XformInput className='xform-input w-2/6' onChange={handleChange} value={purchase_date} name='purchase_date' type='date' size='md' label='Purchase Date' required/>
+                  </div>
+                  <div className='flex w-full'>
+                      <XformInput className='xform-input w-2/6' onChange={handleChange} value={qty} name='qty' type='number' min='0' size='md' label='Total Qty' required/>
+                      <XformInput className='xform-input w-2/6' onChange={handleChange} value={cost} name='cost' type='number' min='0' size='md' label='Total Cost' required/>
+                      <select className='xform-input w-2/6 custom-select' size='lg' label="Select status" name='del_status' onChange={handleChange}>
+                          <>
+                              <option defaultValue='0'>-- Delivery Status --</option>
+                              <option value='yes'>Delivered</option>
+                              <option value='no'>Pending</option>
+                          </>
+                      </select>
+                  </div>
+                  <hr className="my-3 border-blue-gray-100" />
 
-                    {/* <form onSubmit={handItemSubmit}> */}
-                        <p className='blue-head text-xs mx-4 my-1 tracking-wide'><FcInfo size='16' className='float-left' /> &nbsp; Add purchased items to record</p>
+                  {/* <form onSubmit={handItemSubmit}> */}
+                      <p className='blue-head text-xs mx-4 my-1 tracking-wide'><FcInfo size='16' className='float-left' /> &nbsp; Add purchased items to record</p>
 
-                        <div className='flex w-full px-1'>
-                            <XformInput className='xform-input w-2/3' onChange={handleSearchItems} value={searchItemValue} name='qty' type='text' min='0' size='md' label='Scan / Type Code'/>
-                            {/* <button onClick={handleAddNewItem} className='change-date-link !my-1.5'><BsPlusCircle size='16' className='float-left mr-2 mt-0.5' /> Add Item</button> */}
-                        </div>
-                    {/* </form> */}
+                      <div className='flex w-full px-1'>
+                          <XformInput className='xform-input w-2/3' onChange={handleSearchItems} value={searchItemValue} name='qty' type='text' min='0' size='md' label='Scan / Type Code'/>
+                          {/* <button onClick={handleAddNewItem} className='change-date-link !my-1.5'><BsPlusCircle size='16' className='float-left mr-2 mt-0.5' /> Add Item</button> */}
+                      </div>
+                  {/* </form> */}
 
-                    { searchItems.length > 0 ? 
-                        <div className='search-items-container'>
-                            { searchItems.map(item => item.del == 'no' ?
-                                <p className='search-items' onDoubleClick={() => {handleItemDoubleClick(item.id)}} key={item.id}><BiSolidCircle size='8' className='float-left' />&nbsp; {item.name} &nbsp;
-                                    {/* <BiSolidPlusSquare size='30' className='float-right hover:opacity-70' /> */}
-                                </p> :null 
-                            )}
-                            {/* <p><BiSolidCircle size='8' className='float-left' />&nbsp; Clips</p>
-                            <p><BiSolidCircle size='8' className='float-left' />&nbsp; Sproude Sachet</p>
-                            <p><BiSolidCircle size='8' className='float-left' />&nbsp; Sproude Bottle Water</p>
-                            <p><BiSolidCircle size='8' className='float-left' />&nbsp; Sproude Bottle Water</p>
-                            <p><BiSolidCircle size='8' className='float-left' />&nbsp; Clips</p>
-                            <p><BiSolidCircle size='8' className='float-left' />&nbsp; Sproude Sachet</p>
-                            <p><BiSolidCircle size='8' className='float-left' />&nbsp; Clips</p>
-                            <p><BiSolidCircle size='8' className='float-left' />&nbsp; Sproude Bottle Water</p>
-                            <p><BiSolidCircle size='8' className='float-left' />&nbsp; Clips</p>
-                            <p><BiSolidCircle size='8' className='float-left' />&nbsp; Sproude Sachet</p>
-                            <p><BiSolidCircle size='8' className='float-left' />&nbsp; Sproude Sachet</p> */}
-                        </div>
-                    :null}
-                    
-                    { localCart.length > 0 ? 
-                        <div className='purchased-items-container'>
-                            { localCart.map(item => 
-                                <p className='added-items' onDoubleClick={() => {handleItemRemove(item.id)}} key={item.id}><BiSolidCircle size='8' className='float-left' />&nbsp; {item.name} &nbsp;</p>
-                            )}
-                        </div>
-                    :null}
-                    { localCart.length > 0 ?
-                        <Button type='submit' className='float-right mb-5' size='sm' variant="outlined">&nbsp;<TbShoppingBagPlus size='18' className='float-left mr-2'/> Save Purchase &nbsp;</Button>
-                    : null }
-                </form>
-            </div> 
-
-          { purchaseRecords.length > 0 ?
+                  { searchItems.length > 0 ? 
+                      <div className='search-items-container'>
+                          { searchItems.map(item => item.del == 'no' ?
+                              <p className='search-items' onDoubleClick={() => {handleItemDoubleClick(item.id)}} key={item.id}><BiSolidCircle size='8' className='float-left' />&nbsp; {item.name} &nbsp;
+                                  {/* <BiSolidPlusSquare size='30' className='float-right hover:opacity-70' /> */}
+                              </p> :null 
+                          )}
+                          {/* <p><BiSolidCircle size='8' className='float-left' />&nbsp; Clips</p>
+                          <p><BiSolidCircle size='8' className='float-left' />&nbsp; Sproude Sachet</p>
+                          <p><BiSolidCircle size='8' className='float-left' />&nbsp; Sproude Bottle Water</p>
+                          <p><BiSolidCircle size='8' className='float-left' />&nbsp; Sproude Bottle Water</p>
+                          <p><BiSolidCircle size='8' className='float-left' />&nbsp; Clips</p>
+                          <p><BiSolidCircle size='8' className='float-left' />&nbsp; Sproude Sachet</p>
+                          <p><BiSolidCircle size='8' className='float-left' />&nbsp; Clips</p>
+                          <p><BiSolidCircle size='8' className='float-left' />&nbsp; Sproude Bottle Water</p>
+                          <p><BiSolidCircle size='8' className='float-left' />&nbsp; Clips</p>
+                          <p><BiSolidCircle size='8' className='float-left' />&nbsp; Sproude Sachet</p>
+                          <p><BiSolidCircle size='8' className='float-left' />&nbsp; Sproude Sachet</p> */}
+                      </div>
+                  :null}
+                  
+                  { localCart.length > 0 ? 
+                      <div className='purchased-items-container'>
+                          { localCart.map(item => 
+                              <p className='added-items' onDoubleClick={() => {handleItemRemove(item.id)}} key={item.id}><BiSolidCircle size='8' className='float-left' />&nbsp; {item.name} &nbsp;</p>
+                          )}
+                      </div>
+                  :null}
+                  { localCart.length > 0 ?
+                      <Button type='submit' className='float-right m-2' size='sm' variant="outlined">&nbsp;<TbShoppingBagPlus size='18' className='float-left mr-2'/> Save Purchase &nbsp;</Button>
+                  : null }
+              </form>
+              <p className='my-12'></p>
+          </div> 
+            
+          { purchss.length > 0 ?
             <table className="cart-tbl w-calc[100%-100px] min-w-max table-auto text-left">
               <thead>
                   <tr>
-                      <th className='text-center'>#</th>
                       <th>SUPPLIER</th>
-                      <th>PURCHASED ITEMS</th>
                       <th>STATUS</th>
-                      <th className='text-right'>COST GH₵</th>
+                      <th className='text-right'>COST/QTY</th>
                       <th className='text-right'>DATE</th>
                       <th className='text-right'>ACTIONS</th>
                   </tr>
               </thead>
 
               <tbody>
-                  {purchaseRecords.map((pur, index) => {
+                  {purchss.map((pur, index) => {
                     var sendClass = '';
-                    const isLast = index === purchaseRecords.length - 1;
+                    const isLast = index === purchss.length - 1;
                     const classes = isLast ? "p-4" : "p-4 border-blue-gray-50";
                     if (pur.del === 'no') {
                       sendClass = 'even:bg-blue-gray-50/30';
@@ -304,7 +314,7 @@ const PurchasesPage = () => {
                       sendClass = 'bg-red-100/80 !border-b-4 border-b-white';
                     }
                     return(
-                      <PurchaseRow key={pur.id} getId={pull_id} i={i++} product={pur} classes={classes} sendClass={sendClass} openDialog={handleOpen}/>
+                      <PurchaseRow key={pur.id} getId={pull_id} i={i++} purchase={pur} getDrawerId={pullDrawerId} classes={classes} sendClass={sendClass} openDialog={handleOpen}/>
                     );
                   }).reverse()}
                   {/* <tr>
@@ -323,6 +333,12 @@ const PurchasesPage = () => {
           : null
           // <p className='item-description text-center uppercase'>Oops..! No items found</p>
           }
+
+          { openBottom == true ? 
+              <Drawer placement="bottom" open={openBottom} onClose={closeDrawerBottom} className="p-4 overflow-auto">
+                  <PurchaseDrawer itemsPur={drawerRec} />
+              </Drawer>
+          :null}
         </CardBody>
       </Card>
 

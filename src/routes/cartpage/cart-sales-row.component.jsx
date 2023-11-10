@@ -2,14 +2,15 @@ import { Drawer, Button, IconButton, Typography, ButtonGroup, Tooltip } from '@m
 import React, { useContext, useState } from 'react'
 import { BiEditAlt, BiExpand } from 'react-icons/bi';
 import { GrEdit } from 'react-icons/gr';
-import { FaPrint } from 'react-icons/fa6';
+import { FaPrint, FaRegFolderOpen } from 'react-icons/fa6';
 import { FaCheck, FaMinus, FaPlus, FaReply, FaTimes } from 'react-icons/fa';
 import { CartContext } from '../../context/cart.context';
 import ExpandDrawer from './expand-drawer-content.components';
 import { BsCheck2Square, BsCheckCircle, BsCheckCircleFill, BsCheckSquare } from 'react-icons/bs';
 import './cartpage.styles.css';
+import { infoToast } from '../../utils/firebase/firebase.utils';
 
-const XcartSalesRow = ({ i, order, classes, getDrawerId }) => {
+const XcartSalesRow = ({ i, order, classes, getDialogId, getDrawerId }) => {
     const { id, user, item_details, total, paid_debt, debt_bal, pay_mode, buyer_name, buyer_contact, discount, amt_paid, del_status, purchase_type, created_at, updated_at } = order;
     const { cartItems, addItemsToCart, decreaseItemQty, removeCartItem } = useContext(CartContext);
 
@@ -19,7 +20,11 @@ const XcartSalesRow = ({ i, order, classes, getDrawerId }) => {
         }
     }
 
-    const handleDrawer = () => {
+    const sendId = () => {
+        getDialogId(id);
+    }
+
+    const sendDrawerId = () => {
         getDrawerId(id);
     }
 
@@ -59,9 +64,14 @@ const XcartSalesRow = ({ i, order, classes, getDrawerId }) => {
                 <p className='item-description'>{updated_at}</p> */}
             </td>
             <td className={classes}>
-                <Tooltip content='Expand' className='tooltip-style'><button className='action-btn' onClick={handleDrawer}><BiExpand size='12'/></button></Tooltip>
+                <Tooltip content='Expand' className='tooltip-style'><button className='action-btn' onClick={sendDrawerId}><BiExpand size='12'/></button></Tooltip>
                 <Tooltip content='Return' className='tooltip-style'><button className='action-btn'><FaReply size='12'/></button></Tooltip>
-                <Tooltip content='Print' className='tooltip-style'><button className='action-btn'><FaPrint size='12'/></button></Tooltip>
+                
+                {
+                    del_status === 'yes' 
+                    ? <Tooltip content='Print' className='tooltip-style'><button className='action-btn' onClick={sendId}><FaPrint size='12'/></button></Tooltip>
+                    : <Tooltip content='Open' className='tooltip-style'><button className='action-btn' onClick={sendId}><FaRegFolderOpen size='12'/></button></Tooltip>
+                }
                 {/* <button className='action-btn'><GrEdit size='12'/></button> */}
                 {/* <button className='del-btn' onClick={removeFunc}><FaTimes size='12'/></button> */}
             </td>

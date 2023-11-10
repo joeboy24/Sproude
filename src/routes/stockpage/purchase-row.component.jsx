@@ -1,10 +1,12 @@
-import { Drawer, Button, IconButton, Typography, ButtonGroup } from '@material-tailwind/react';
+import { Drawer, Button, IconButton, Typography, ButtonGroup, Tooltip } from '@material-tailwind/react';
 import React, { useContext, useState } from 'react'
 import { BiEditAlt, BiExpand, BiSolidCircle } from 'react-icons/bi';
 import { GrEdit } from 'react-icons/gr';
 import { FaPrint, FaReply } from 'react-icons/fa6';
 import { PiWarningOctagon } from 'react-icons/pi';
-import { FaCheck, FaMinus, FaPlus, FaTimes, FaTrashRestore } from 'react-icons/fa';
+import { AiOutlineShareAlt } from 'react-icons/ai';
+import { FiShare2 } from 'react-icons/fi';
+import { FaCheck, FaMinus, FaPlus, FaShareAlt, FaTimes, FaTrashRestore } from 'react-icons/fa';
 import { CartContext } from '../../context/cart.context';
 // import ExpandDrawer from './expand-drawer-content.components';
 import { BsCheck2Circle, BsCheck2Square, BsCheckCircle, BsCheckCircleFill, BsCheckSquare } from 'react-icons/bs';
@@ -12,7 +14,7 @@ import { ProductsContext } from '../../context/product.context';
 
 
 
-const PurchaseRow = ({ purchase, getId, classes, sendClass, openDialog }) => {
+const PurchaseRow = ({ purchase, getId, classes, sendClass, openDialog, getDrawerId }) => {
     const { id, supplier_name, supplier_contact, qty, cost, del_status, purchase_date, purchased_items, created_at, del } = purchase;
     const { cartItems, addItemsToCart, decreaseItemQty, removeCartItem } = useContext(CartContext);
     const { delProduct, getProduct } = useContext(ProductsContext);
@@ -39,6 +41,10 @@ const PurchaseRow = ({ purchase, getId, classes, sendClass, openDialog }) => {
         openDialog();
     }
 
+    const handleDrawer = () => {
+        getDrawerId(id);
+    }
+
 
     
     return (
@@ -49,21 +55,18 @@ const PurchaseRow = ({ purchase, getId, classes, sendClass, openDialog }) => {
                 <p className='item-description'>{supplier_contact}</p>
             </td>
             <td className={classes}>
-                <p className='item-name'>Cost: {cost}</p>
-                <p className='item-description'>Qty: {qty}</p>
-                { purchased_items.map(item => 
-                    <p className='added-items'><BiSolidCircle size='8' className='float-left' />&nbsp; {item.name} &nbsp;</p>
-                )}
-            </td>
-            <td className={classes}>
+                <Tooltip content='View Items' className='tooltip-style'>
+                    <p className='item-description no-of-items-btn blue-head' onClick={handleDrawer}>{purchased_items.length} Items</p>
+                </Tooltip>
                 {
                     del_status !== 'no' 
-                    ? <p className='item-name pb-2'><BsCheck2Circle size='18' className='float-left mt-0.5' />&nbsp;<span>Delivered</span></p> 
-                    : <p className='item-description not-delivered-btn'><PiWarningOctagon size='18' className='float-left' />&nbsp;<span>Pending</span></p>
+                    ? <p className='item-description pb-2'><BsCheck2Circle size='14' className='float-left mt-0.5' />&nbsp;<span>Delivered</span></p> 
+                    : <p className='item-description warning-btn'><PiWarningOctagon size='18' className='float-left' />&nbsp;<span>Pending</span></p>
                 }
             </td>
             <td className={classes}>
-                <p className='item-name text-right'>{cost}</p>
+                <p className='item-name text-right'>₵ {cost}</p>
+                <p className='item-description text-right'>Qty: {qty}</p>
             </td>
             <td className={classes}>
                 <p className='item-name text-right'>{purchase_date}</p>
@@ -73,7 +76,8 @@ const PurchaseRow = ({ purchase, getId, classes, sendClass, openDialog }) => {
             <td className={classes}>
                 { del === 'no' 
                 ? <><button className='del-btn' onClick={removeFunc}><FaTimes size='12'/></button>
-                    <button className='action-btn' onClick={sendOpenDialog}><GrEdit size='12'/></button>
+                    {/* <Tooltip content='Distribute' className='tooltip-style'><button className='action-btn' onClick={sendOpenDialog}><FaShareAlt size='12'/></button></Tooltip>
+                    <Tooltip content='Expand' className='tooltip-style'><button className='action-btn' onClick={handleDrawer}><BiExpand size='12'/></button></Tooltip> */}
                   </>
                 : <button className='del-btn' onClick={restoreFunc}><FaReply size='12'/></button>
                 }

@@ -45,13 +45,13 @@ const GenInvoice = ({invoiceRecord}) => {
                 <tr className='blue-head'>
                     <td>Billed to</td>
                     <td>Date of Issue</td>
-                    <td>Invoice Number</td>
+                    <td>Invoice Ref.</td>
                     <td className='text-right'>Amount Due (GHS)</td>
                 </tr>
                 <tr className='relative'>
-                    <td>John Doe</td>
+                    <td>{buyer_name}</td>
                     <td>31/10/2023</td>
-                    <td>A72339DGHS823</td>
+                    <td>{id.substring(2,15)}</td>
                     <td className='amount-focus text-right'>₵{total}</td>
                 </tr>
                 <tr>
@@ -61,14 +61,14 @@ const GenInvoice = ({invoiceRecord}) => {
                     <td></td>
                 </tr>
                 <tr>
-                    <td>0247873637</td>
+                    <td>{buyer_contact}</td>
                     <td className='blue-head'>Due Date</td>
                     <td></td>
                     <td></td>
                 </tr>
                 <tr>
                     <td>Behind marina Mall</td>
-                    <td>Date</td>
+                    <td>31/10/2023</td>
                     <td></td>
                     <td></td>
                 </tr>
@@ -90,7 +90,7 @@ const GenInvoice = ({invoiceRecord}) => {
                     return (
                         <tr key={product.id}>
                             <td className='text-left'>
-                            {product.name}<p className='item-description'>{purchase_type} - {product.description}</p>
+                                {product.name}<p className='item-description'>{purchase_type} - {product.description}</p>
                             </td>
                             <td>{price}</td>
                             <td className='text-center'>{quantity}</td>

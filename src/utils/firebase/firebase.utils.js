@@ -178,6 +178,19 @@ export const updateProductDoc = async (docToUpdate) => {
     }
 }
 
+// export const updateMultiProductDoc = async (docsToUpdate) => {
+//     // const updateFunc = () => 
+//     docsToUpdate.forEach((doc) => {
+//         const upRefValue = doc(db, 'products', doc.id);
+//         await updateDoc(upRefValue, docToUpdate);
+//     })
+//     // updateFunc();
+//     try {
+//     } catch (error) {
+//         console.log('Error occoured at products deletion: ', error.message);
+//     }
+// }
+
 
 // Purchases
 

@@ -12,6 +12,33 @@ const processProducts = async () => {
   return (productMap);
 }
 
+const reduceProductQtys = async (item_details, products) => {
+  const sendBack = [];
+
+  item_details.map(item => {
+    const { item_id, quantity, purchase_type } = item;
+    const checkExist = products.find(el => el.id == item_id)
+
+    if (checkExist) {
+      if (purchase_type == 'RTL') {
+        // Reduce RTL Qty.
+        const prodToReduce = products.map(product => product.id === item_id
+          ? sendBack.push({ ...product, rtl_qty: product.rtl_qty - quantity, action: 'reduced' })
+          : product
+          ).filter(el => el.id === item_id);
+      } else { 
+        // Reduce WHL Qty.
+        const prodToReduce = products.map(product => product.id === item_id
+          ? sendBack.push({ ...product, whl_qty: product.whl_qty - quantity, action: 'reduced' }) 
+          : product
+          ).filter(el => el.id === item_id);
+      }
+    }
+  })
+  return sendBack;
+  // infoToast(JSON.stringify(prodToReduce))
+}
+
 
 
 export const ProductsContext = createContext({
@@ -37,6 +64,7 @@ export const ProductsProvider = ({children}) => {
   const [ sales, setSales ] = useState([]);
   const [ expenses, setExpenses ] = useState([]);
   const [ purchss, setPurchss ] = useState([]);
+  const [ toggleRefresh, setToggleRefresh ] = useState(false);
 
   // console.log('----- Products and Sales context loaded -----');
 
@@ -46,9 +74,13 @@ export const ProductsProvider = ({children}) => {
       getProduct();
       getSales();
       getExpensesRecords();
-      console.log(purchss)
 
     },[]);
+
+    useEffect(() => {
+      getProduct();
+      getSales();
+    },[toggleRefresh]);
 
 
     // Products
@@ -97,8 +129,31 @@ export const ProductsProvider = ({children}) => {
     }
 
     const updateSalesRecord = async (docToUpdate) => {
-      await updateSalesDoc(docToUpdate);
-      getSales();
+      const { item_details } = docToUpdate;
+      const reducedProducts = await reduceProductQtys(docToUpdate.item_details, products);
+      // docToUpdate['item_details'] = reducedProducts;
+      // console.log(itemDet)
+      // console.log('-------')
+      // console.log(docToUpdate.item_details)
+      // console.log('-------')
+      // console.log(sales[0].item_details)
+      // console.log('-------')
+      // console.log(reducedProducts[0])
+      // console.log('-------')
+      // console.log(docToUpdate)
+      // console.log(JSON.stringify(sales))
+
+      // console.log(JSON.stringify(reducedProducts))
+      // console.log(docToUpdate.item_details.PromiseResult)
+      // setPurchss(reducedProducts)
+      for (const doc of reducedProducts) {
+        // console.log(doc.id)
+        await updateProductDoc(doc);
+      }
+      await updateSalesDoc(docToUpdate).then(
+        getSales()
+      );
+      setToggleRefresh(!toggleRefresh)
     }
 
 
@@ -149,7 +204,7 @@ export const ProductsProvider = ({children}) => {
       setPurchss(purMap);
       // infoToast('Inside PurchaseDocs2')
       // console.log(purMap)
-      return purMap;
+      // return purMap;
     }
 
 
