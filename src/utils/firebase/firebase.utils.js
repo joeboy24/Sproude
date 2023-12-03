@@ -1,11 +1,14 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { Toaster, toast } from 'sonner'
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-import { doc, getDoc , setDoc, getFirestore, collection, addDoc, getDocs, query, updateDoc, deleteDoc } from "firebase/firestore";
 
-// Your web app's Firebase configuration
+import { initializeApp } from "firebase/app";
+import { getAuth, createUserWithEmailAndPassword, 
+    signInWithEmailAndPassword, signOut, onAuthStateChanged, 
+    signInWithPopup, GoogleAuthProvider  
+} from "firebase/auth";
+import { Toaster, toast } from 'sonner'
+import { doc, getDoc , setDoc, getFirestore, collection, where, orderBy, addDoc, getDocs, query, updateDoc, deleteDoc } from "firebase/firestore";
+
+
+// Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCGO18AsLnyl0lP7rUb77t4OoPRX15d1nI",
   authDomain: "sproude-pos.firebaseapp.com",
@@ -19,15 +22,121 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 
 
+export const auth = getAuth();
 export const db = getFirestore();
+
+const provider = new GoogleAuthProvider();
+provider.setCustomParameters({
+  prompt: "select_account"
+});
+export const signInWithGooglePopup = () => signInWithPopup(auth, provider);
+
+export const logGoogleUser = async () => {
+    try {
+      await signInWithGooglePopup();
+    } catch (error) {
+      switch (error.code) {
+        case ('auth/popup-closed-by-user'):
+            infoToast('Login window closed..!');
+          break;
+      
+        default:
+            infoToast('An error occured..!')
+            console.log('An error occured: '+error.code);
+          break;
+      }
+    }
+    // const userDocRef = await createUserDocumentFromAuth();
+    // console.log(user);
+}
+
+export const createAuth = async (email, password) => {
+    if (!email || !password) return;
+    return await createUserWithEmailAndPassword(auth, email, password);  
+}
+
+export const createUserDocumentFromAuth = async (userAuth, additionalinfo = {}) => {
+    if (!userAuth) return;
+    const userDocRef = doc(db, 'users', userAuth.uid);
+    // console.log('userDocRef: ', userDocRef);
+
+    const userSnapshot = await getDoc(userDocRef);
+    // console.log('userSnapshot: ', userSnapshot);
+
+    if (!userSnapshot.exists()) {
+        const { displayName, email } = userAuth;
+        // const { email } = userAuth;
+        const createdAt = new Date();
+        const status = 'user';
+
+      try {
+        await setDoc(userDocRef, {
+          displayName, email, status, createdAt, ...additionalinfo
+        });
+      } catch (error) {
+        console.log('An error occured', error.message);
+      }
+    }
+
+    return userDocRef;
+}
+
+export const signInAuthWithEmailAndPassword = async (email, password) => {
+    if (!email || !password) return;
+    return await signInWithEmailAndPassword(auth, email, password);  
+}
+
+export const signOutUser = async () => await signOut(auth);
+
+export const onAuthStateChangeListener = (callback) => onAuthStateChanged(auth, callback);
+
+
+// Generate OTP
+
+export const OTPGen = async (limit) => {
+    const otpRef = collection(db, 'otpgen');
+
+    for (let i = 0; i < limit; i++) {
+        var otpp = 'A'+Math.random()*107000;
+        // console.log('OTPGen - '+otpp.substring(0, 5));
+        console.log(i+' - '+otpp.substring(0, 5));
+        try {
+            await addDoc(otpRef, { otp: otpp.substring(0, 5), status: 'no'}).then(
+                // window.location.reload()
+            );
+        } catch (error) {
+            infoToast('Internet Disconnected');
+            console.log('Error occoured: ', error.message);
+        }
+        
+    }
+    
+}
+
+export const searchOtp = async (otp) => {
+    // const otpRef = await getDocs(query(collection(db, 'otpgen').where("otp", "==", otp)));
+
+    const found = [];
+    const otpRef = collection(db, "otpgen");
+
+    const findOtp = await getDocs(query(otpRef, where("otp", "==", otp)));
+    const mapOtp = () => findOtp.forEach((doc) => {
+        found.push({...doc.data(), id: doc.id});
+    });
+    mapOtp();
+    return found[0];
+}
+
 
 // Sales
 
 export const createSalesDoc = async (docToAdd) => {
+    // return 
+    console.log(docToAdd);
     const salesRefValue = collection(db, 'sales');
     try {
         await addDoc(salesRefValue, docToAdd).then(
-            window.location.reload()
+            // window.location.reload()
         );
     } catch (error) {
         infoToast('Internet Disconnected');
@@ -47,9 +156,8 @@ export const createSalesDoc = async (docToAdd) => {
 }
 
 export const getSalesDocuments = async () => {
-
     const salesReceiver = [];
-    const querySnapshot = await getDocs(query(collection(db, 'sales')));
+    const querySnapshot = await getDocs(query(collection(db, 'sales'), orderBy("created_at", "asc")));
 
     const salesMap = () => querySnapshot.forEach((doc) => {
         salesReceiver.push({...doc.data(), id: doc.id});

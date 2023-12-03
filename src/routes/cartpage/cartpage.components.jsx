@@ -14,13 +14,21 @@ import { createSalesDoc, getProductsDocuments, infoToast } from '../../utils/fir
 import { FaCalendarAlt, FaPlus, FaTimes } from 'react-icons/fa';
 import CustomRadio from '../../components/form/custom-radio.components';
 import ExpandDrawer from './expand-drawer-content.components';
+import useAuth from '../../hooks/useAuth';
  
  
 
-const XcartPage = () => {
+const XcartPage = () => { 
     var c = 1;
     var i = 1;
+    const cur_dt = new Date;
     const { cartItems, cartCount, cartTotal, salesRecords, addItemsToCart, saveToLocal, retrieveFromLocal, addSalesRecord } = useContext(CartContext);
+    const { currentUser } = useAuth();
+
+    // useEffect(() => {
+    //     console.log('User Loaded');
+    //     console.log(currentUser)
+    // },[currentUser]);
 
     // console.log('System has started');
     // const storedVal = JSON.parse(localStorage.getItem("localCartItems"));
@@ -112,26 +120,27 @@ const XcartPage = () => {
     const handlePay = (event) => {
         event.preventDefault();
         var orderId = 'M'+Math.random().toString(36).slice(2);
-        var dis = event.target.discount.value;
-        var pay_mode = event.target.pay_mode.value;
-        var amt_paid = event.target.amt_paid.value;
+        // var dis = event.target.discount.value;
+        // var pay_mode = event.target.pay_mode.value;
+        // var amt_paid = event.target.amt_paid.value;
         var del_status = event.target.del_status.value;
-        var tot = cartTotal - dis;
-        var paid_debt = tot;
+        var tot = cartTotal;
+        // var tot = cartTotal - dis;
+        // var paid_debt = tot;
         var debt_bal = 0;
 
-        if (pay_mode == '0' || pay_mode == '-- Payment Mode --') {
-            return infoToast('Oops..! Select `Payment Mode` to proceed');
-        } else if (del_status == '0' || del_status == '-- Delivery Status --') {
-            return infoToast('Oops..! Select `Delivery Status` to proceed');
-        }
+        // if (pay_mode == '0' || pay_mode == '-- Payment Mode --') {
+        //     return infoToast('Oops..! Select `Payment Mode` to proceed');
+        // } else if (del_status == '0' || del_status == '-- Delivery Status --') {
+        //     return infoToast('Oops..! Select `Delivery Status` to proceed');
+        // }
 
-        if (amt_paid < tot) {
-            pay_mode = 'post_pay';
-            paid_debt = amt_paid;
-            debt_bal = tot - amt_paid;
-        }
-        // return alert(amt_paid+' '+pay_mode+' '+tot);
+        // if (amt_paid < tot) {
+        //     pay_mode = 'post_pay';
+        //     paid_debt = amt_paid;
+        //     debt_bal = tot - amt_paid;
+        // }
+        // // return alert(amt_paid+' '+pay_mode+' '+tot);
 
         const payInputs = {
             id: orderId.toUpperCase(),
@@ -139,12 +148,12 @@ const XcartPage = () => {
             item_details: [],
             total: tot,
             debt_bal: debt_bal,
-            paid_debt: tot,
-            pay_mode: pay_mode,
+            paid_debt: 0,
+            // pay_mode: pay_mode,
             buyer_name: event.target.buyer_name.value,
             buyer_contact: event.target.buyer_contact.value,
-            discount: dis,
-            amt_paid: amt_paid,
+            discount: 0,
+            amt_paid: 0,
             del_status: del_status,
             count: salesRecords.reduce((t, c) => t + 1, 0),
             del: 'no',
@@ -291,7 +300,7 @@ const XcartPage = () => {
                             <option value="no">Not Delivered</option>
                         </select>
                     
-                        <select name='pay_mode' className='xform-input myInput-dark'>
+                        {/* <select name='pay_mode' className='xform-input myInput-dark'>
                             <option defaultValue="0">-- Payment Mode --</option>
                             <option value="cash">Cash</option>
                             <option value="cheque">Cheque</option>
@@ -299,11 +308,11 @@ const XcartPage = () => {
                             <option value="post_pay">Post Payment(Debt)</option>
                         </select>
                         <input type='number' min='0' className='xform-input myInput-dark' name='discount' placeholder="Discount eg. 10" required/>
-                        <input type='number' min='0' className='xform-input myInput-dark' name='amt_paid' placeholder="Amount Paid" required/>
+                        <input type='number' min='0' className='xform-input myInput-dark' name='amt_paid' placeholder="Amount Paid" required/> */}
                         
-                    </div>
+                    </div>  
                     { cartItems.length > 0 ?
-                        <Button type='submit' className='float-right' size='sm' variant="outlined">&nbsp;<BsBagCheck size='18' className='float-left mr-2'/> Pay Now &nbsp;</Button>
+                        <Button type='submit' className='float-right' size='sm' variant="outlined">&nbsp;<BsBagCheck size='18' className='float-left mr-2'/> Add Record &nbsp;</Button>
                     : null }
                 </form>
             </CardBody>
@@ -316,13 +325,14 @@ const XcartPage = () => {
             <Card className='cartpage-content'>
                 <CardBody>
                     <div className='table-container1 overflow-auto'>
+                        <p>{new Date('28-Nov-2023').getTime()} - {cur_dt.getTime()}</p>
                         <table className="cart-tbl w-calc[100%-100px] min-w-max table-auto text-left">
                             <thead>
                                 <tr>
                                     <th>#</th>
                                     <th>ORDER REF#</th>
                                     <th>PAYMENT</th>
-                                    <th>BUYER</th>
+                                    <th className='w-16'>BUYER</th>
                                     <th className='text-center'>TOTAL GH₵</th>
                                     <th>DATE</th>
                                     <th className='text-right'>ACTIONS</th>
@@ -335,7 +345,7 @@ const XcartPage = () => {
                                     const classes = isLast ? "p-4" : "p-4 border-blue-gray-50";
                                     return(
                                         <>
-                                        <XcartSalesRow key={order.id} getDrawerId={pullDrawerId} i={i++} order={order} classes={classes} />
+                                        <XcartSalesRow key={order.id} hideAction='yes' getDrawerId={pullDrawerId} i={i++} order={order} classes={classes} />
                                         </>
                                     );
                                 }).reverse()}

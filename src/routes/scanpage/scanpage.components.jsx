@@ -262,7 +262,7 @@ const ScanPage = () => {
                                 <th>#</th>
                                 <th>ORDER REF#</th>
                                 <th>PAYMENT</th>
-                                <th>BUYER</th>
+                                <th className='w-16'>BUYER</th>
                                 <th className='text-center'>TOTAL GH₵</th>
                                 <th>DATE</th>
                                 <th className='text-right'>ACTIONS</th>
@@ -271,10 +271,10 @@ const ScanPage = () => {
 
                         <tbody>
                             {/* { displayInvoice !== 'no' ? 
-                                <XcartSalesRow key={invoiceRecord.id} getDialogId={pullDialogId} getDrawerId={pullDrawerId} i={i++} order={invoiceRecord} classes='p-4 border-blue-gray-50' />
+                                <XcartSalesRow key={invoiceRecord.id} hideAction='no' getDialogId={pullDialogId} getDrawerId={pullDrawerId} i={i++} order={invoiceRecord} classes='p-4 border-blue-gray-50' />
                             :null} */}
                             { searchResult.length == 1 ? 
-                                <XcartSalesRow key={searchResult[0].id} getDialogId={pullDialogId} getDrawerId={pullDrawerId} i={i++} order={searchResult[0]} classes='p-4 border-blue-gray-50' />
+                                <XcartSalesRow key={searchResult[0].id} hideAction='no' getDialogId={pullDialogId} getDrawerId={pullDrawerId} i={i++} order={searchResult[0]} classes='p-4 border-blue-gray-50' />
                             :null}
                             { searchResult.length > 1 ?
                                searchResult.map((order, index) => {
@@ -282,7 +282,7 @@ const ScanPage = () => {
                                     const classes = isLast ? "p-4" : "p-4 border-blue-gray-50";
                                     return(
                                         <>
-                                        <XcartSalesRow key={order.id} getDialogId={pullDialogId} getDrawerId={pullDrawerId} i={i++} order={order} classes={classes} />
+                                        <XcartSalesRow key={order.id} hideAction='no' getDialogId={pullDialogId} getDrawerId={pullDrawerId} i={i++} order={order} classes={classes} />
                                         </>
                                     );
                                 }).reverse()
@@ -316,6 +316,7 @@ const ScanPage = () => {
 
         { open == true ?
             <div className='receipt-cover p-2 rounded-md bg-white'>
+                {/* <GenInvoice invoiceRecord={invoiceRecord}/> */}
                 <Button className='float-left no-print' size='sm' variant="outlined" onClick={() => {window.print()}}>&nbsp;<FaPrint size='18' className='float-left mr-2'/> Print &nbsp;</Button>
                 <IconButton size='sm' className='del-btn float-right no-print' onClick={handleOpen}><FaTimes size='16'/></IconButton>
                 <div className='w-1/3 receipt-container pr-2'>

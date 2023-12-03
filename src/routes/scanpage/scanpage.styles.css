@@ -73,7 +73,7 @@
 }
 
 .amount-focus {
-    @apply text-2xl absolute right-0;
+    @apply text-xl absolute right-0;
 }
 
 .invoice-center {

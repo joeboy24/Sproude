@@ -12,3 +12,102 @@
     height: 70vh;
     @apply overflow-auto;
 }
+
+.profile-container {
+    @apply bg-white rounded-lg;
+}
+
+.profile-img-cont {
+    @apply bg-white rounded-t-2xl h-40 shadow-lg;
+    background: url(https://t4.ftcdn.net/jpg/05/22/65/47/360_F_522654750_dWty6iO9Ev0Xjqlmorg6QV04sgKpmkUN.jpg);
+    background-size: 100%;
+    /* opacity: 0.4;
+    border: 2px solid #ff9100; */
+}
+
+.profile-img {
+    @apply w-full;
+    height: 162px;
+}
+
+/* .hexagon::before {
+    content:"";
+    display:block;
+    padding-top:86.6%;
+    background:currentColor;
+   clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+ } */
+
+
+.box
+{
+    @apply w-40 h-40;
+    background-color: #faebd7;
+    clip-path: polygon(50% 0, 100% 38%, 81% 100%, 19% 100%, 0 38%);
+    margin: 0 auto;
+    border: 3px solid #fff;
+}
+
+.flt_svg {
+    visibility: hidden; 
+    position: absolute;
+    width: 0px;
+    height: 0px;
+}
+
+.box_parent
+{
+    margin-top: -167px;
+    filter: url('#flt_tag');
+}
+
+
+
+.box2
+{
+    @apply w-44 h-44 shadow-lg;
+    background-color: #faebd7;
+    clip-path: polygon(50% 0, 100% 38%, 81% 100%, 19% 100%, 0 38%);
+    margin: 0 auto;
+    border: 3px solid #fff;
+}
+
+.flt_svg2 {
+    visibility: hidden; 
+    position: absolute;
+    width: 0px;
+    height: 0px;
+}
+
+.box_parent2
+{
+    margin-top: -100px;
+    filter: url('#flt_tag');
+}
+
+.profile-text {
+    @apply text-center m-3 p-3;
+}
+
+.profile-text h2 {
+    @apply font-medium mb-1;
+}
+
+.profile-text p {
+    @apply font-light text-xs mb-0.5;
+}
+
+
+
+
+
+
+
+
+
+
+@media (max-width: 800px) {
+    .general-container-size {
+        @apply mx-2 w-[calc(100%-16px)];
+    }
+}

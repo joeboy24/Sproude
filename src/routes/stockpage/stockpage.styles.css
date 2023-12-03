@@ -21,7 +21,7 @@
 }
 
 .card-header-top {
-    @apply text-4xl mt-8 mb-0 font-thin text-blue-gray-500 text-center border-b pb-5;
+    @apply text-4xl mt-8 mb-5 font-thin text-blue-gray-500 text-center border-b pb-5;
 }
 
 .radio-text2 {

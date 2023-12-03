@@ -1,0 +1,95 @@
+
+.login-container-size {
+    @apply flex my-20 w-4/6 mx-[calc(33%/2)];
+}
+
+.login-left {
+    @apply w-[calc(40%-1px)] bg-white rounded-l-2xl my-3 shadow-lg;
+}
+
+.login-left img {
+    @apply w-[calc(70%-24px)] m-[calc(30%/2)];
+}
+
+.login-right {
+    @apply w-[calc(60%-1px)] bg-teal-700 rounded-2xl shadow-2xl;
+    background: url(https://img.freepik.com/premium-photo/abstract-neo-memphis-style-background-with-grainy-texture-trendy-contemporary-design-digital-art_598586-546.jpg);
+    background-size: 100%
+}
+
+.login-right2 {
+    @apply w-1/2 bg-teal-700 rounded-2xl shadow-2xl;
+    background: url(https://img.freepik.com/premium-photo/abstract-neo-memphis-style-background-with-grainy-texture-trendy-contemporary-design-digital-art_598586-586.jpg?size=626&ext=jpg);
+    background-size: 100%
+}
+
+.inner2 {
+    @apply bg-white/60 rounded-lg mx-20 my-28 py-10;
+}
+
+.sign-in {
+    @apply text-2xl font-light mb-4 mx-10;
+}
+
+.register-container {
+    @apply text-center -mt-10;
+}
+
+.register-container p {
+    @apply text-xs font-light;
+}
+
+.register-container h3 {
+    @apply text-xs bg-teal-700 text-white rounded-md px-3 py-1.5 hover:opacity-80 m-1 w-28 mx-[calc((100%-116px)/2)];
+}
+
+#reg2 { display: none; }
+
+
+
+
+
+
+
+
+/* @media (max-width: 1400px) {
+    .login-container-size {
+        @apply flex my-20 w-4/6 mx-[calc(33%/2)];
+    }
+} */
+
+@media (max-width: 1100px) {
+    .inner2 {
+        @apply mx-10;
+    }
+}
+
+@media (max-width: 800px) {
+
+    .inner2 {
+        @apply mx-2;
+    }
+
+    /* .inner2 div {
+        @apply !mx-4;
+    } */
+
+    .login-container-size {
+        @apply mx-2 w-[calc(100%-16px)] flex-col;
+    }
+
+    .login-left {
+        display: none
+    }
+    
+    .login-right, .login-right2 {
+        @apply w-full rounded-3xl;
+    }
+
+    #reg2 { display: block; }
+
+    .register-container {
+        @apply mt-5;
+    }
+
+}

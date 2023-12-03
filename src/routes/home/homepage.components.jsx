@@ -1,16 +1,7 @@
 import React from 'react'
-import SideBar from '../../components/sidebar/sidebar.components'
-// import { StickyNavbar } from '../../components/navbar-check.components'
-import AdminNavbar from '../../components/mynavbar/admin-navbar.components'
-import XformInput from '../../components/form/forminput.component'
-import XcartPage from '../cartpage/cartpage.components'
-import MenuStrip from '../../components/menu-strip/menu-strip.components'
 import './homepage.styles.css'
 import { HiOutlineClipboardDocumentList } from 'react-icons/hi2'
-import { Card, CardBody } from '@material-tailwind/react'
-import { Link } from 'react-router-dom'
 import { BsCart4 } from 'react-icons/bs'
-import { PiCarDuotone } from 'react-icons/pi'
 import { LiaFileInvoiceDollarSolid } from 'react-icons/lia'
 
 const Homepage = () => {

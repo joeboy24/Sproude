@@ -13,23 +13,38 @@ import ExpensesPage from './routes/expenses-page/expenses.components';
 import ScanPage from './routes/scanpage/scanpage.components';
 import { Toaster, toast } from 'sonner'
 import PurchasesPage from './routes/stockpage/purchases.components';
+import CompanyPage from './routes/company-page/company.components';
+import UserProfile from './routes/user-profile.components';
+import LoginPage from './routes/auth/login.components';
+import { useContext } from 'react';
+import { UserContext } from './context/user.context';
+import RequireAuth from './components/RequireAuth';
+
 
 function App() { 
+  const { currentUser } = useContext(UserContext);
+
   return (
     <>
     <Routes>
       <Route path='/' element={<NavigationPage />}>
         <Route index element={<Homepage />}/>
+        {/* <Route path='login' element={<LoginPage />}/> */}
         <Route path='stock' element={<StockPage />}>
           <Route index element={<StockIndex />}/>
           <Route path='add-new-item' element={<NewItem />}/>
           <Route path='purchases' element={<PurchasesPage />}/>
         </Route>
         <Route path='sales' element={<XcartPage />}/>
-        <Route path='expenses' element={<ExpensesPage />}/>
-        <Route path='scan-doc' element={<ScanPage />}/>
+        <Route element={<RequireAuth />}>
+          <Route path='expenses' element={<ExpensesPage />}/>
+          <Route path='scan-doc' element={<ScanPage />}/>
+        </Route>
+        <Route path='profile' element={<UserProfile />}/>
+        <Route path='company-setup' element={<CompanyPage />}/>
       </Route>
-    </Routes> 
+      <Route path='login' element={<LoginPage />}/>
+    </Routes>
     <Toaster richColors/>
     </>
     // <div className="App">

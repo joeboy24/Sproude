@@ -7,3 +7,7 @@
     font-size: 0.8em;
     @apply w-auto uppercase tracking-wider text-blue-gray-500;
 }
+
+.ell {
+    @apply border-none focus:!border-t-green-500/100;
+}
