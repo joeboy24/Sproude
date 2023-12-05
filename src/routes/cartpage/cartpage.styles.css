@@ -154,7 +154,7 @@
 
 .delivered-btn {
     font-size: 0.7em;
-    @apply w-auto bg-green-500 rounded-md text-white text-center font-medium py-1 px-2.5 my-1 uppercase;
+    @apply w-auto bg-green-500 rounded-md !text-white text-center font-medium py-1 px-2.5 my-1 uppercase;
 }
 
 .warning-btn {
@@ -164,7 +164,7 @@
 
 .not-delivered-btn {
     font-size: 0.7em;
-    @apply w-auto bg-red-500/90 rounded-md text-white text-center font-medium py-1.5 px-2.5 my-1 uppercase;
+    @apply w-auto bg-red-500/90 rounded-md !text-white text-center font-medium py-1.5 px-2.5 my-1 uppercase;
 }
 
 .change-date-link {

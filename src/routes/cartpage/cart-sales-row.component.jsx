@@ -1,5 +1,5 @@
 import { Drawer, Button, IconButton, Typography, ButtonGroup, Tooltip } from '@material-tailwind/react';
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { BiEditAlt, BiExpand } from 'react-icons/bi';
 import { GrEdit } from 'react-icons/gr';
 import { FaPrint, FaRegFolderOpen } from 'react-icons/fa6';
@@ -9,10 +9,17 @@ import ExpandDrawer from './expand-drawer-content.components';
 import { BsCheck2Square, BsCheckCircle, BsCheckCircleFill, BsCheckSquare } from 'react-icons/bs';
 import './cartpage.styles.css';
 import { infoToast } from '../../utils/firebase/firebase.utils';
+import useAuth from '../../hooks/useAuth';
 
 const XcartSalesRow = ({ i, order, classes, getDialogId, getDrawerId, hideAction }) => {
     const { id, user, item_details, total, paid_debt, debt_bal, pay_mode, buyer_name, buyer_contact, discount, amt_paid, del_status, purchase_type, created_at, updated_at } = order;
     const { cartItems, addItemsToCart, decreaseItemQty, removeCartItem } = useContext(CartContext);
+    const { users, getUsers } = useAuth();
+    const rowUser = users.find(el => el.uid == user);
+    // console.log(rowUser.displayName);
+
+    // const [ curUsers, setCurUsers ] = useState(users);
+    // const { displayName } = users.find(el => el.uid === user);
 
     // console.log(new Date(1701172485 * 1000).getDay());
 
@@ -39,6 +46,10 @@ const XcartSalesRow = ({ i, order, classes, getDialogId, getDrawerId, hideAction
 
     // getDate('1701172485');
 
+    // useEffect(() => {
+    //     getUsers();
+    // }, [curUsers]);
+
     
     return (
         <>
@@ -46,7 +57,7 @@ const XcartSalesRow = ({ i, order, classes, getDialogId, getDrawerId, hideAction
             <td className='item-description pl-4 pr-2'>{i}</td>
             <td className={classes}>
                 <p className='item-name'>{id.substring(2, 14)}</p>
-                <p className='item-description'>User: {user}</p>
+                <p className='item-description'>User: {rowUser.displayName}</p>
                 {
                     del_status === 'yes' 
                     ? <p className='item-description delivered-btn'><FaCheck className='float-left mt-0.5' />&nbsp;<span>Delivered</span></p> 

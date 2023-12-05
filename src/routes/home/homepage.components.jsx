@@ -1,5 +1,6 @@
 import React from 'react'
 import './homepage.styles.css'
+import '../other-styles.styles.css';
 import { HiOutlineClipboardDocumentList } from 'react-icons/hi2'
 import { BsCart4 } from 'react-icons/bs'
 import { LiaFileInvoiceDollarSolid } from 'react-icons/lia'
@@ -46,7 +47,7 @@ const Homepage = () => {
         </a>
 
       </div>
-    </>
+    </> 
   )
 }
 

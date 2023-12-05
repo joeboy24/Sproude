@@ -1,8 +1,8 @@
 
-.general-container-size {
+/* .general-container-size {
     width: 800px;
     @apply my-5;
-}
+} */
 
 .general-container-wrapper {
     @apply w-full grid place-items-center mb-10;

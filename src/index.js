@@ -9,19 +9,22 @@ import { BrowserRouter } from 'react-router-dom';
 import { ProductsProvider } from './context/product.context';
 import { CartProvider } from './context/cart.context';
 import { UserProvider } from './context/user.context';
+import { SystemProvider } from './context/system.context';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <ThemeProvider>
       <BrowserRouter>
-        <UserProvider>
-          <ProductsProvider>
-            <CartProvider>
-              <App />
-            </CartProvider>
-          </ProductsProvider>
-        </UserProvider>
+        {/* <SystemProvider> */}
+          <UserProvider>
+            <ProductsProvider>
+              <CartProvider>
+                <App />
+              </CartProvider>
+            </ProductsProvider>
+          </UserProvider>
+        {/* </SystemProvider> */}
       </BrowserRouter>
     </ThemeProvider>
   </React.StrictMode>

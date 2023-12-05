@@ -13,7 +13,7 @@
 }
 
 .items-input-group {
-    @apply w-[calc(80%-1px)] ml-[calc(10%-1px)] mr-[calc(10%-1px)] my-3;
+    @apply w-[calc(80%-1px)] mx-[calc(20%/2)] my-3;
 }
 
 .items-input-group p {
@@ -77,5 +77,9 @@
 @media (max-width: 800px) {
     .image-title {
         @apply w-3/6;
+    }
+
+    .items-input-group {
+        @apply w-[calc(100%-16px)] mx-2 my-3;
     }
 }

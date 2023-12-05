@@ -3,6 +3,7 @@ import React from 'react';
 import vector1 from '../../assets/sproude-vector-01.png'
 import vector2 from '../../assets/sproude-vector-02.png'
 import './stockpage.styles.css';
+import '../other-styles.styles.css';
 import AdminNavbar from '../../components/mynavbar/admin-navbar.components';
 import MenuStrip from '../../components/menu-strip/menu-strip.components';
 import { Card, CardBody } from '@material-tailwind/react';

@@ -1,6 +1,7 @@
 
 import React, { useContext, useEffect, useState } from 'react'
 import './scanpage.styles.css'
+import '../other-styles.styles.css';
 import { Button, Card, CardBody, Dialog, DialogBody, Drawer, IconButton, Input } from '@material-tailwind/react'
 import QRCode from 'react-qr-code';
 import GenInvoice from './gen-invoice.components';
@@ -12,6 +13,7 @@ import { ProductsContext } from '../../context/product.context';
 import { BsBagCheck } from 'react-icons/bs';
 import { infoToast } from '../../utils/firebase/firebase.utils';
 import { FaPrint, FaTimes } from 'react-icons/fa';
+import useAuth from '../../hooks/useAuth';
 
 const ScanPage = () => {
     var c = 1;
@@ -20,13 +22,17 @@ const ScanPage = () => {
     const onChange = ({ target }) => setScanInput(target.value);
 
     // const { salesRecords } = useContext(CartContext);
+    const { users, getUsers, company } = useAuth();
+    // const [ curCompany, setCurCompany ] = useState(company);
     const { sales, products, getProduct, getSales, updateSalesRecord } = useContext(ProductsContext);
     const [ drawerRec, setDrawerRec ] = useState();
     const [openBottom, setOpenBottom] = useState(false);
     const openDrawerBottom = () => setOpenBottom(true);
     const closeDrawerBottom = () => setOpenBottom(false);
+    // console.log(users);
 
     const [ newSearchKey, setNewSearchKey ] = useState('');
+    const [ curUsers, setCurUsers ] = useState(users);
     const [ searchResult, setSearchResult ] = useState(sales);
     const [ invoiceRecord, setInvoiceRecord ] = useState([]);
     const [ displayInvoice, setDisplayInvoice ] = useState('no');
@@ -168,6 +174,10 @@ const ScanPage = () => {
     // },[searchResult]);
 
     useEffect(() => {
+        setCurUsers(users)
+    },[users]);
+
+    useEffect(() => {
         setSearchResult(Object.assign(searchResult, invoiceRecord));
     },[invoiceRecord]);
 
@@ -189,6 +199,7 @@ const ScanPage = () => {
     <>
         <Card className='general-container-size no-print'>
             <CardBody>
+                {/* <p>Company: {company ? company.companyName :null}</p> */}
                 <div className='scanner-top'>
                     <div className="relative flex w-full">
                         <Input
@@ -244,7 +255,7 @@ const ScanPage = () => {
                     {/* { invoiceRecord.del_status !== 'no' ? */}
                         <Button className='float-left no-print text-xs font-light m-1' size='sm' variant="outlined" onClick={() => {window.print()}}>&nbsp;<FaPrint size='12' className='float-left mr-2'/> Print Receipt &nbsp;</Button>
                     {/* :null} */}
-                    <GenInvoice invoiceRecord={invoiceRecord}/>
+                    <GenInvoice company={company} invoiceRecord={invoiceRecord}/>
                 </div>
                 </>
             :null}
@@ -281,9 +292,7 @@ const ScanPage = () => {
                                     const isLast = index === searchResult.length - 1;
                                     const classes = isLast ? "p-4" : "p-4 border-blue-gray-50";
                                     return(
-                                        <>
                                         <XcartSalesRow key={order.id} hideAction='no' getDialogId={pullDialogId} getDrawerId={pullDrawerId} i={i++} order={order} classes={classes} />
-                                        </>
                                     );
                                 }).reverse()
                             :null}
@@ -320,7 +329,7 @@ const ScanPage = () => {
                 <Button className='float-left no-print' size='sm' variant="outlined" onClick={() => {window.print()}}>&nbsp;<FaPrint size='18' className='float-left mr-2'/> Print &nbsp;</Button>
                 <IconButton size='sm' className='del-btn float-right no-print' onClick={handleOpen}><FaTimes size='16'/></IconButton>
                 <div className='w-1/3 receipt-container pr-2'>
-                    <ReceiptWithQrCode invoiceRecord={drawerRec} scanCode={scanInput} />
+                    <ReceiptWithQrCode users={users} company={company} invoiceRecord={drawerRec} scanCode={scanInput} />
                 </div>
             </div>
         :null}

@@ -2,6 +2,7 @@ import { Drawer, Button, IconButton, Typography, Card, CardBody, MenuHandler, Me
 import React, { useContext, useEffect, useState } from 'react'
 import XformInput from '../../components/form/forminput.component';
 import './cartpage.styles.css'
+import '../other-styles.styles.css';
 import { BsBagCheck, BsBasket, BsBasket2Fill, BsBasketFill, BsCart4, BsPlus, BsPlusCircle } from 'react-icons/bs';
 import { TABLE_ROWS } from '../../TestData.jsx'
 import AdminNavbar from '../../components/mynavbar/admin-navbar.components';
@@ -325,7 +326,7 @@ const XcartPage = () => {
             <Card className='cartpage-content'>
                 <CardBody>
                     <div className='table-container1 overflow-auto'>
-                        <p>{new Date('28-Nov-2023').getTime()} - {cur_dt.getTime()}</p>
+                        {/* <p>{new Date('28-Nov-2023').getTime()} - {cur_dt.getTime()}</p> */}
                         <table className="cart-tbl w-calc[100%-100px] min-w-max table-auto text-left">
                             <thead>
                                 <tr>
@@ -344,9 +345,7 @@ const XcartPage = () => {
                                     const isLast = index === salesRecords.length - 1;
                                     const classes = isLast ? "p-4" : "p-4 border-blue-gray-50";
                                     return(
-                                        <>
                                         <XcartSalesRow key={order.id} hideAction='yes' getDrawerId={pullDrawerId} i={i++} order={order} classes={classes} />
-                                        </>
                                     );
                                 }).reverse()}
                                 {/* <tr key={order.id}>

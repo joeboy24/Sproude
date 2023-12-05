@@ -4,9 +4,10 @@ import QRCode from 'react-qr-code'
 import { ProductsContext } from '../../context/product.context';
 
 
-const ReceiptWithQrCode = ({ invoiceRecord, scanCode }) => {
+const ReceiptWithQrCode = ({ users, company, invoiceRecord, scanCode }) => {
   const { products } = useContext(ProductsContext);
   const { id, user, item_details, total, paid_debt, debt_bal, pay_mode, buyer_name, buyer_contact, discount, amt_paid, del_status, created_at, updated_at } = invoiceRecord;
+  const { country, companyName, slogan, phone, email, logo, address1, address2 } = company;
   
   const tot_qty = item_details.reduce(
       (total, item) => total + item.quantity, 0
@@ -14,21 +15,27 @@ const ReceiptWithQrCode = ({ invoiceRecord, scanCode }) => {
   const tot_amt = item_details.reduce(
       (total, item) => total + item.purchase_total, 0
   );
+
+  const recUser = users.filter(el => el.uid == user);
+  console.log(users);
+  console.log(user);
+  console.log(recUser);
+  console.log(recUser[0]);
   
   return (
     <>
       <div key={id}>
         <QRCode value={id} size={120} style={{ width: '100%' }}/>
 
-        <h2 className='text-center text-sm font-semibold mt-4 mb-1 uppercase'>Sproude Mart-Portland</h2>
-        <p className='text-center text-sm font-normal'>Doctors Bangalow</p>
-        <p className='text-center text-sm font-normal'>0247873637</p>
+        <h2 className='text-center text-sm font-semibold mt-4 mb-1 uppercase'>{companyName}</h2>
+        <p className='text-center text-sm font-normal'>{address1+' '+address2}</p>
+        <p className='text-center text-sm font-normal'>{phone}</p>
 
         <h4 className='text-center text-xs font-semibold mt-3 mb-2 uppercase'>Purchase Receipt</h4>
         <table>
             <tbody>
                 <tr className='border-b border-b-gray-300'><td>Date:31 Oct 2023</td><td className='text-right'>Time:9:30 PM</td></tr>
-                <tr><td className='pt-1'>Sales ATD:</td><td className='text-right pt-1'>{user}</td></tr>
+                <tr><td className='pt-1'>Sales ATD:</td><td className='text-right pt-1'>{recUser[0].displayName}</td></tr>
                 <tr><td>Ref No:</td><td className='text-right'>{id.substring(2,15)}</td></tr>
                 {/* <tr><td>Batch No:</td><td className='text-right'>00273</td></tr>
                 <tr><td>Merchant ID:</td><td className='text-right'>13436925488</td></tr> */}
@@ -40,7 +47,7 @@ const ReceiptWithQrCode = ({ invoiceRecord, scanCode }) => {
                   })
                 }
                 <tr className='border-b border-b-gray-300'><td>Discount:</td><td className='text-right'>{discount}</td></tr>
-                <tr className='text-sm font-semibold'><td className='pb-1'>Amount:</td><td className='text-right pb-1'>Gh₵ {total}</td></tr>
+                <tr className='text-sm font-semibold'><td className='pb-1'>Amount:</td><td className='text-right pb-1'>Gh₵ {total.toLocaleString()}</td></tr>
             </tbody>
         </table>
         

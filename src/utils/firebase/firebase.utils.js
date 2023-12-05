@@ -1,8 +1,9 @@
 
 import { initializeApp } from "firebase/app";
+import { getStorage } from 'firebase/storage';
 import { getAuth, createUserWithEmailAndPassword, 
     signInWithEmailAndPassword, signOut, onAuthStateChanged, 
-    signInWithPopup, GoogleAuthProvider  
+    signInWithPopup, GoogleAuthProvider, sendPasswordResetEmail  
 } from "firebase/auth";
 import { Toaster, toast } from 'sonner'
 import { doc, getDoc , setDoc, getFirestore, collection, where, orderBy, addDoc, getDocs, query, updateDoc, deleteDoc } from "firebase/firestore";
@@ -20,6 +21,7 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
+export const imageDb = getStorage(firebaseApp);
 
 
 export const auth = getAuth();
@@ -67,18 +69,20 @@ export const createUserDocumentFromAuth = async (userAuth, additionalinfo = {}) 
         const { displayName, email } = userAuth;
         // const { email } = userAuth;
         const createdAt = new Date();
+        const uid = userAuth.uid;
         const status = 'user';
+        const del = 'no';
 
       try {
         await setDoc(userDocRef, {
-          displayName, email, status, createdAt, ...additionalinfo
+          uid, displayName, email, status, del, createdAt, ...additionalinfo
         });
       } catch (error) {
         console.log('An error occured', error.message);
       }
     }
-
-    return userDocRef;
+    return await searchUserDoc(userAuth.email)
+    return userSnapshot;
 }
 
 export const signInAuthWithEmailAndPassword = async (email, password) => {
@@ -87,8 +91,44 @@ export const signInAuthWithEmailAndPassword = async (email, password) => {
 }
 
 export const signOutUser = async () => await signOut(auth);
-
+export const resetPassword = (email) => sendPasswordResetEmail(auth, email);
 export const onAuthStateChangeListener = (callback) => onAuthStateChanged(auth, callback);
+
+
+// Company
+
+export const createCompanyDoc = async (docToAdd) => {
+    const expRefValue = collection(db, 'company');
+    try {
+        await addDoc(expRefValue, docToAdd);
+    } catch (error) {
+        console.log('Error occoured: ', error.message);
+    }
+    
+}
+
+export const getCompanyDoc = async () => {
+    const companyReceiver = [];
+    const querySnapshot = await getDocs(query(collection(db, 'company')));
+
+    const companyMap = () => querySnapshot.forEach((doc) => {
+        companyReceiver.push({...doc.data(), id: doc.id});
+    });
+    companyMap();
+    // console.log(usersReceiver);
+    return companyReceiver[0];
+}
+
+export const updateCompanyDoc = async (company) => {
+    const upRefValue = doc(db, 'company', company.id);
+    try {
+        await updateDoc(upRefValue, company).then(
+            successToast("Company update successful")
+        )
+    } catch (error) {
+        console.log('Error occoured at sales: ', error.message);
+    }
+}
 
 
 // Generate OTP
@@ -125,6 +165,45 @@ export const searchOtp = async (otp) => {
     });
     mapOtp();
     return found[0];
+}
+
+
+// Users
+
+export const searchUserDoc = async (email) => {
+    const found = [];
+    const otpRef = collection(db, "users");
+
+    const findOtp = await getDocs(query(otpRef, where("email", "==", email)));
+    const mapOtp = () => findOtp.forEach((doc) => {
+        found.push({...doc.data()});
+    });
+    mapOtp();
+    // console.log(found[0]);
+    return found[0];
+}
+
+export const getUsersDocuments = async () => {
+    const usersReceiver = [];
+    const querySnapshot = await getDocs(query(collection(db, 'users')));
+
+    const usersMap = () => querySnapshot.forEach((doc) => {
+        usersReceiver.push({...doc.data()});
+    });
+    usersMap();
+    // console.log(usersReceiver);
+    return usersReceiver;
+}
+
+export const updateUserDoc = async (user) => {
+    const upRefValue = doc(db, 'users', user.uid);
+    try {
+        await updateDoc(upRefValue, user).then(
+            successToast(user.displayName+"'s record temporarily deleted")
+        )
+    } catch (error) {
+        console.log('Error occoured at sales: ', error.message);
+    }
 }
 
 

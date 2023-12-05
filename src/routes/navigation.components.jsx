@@ -2,6 +2,7 @@
 
 import React from 'react';
 import '../routes/stockpage/stockpage.styles.css';
+import './other-styles.styles.css';
 import { Outlet } from 'react-router-dom';
 import AdminNavbar from '../components/mynavbar/admin-navbar.components';
 import MenuStrip from '../components/menu-strip/menu-strip.components';

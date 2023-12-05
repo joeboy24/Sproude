@@ -13,12 +13,15 @@ import { CiLock } from "react-icons/ci";
 import { HiOutlineLockClosed } from 'react-icons/hi';
 import { FaTimes } from 'react-icons/fa';
 import { BiSave } from 'react-icons/bi';
+import useAuth from '../hooks/useAuth';
 
 const UserProfile = () => {
   var c = 1;
   const cur_date = new Date();
   const [open, setOpen] = useState(false);
   const [update, setUpdate] = useState(false);
+  const { currentUser } = useAuth();
+  const { displayName, email, phone } = currentUser;
 
 
   const handleOpen = () => setOpen(!open);
@@ -79,9 +82,9 @@ const UserProfile = () => {
         </div>
 
         <div className='profile-text'>
-            <h2>Patricia Ola Yawson</h2>
-            <p>patoyawson@gmail.com</p>
-            <p>0202622172</p>
+            <h2>{displayName}</h2>
+            <p>{email}</p>
+            <p>{phone}</p>
             {
                 update === false ? 
                 <Button onClick={toggleUpdate} type='button' className='float-center m-4' size='sm' variant="outlined">&nbsp;<VscSaveAs size='18' className='float-left mr-2'/> Update Profile &nbsp;</Button>

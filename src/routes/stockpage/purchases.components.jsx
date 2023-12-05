@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import './stockpage.styles.css';
+import '../other-styles.styles.css';
 import AdminNavbar from '../../components/mynavbar/admin-navbar.components';
 import MenuStrip from '../../components/menu-strip/menu-strip.components';
 import { Button, Card, CardBody, Dialog, DialogBody, DialogFooter, DialogHeader, Drawer, Input, Option, Select, Textarea } from '@material-tailwind/react';

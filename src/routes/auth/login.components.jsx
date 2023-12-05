@@ -1,6 +1,7 @@
 
 import React, { useContext, useEffect, useState } from 'react'
 import './login.styles.css'
+import '../other-styles.styles.css';
 import { MdLogin, MdOutlineMail, MdOutlineMarkEmailUnread } from 'react-icons/md'
 import XformInput from '../../components/form/forminput.component'
 import { Button, Spinner } from '@material-tailwind/react'
@@ -12,6 +13,7 @@ import { OTPGen, createAuth, createUserDocumentFromAuth, errorToast, infoToast,
 import { UserContext } from '../../context/user.context'
 import { useLocation, useNavigate } from 'react-router-dom'
 import useAuth from '../../hooks/useAuth'
+import { FaRegUser } from 'react-icons/fa6'
 
 
 const LoginPage = () => {
@@ -22,7 +24,6 @@ const LoginPage = () => {
 
     const { currentUser, setCurrentUser } = useAuth();
     // console.log('currentUser:');
-    // console.log(currentUser);
     // var otpp = 'A'+Math.random()*107000;
     // console.log(otpp.substring(0, 5));
 
@@ -58,10 +59,10 @@ const LoginPage = () => {
             setFormfields(defaultFormFields);
             const { displayName } = user;
             successToast('Login successful..!');
+            navigate(from, { replace: true })
             setCurrentUser(user);
             console.log(user.email);
-            console.log(user.displayName);
-            navigate(from, { replace: true })
+            // console.log(user.displayName);
             
         } catch (error) {
             switch (error.code) {
@@ -111,6 +112,8 @@ const LoginPage = () => {
             if (error.code === 'auth/email-already-in-use') {
                 errorToast('Oops..! Email already in use');
                 return;
+            } else if (error.code === 'auth/weak-password') {
+                return infoToast('Password should not be less than 8 characters')
             }
             errorToast('Oops..! Unable to register. Check Email!')
             console.log('User creation encountered an error: ', error);
@@ -135,6 +138,18 @@ const LoginPage = () => {
         //     errorToast('Oops..! Incorrect OTP');
         // }
     }
+
+
+    // useEffect(() => {
+    //     if (localStorage.getItem('curUser') !== ''){
+    //         if(from === '/login'){
+    //             navigate('/', {replace:true})
+    //         } else {
+    //             navigate(from, {replace:true});
+    //         }
+    //             console.log(localStorage.getItem('curUser'));
+    //     }
+    // }, [currentUser])
 
 
 
@@ -198,66 +213,25 @@ const LoginPage = () => {
                     </div>
                 </div>
                 :
-                <div className='login-right2'>
-                    <div className='inner2'>
-
-                        <p className='sign-in'>Register</p>
-                        { spinner === true ? <Spinner className='w-8 h-8 mx-[calc((100%-64px)/2)]' /> : null }
-
-                        <form onSubmit={registerWithOtp}>
-
-                            {/* <p className="my-4">&nbsp;</p> */}
-                            <div className='items-input-group flex'>
-                                <h4 className='blue-head text-xs mx-4 my-1 tracking-wide'><FcInfo size='16' className='float-left' /> &nbsp; Enter Username and OTP to proceed</h4>
-                            </div>
-                
-                            <div className='items-input-group flex'>
-                                <XformInput inIcon={<MdOutlineMail />} name='displayName' type='text' size='lg' labelProp='hidden' placeholder='Username' elementClass='border-none px-5' className='bg-white/50 my-1§ w-full rounded-full shadow-md' required/>
-                            </div>
-                            
-                            <div className='items-input-group flex'>
-                                <XformInput inIcon={<HiOutlineLockClosed />} name='otp' type='password' size='lg' labelProp='hidden' placeholder='Enter OTP' elementClass='border-none px-5' className='bg-white/50 my-1 w-full rounded-full shadow-md' required/>
-                            </div>
-                
-                            <div className='items-input-group'>
-                                <Button type='submit' className='w-full float-center rounded-full' variant="outlined">&nbsp; Register &nbsp;<MdLogin size='18' className='float-right ml-2'/></Button>
-                            </div>
-                        </form>
-
-                        <div id='reg2' className='register-container'>
-                            <p>Already have an account?</p>
-                            <h3 onClick={userReg}>Login Here</h3>
-                        </div>
-
-                    </div>
-                </div>
                 // <div className='login-right2'>
                 //     <div className='inner2'>
 
                 //         <p className='sign-in'>Register</p>
-
                 //         { spinner === true ? <Spinner className='w-8 h-8 mx-[calc((100%-64px)/2)]' /> : null }
 
-                //         <form onSubmit={handleRegister}>
+                //         <form onSubmit={registerWithOtp}>
 
+                //             {/* <p className="my-4">&nbsp;</p> */}
                 //             <div className='items-input-group flex'>
-                //                 <h4 className='blue-head text-xs mx-4 my-1 tracking-wide'><FcInfo size='16' className='float-left' /> &nbsp; Provide details to register</h4>
+                //                 <h4 className='blue-head text-xs mx-4 my-1 tracking-wide'><FcInfo size='16' className='float-left' /> &nbsp; Enter Username and OTP to proceed</h4>
                 //             </div>
                 
                 //             <div className='items-input-group flex'>
-                //                 <XformInput inIcon={<MdOutlineMail />} name='displayName' onChange={handleChange} type='text' value={displayName} size='lg' labelProp='hidden' placeholder='Username' elementClass='border-none px-5' className='bg-white/50 my-1§ w-full rounded-full shadow-md' required/>
+                //                 <XformInput inIcon={<MdOutlineMail />} name='displayName' type='text' size='lg' labelProp='hidden' placeholder='Username' elementClass='border-none px-5' className='bg-white/50 my-1§ w-full rounded-full shadow-md' required/>
                 //             </div>
                             
                 //             <div className='items-input-group flex'>
-                //                 <XformInput inIcon={<MdOutlineMail />} name='email' onChange={handleChange} type='email' value={email} size='lg' labelProp='hidden' placeholder='Email' elementClass='border-none px-5' className='bg-white/50 my-1§ w-full rounded-full shadow-md' required/>
-                //             </div>
-                            
-                //             <div className='items-input-group flex'>
-                //                 <XformInput inIcon={<HiOutlineLockClosed />} name='password' onChange={handleChange} type='password' value={password} size='lg' labelProp='hidden' placeholder='Password' elementClass='border-none px-5' className='bg-white/50 my-1 w-full rounded-full shadow-md' required/>
-                //             </div>
-                            
-                //             <div className='items-input-group flex'>
-                //                 <XformInput inIcon={<HiOutlineLockClosed />} name='confirmPassword' onChange={handleChange} type='password' value={confirmPassword} size='lg' labelProp='hidden' placeholder='Confirm Password' elementClass='border-none px-5' className='bg-white/50 my-1 w-full rounded-full shadow-md' required/>
+                //                 <XformInput inIcon={<HiOutlineLockClosed />} name='otp' type='password' size='lg' labelProp='hidden' placeholder='Enter OTP' elementClass='border-none px-5' className='bg-white/50 my-1 w-full rounded-full shadow-md' required/>
                 //             </div>
                 
                 //             <div className='items-input-group'>
@@ -272,6 +246,48 @@ const LoginPage = () => {
 
                 //     </div>
                 // </div>
+
+                <div className='login-right2'>
+                    <div className='inner2'>
+
+                        <p className='sign-in'>Register</p>
+
+                        { spinner === true ? <Spinner className='w-8 h-8 mx-[calc((100%-64px)/2)]' /> : null }
+
+                        <form onSubmit={handleRegister}>
+
+                            <div className='items-input-group flex'>
+                                <h4 className='blue-head text-xs mx-4 my-1 tracking-wide'><FcInfo size='16' className='float-left' /> &nbsp; Provide details to register</h4>
+                            </div>
+                
+                            <div className='items-input-group flex'>
+                                <XformInput inIcon={<FaRegUser />} name='displayName' onChange={handleChange} type='text' value={displayName} size='lg' labelProp='hidden' placeholder='Username' elementClass='border-none px-5' className='bg-white/50 my-1§ w-full rounded-full shadow-md' required/>
+                            </div>
+                            
+                            <div className='items-input-group flex'>
+                                <XformInput inIcon={<MdOutlineMail />} name='email' onChange={handleChange} type='email' value={email} size='lg' labelProp='hidden' placeholder='Email' elementClass='border-none px-5' className='bg-white/50 my-1§ w-full rounded-full shadow-md' required/>
+                            </div>
+                            
+                            <div className='items-input-group flex'>
+                                <XformInput inIcon={<HiOutlineLockClosed />} name='password' onChange={handleChange} type='password' value={password} size='lg' labelProp='hidden' placeholder='Password' elementClass='border-none px-5' className='bg-white/50 my-1 w-full rounded-full shadow-md' required/>
+                            </div>
+                            
+                            <div className='items-input-group flex'>
+                                <XformInput inIcon={<HiOutlineLockClosed />} name='confirmPassword' onChange={handleChange} type='password' value={confirmPassword} size='lg' labelProp='hidden' placeholder='Confirm Password' elementClass='border-none px-5' className='bg-white/50 my-1 w-full rounded-full shadow-md' required/>
+                            </div>
+                
+                            <div className='items-input-group'>
+                                <Button type='submit' className='w-full float-center rounded-full' variant="outlined">&nbsp; Register &nbsp;<MdLogin size='18' className='float-right ml-2'/></Button>
+                            </div>
+                        </form>
+
+                        <div id='reg2' className='register-container'>
+                            <p>Already have an account?</p>
+                            <h3 onClick={userReg}>Login Here</h3>
+                        </div>
+
+                    </div>
+                </div>
             }
         </div>
     </>

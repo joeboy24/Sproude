@@ -97,6 +97,32 @@
     @apply font-light text-xs mb-0.5;
 }
 
+.item-name {
+    @apply text-sm;
+}
+
+.item-description {
+    @apply text-xs font-light text-blue-gray-500;
+}
+
+.cart-tbl {
+    @apply w-full;
+}
+
+.cart-tbl th {
+    @apply border-b text-xs tracking-widest border-blue-gray-100 bg-blue-gray-50 px-4 py-3 font-light leading-none opacity-70;
+}
+
+.cart-tbl tr {
+    @apply border-b hover:bg-blue-gray-50/20 hover:!border-b hover:border-b-orange-600/60
+    /* hover:border-b-2 hover:border-b-light-blue-300 */
+    ;
+}
+
+.general-container-size {
+    width: 800px;
+    @apply my-5;
+}
 
 
 
@@ -108,6 +134,7 @@
 
 @media (max-width: 800px) {
     .general-container-size {
-        @apply mx-2 w-[calc(100%-16px)];
+        width: 100%;
+        @apply mx-2;
     }
 }

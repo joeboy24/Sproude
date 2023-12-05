@@ -3,7 +3,7 @@ import logo from './logo.svg';
 import { Button, Navbar } from '@material-tailwind/react';
 import { Bs0Circle, BsClipboardCheck } from 'react-icons/bs'
 import { NavbarWithMegaMenu } from './components/navbar-check.components';
-import { Outlet, Route, Routes } from 'react-router-dom';
+import { Outlet, Route, Routes, useNavigate } from 'react-router-dom';
 import Homepage from './routes/home/homepage.components';
 import XcartPage from './routes/cartpage/cartpage.components';
 import StockPage, { StockIndex } from './routes/stockpage/stockpage.components';
@@ -22,26 +22,33 @@ import RequireAuth from './components/RequireAuth';
 
 
 function App() { 
+  const navigate = useNavigate();
   const { currentUser } = useContext(UserContext);
+  const curUser = localStorage.getItem('curUser');
+  // console.log(currentUser)
+  // if (curUser !== ''){
+  //     navigate('/');
+  //     // const currentUser = JSON.parse(localStorage.getItem('curUser'));
+  // }
 
   return (
     <>
     <Routes>
       <Route path='/' element={<NavigationPage />}>
         <Route index element={<Homepage />}/>
-        {/* <Route path='login' element={<LoginPage />}/> */}
-        <Route path='stock' element={<StockPage />}>
-          <Route index element={<StockIndex />}/>
-          <Route path='add-new-item' element={<NewItem />}/>
-          <Route path='purchases' element={<PurchasesPage />}/>
-        </Route>
-        <Route path='sales' element={<XcartPage />}/>
-        <Route element={<RequireAuth />}>
+        <Route element={<RequireAuth allowedRoles='user' />}>
+          {/* <Route path='login' element={<LoginPage />}/> */}
+          <Route path='stock' element={<StockPage />}>
+            <Route index element={<StockIndex />}/>
+            <Route path='add-new-item' element={<NewItem />}/>
+            <Route path='purchases' element={<PurchasesPage />}/>
+          </Route>
+          <Route path='sales' element={<XcartPage />}/>
           <Route path='expenses' element={<ExpensesPage />}/>
           <Route path='scan-doc' element={<ScanPage />}/>
+          <Route path='profile' element={<UserProfile />}/>
+          <Route path='company-setup' element={<CompanyPage />}/>
         </Route>
-        <Route path='profile' element={<UserProfile />}/>
-        <Route path='company-setup' element={<CompanyPage />}/>
       </Route>
       <Route path='login' element={<LoginPage />}/>
     </Routes>

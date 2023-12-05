@@ -4,9 +4,15 @@ import './scanpage.styles.css'
 import { ProductsContext } from '../../context/product.context';
 
 
-const GenInvoice = ({invoiceRecord}) => {
+const GenInvoice = ({company, invoiceRecord}) => {
     const { products } = useContext(ProductsContext);
     const { id, user, item_details, total, paid_debt, debt_bal, pay_mode, buyer_name, buyer_contact, discount, amt_paid, del_status, created_at, updated_at } = invoiceRecord;
+    const { country, companyName, slogan, phone, email, logo, address1, address2 } = company;
+
+    // {cur_date.toLocaleDateString()+' '+cur_date.toLocaleString('en-IN').split(' ')[1]}
+    const secs = created_at.seconds;
+    const newDate = new Date(secs * 1000);
+    const cur_date = new Date(created_at.seconds);
     // const findProduct = products.find(el => el.id === item_id);
     // console.log(invoiceRecord.created_at.seconds)
     
@@ -23,18 +29,21 @@ const GenInvoice = ({invoiceRecord}) => {
 
         <div className='invoice-top w-full flex pt-10'>
             <div className='company-details-left w-2/3'>
-                <img src="https://png.pngtree.com/template/20190119/ourmid/pngtree-water-logo-image_52770.jpg" alt="Sproud Logo" />
-                <h2>Sproude H2O</h2>
+                <img 
+                src={logo}
+                // src="https://png.pngtree.com/template/20190119/ourmid/pngtree-water-logo-image_52770.jpg" 92 Cansas Street | Melbourne, Victoria | 001345894777
+                alt="" />
+                <h2>{companyName}</h2>
                 <p>Invoice</p>
             </div>
 
             <div className='company-details-right'>
                 <table className='w-full'>
                     <tbody>
-                        <tr><td>Address</td><td>92 Cansas Street</td></tr>
-                        <tr><td>& Contact</td><td>Melbourne, Victoria</td></tr>
-                        <tr><td></td><td>001345894777</td></tr>
-                        <tr><td></td><td>Australia</td></tr>
+                        <tr><td>Address</td><td>{address1}</td></tr>
+                        <tr><td>& Contact</td><td>{address2}</td></tr>
+                        <tr><td></td><td>{phone}</td></tr>
+                        <tr><td></td><td>{country}</td></tr>
                         {/* <tr><td>Address</td><td>Franco Estate</td></tr>
                         <tr><td>& Contact</td><td>Kwabenya, Ghana</td></tr>
                         <tr><td></td><td>0202622172</td></tr> */}
@@ -53,7 +62,7 @@ const GenInvoice = ({invoiceRecord}) => {
                 </tr>
                 <tr className='relative'>
                     <td>{buyer_name}</td>
-                    <td>21/11/2023</td>
+                    <td>{cur_date.toLocaleDateString()}</td>
                     <td>{id.substring(2,15)}</td>
                     <td className='amount-focus text-right'>₵{total.toLocaleString()}.00</td>
                 </tr>
@@ -71,7 +80,7 @@ const GenInvoice = ({invoiceRecord}) => {
                 </tr>
                 <tr>
                     <td>Accra, Ghana</td>
-                    <td>21/11/2023</td>
+                    <td>{cur_date.toLocaleDateString()}</td>
                     <td></td>
                     <td></td>
                 </tr>

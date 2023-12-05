@@ -5,21 +5,26 @@ import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import useAuth from '../hooks/useAuth';
 import { UserContext } from '../context/user.context';
 
-const RequireAuth = () => {
-    console.log('Require Auth')
+const RequireAuth = ({ allowedRoles }) => {
     // const { currentUser } = useAuth();
-    const currentUser = JSON.parse(localStorage.getItem('curUser'));
+    // console.log('Require Auth')
+    // console.log(currentUser)
+    var currentUser = '';
     const location = useLocation();
+    if (localStorage.getItem('curUser') !== ''){
+        currentUser = JSON.parse(localStorage.getItem('curUser'));
+    }
 
-    useEffect(() => {
-        console.log('Cur Changes')
-        console.log(currentUser)
-    },[currentUser]);
+    // useEffect(() => {
+    //     console.log('Cur Changes')
+    //     console.log(currentUser)
+    // },[currentUser]);
     
 
     return (
         // currentUser?.auth
         currentUser?.uid
+        // allowedRoles.includes(currentUser?.status)
             ? <Outlet />
             : <Navigate to='/login' state={{ from: location }} replace/>
     );

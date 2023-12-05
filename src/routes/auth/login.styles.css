@@ -18,7 +18,7 @@
 }
 
 .login-right2 {
-    @apply w-1/2 bg-teal-700 rounded-2xl shadow-2xl;
+    @apply w-[calc(60%-1px)] bg-teal-700 rounded-2xl shadow-2xl;
     background: url(https://img.freepik.com/premium-photo/abstract-neo-memphis-style-background-with-grainy-texture-trendy-contemporary-design-digital-art_598586-586.jpg?size=626&ext=jpg);
     background-size: 100%
 }
