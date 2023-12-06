@@ -7,7 +7,7 @@
 
 .menu-strip {
     /* width: 800px; */
-    @apply flex text-center;
+    @apply flex text-center py-1;
 }
 
 .menu-link span {

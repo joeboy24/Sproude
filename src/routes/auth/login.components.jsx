@@ -27,6 +27,7 @@ const LoginPage = () => {
     // var otpp = 'A'+Math.random()*107000;
     // console.log(otpp.substring(0, 5));
 
+    const [newUser, setNewUser] = useState(currentUser);
     const [register, setRegister] = useState(false);
     const [spinner, setSpinner] = useState(false);
     const userReg = () => setRegister(!register);
@@ -59,10 +60,11 @@ const LoginPage = () => {
             const { user } = await signInAuthWithEmailAndPassword(email, password);
             setFormfields(defaultFormFields);
             const { displayName } = user;
-            successToast('Login successful..!');
-            navigate(from, { replace: true })
-            setCurrentUser(user);
+            successToast('Logging you in..!');
+            // setCurrentUser(user);
+            setNewUser(user);
             console.log(user.email);
+            navigate(from, { replace: true })
             // console.log(user.displayName);
             
         } catch (error) {
@@ -101,7 +103,6 @@ const LoginPage = () => {
             console.log('spinToggle: '+spinner);
             // return;
             const { user } = await createAuth(email, password);
-            // setCurrentUser(user);
             await (user, { displayName });
             await createUserDocumentFromAuth(user, {displayName});
             setFormfields(defaultFormFields);
@@ -141,16 +142,18 @@ const LoginPage = () => {
     }
 
 
-    // useEffect(() => {
+    useEffect(() => {
     //     if (localStorage.getItem('curUser') !== ''){
-    //         if(from === '/login'){
-    //             navigate('/', {replace:true})
-    //         } else {
-    //             navigate(from, {replace:true});
-    //         }
+            // if(from === '/login'){
+            //     navigate('/', {replace:true})
+            // } else {
+                if (currentUser) {
+                    navigate(from, {replace:true});
+                }
+            // }
     //             console.log(localStorage.getItem('curUser'));
     //     }
-    // }, [currentUser])
+    }, [currentUser])
 
 
 
@@ -178,6 +181,10 @@ const LoginPage = () => {
                 }
                 </div>
             </div>
+
+            {/* { currentUser ?
+                <p>{currentUser.displayName}</p>
+            :<p>No User</p>} */}
 
             {
                 register === false ?

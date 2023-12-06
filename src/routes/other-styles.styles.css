@@ -138,7 +138,7 @@ table {
  
 .items-input-group {
     @apply 
-    /* w-[calc(80%-1px)] mx-[calc(20%/2)]  */
+    w-[calc(80%-1px)] mx-[calc(20%/2)] 
     my-3;
 }
 
@@ -154,6 +154,13 @@ table {
     @apply w-full
 }
 
+.home-container {
+    width: 800px;
+    @apply min-h-[calc(100vh-140px)] shadow-lg rounded-lg my-5 relative bg-no-repeat;
+    background: url(https://firebasestorage.googleapis.com/v0/b/sproude-pos.appspot.com/o/files%2F2b48ff08-65e9-42bf-9f70-9e8f82de4701?alt=media&token=74e6c5d1-96ed-4834-ba10-67a9620cd10c);
+    background-size: 100%;
+}
+
 
 
 
@@ -165,6 +172,10 @@ table {
 @media (max-width: 800px) {
     .general-container-size {
         @apply w-[calc(100vw-32px)] mx-2;
+    }
+
+    .home-container {
+        @apply w-[calc(100%-8px)] min-h-[calc(100vh-100px)] bg-no-repeat;
     }
 }
 
@@ -186,9 +197,9 @@ table {
         @apply hidden;
     }
  
-    /* .items-input-group {
-        @apply w-2/5 bg-red-400;
-    } */
+    .items-input-group {
+        @apply w-full;
+    }
     
     .input-group-right {
         @apply w-full p-1;
@@ -207,9 +218,13 @@ table {
     }
 
     .home-container {
-        @apply w-[calc(100%-8px)] min-h-[calc(100vh-140px)];
+        @apply w-[calc(100%-8px)] min-h-[calc(100vh-140px)] bg-no-repeat;
         background: url(https://firebasestorage.googleapis.com/v0/b/sproude-pos.appspot.com/o/files%2Fc1620365-bb82-4f9f-bb7e-f2d4294432f8?alt=media&token=0533247b-922f-4a98-a13a-4e23925b0e4b);
         background-size: 100%;
+    }
+
+    .pivoapps {
+        @apply bottom-4 left-4 absolute;
     }
 
 }

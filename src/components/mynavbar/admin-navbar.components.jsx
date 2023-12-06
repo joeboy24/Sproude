@@ -44,7 +44,7 @@ const AdminNavbar = () => {
         
         <div className="nav-col-3">
           <div className='nav-actions-container'>
-            <IconButton onClick={pageRefresh} className='icon-btn'><HiRefresh size='20'/></IconButton>
+            {/* <IconButton onClick={pageRefresh} className='icon-btn'><HiRefresh size='20'/></IconButton> */}
             <Link to='company-setup'><IconButton className='icon-btn'><BsGearFill size='16'/></IconButton></Link>
             {/* <Badge content="5"> */}
               <IconButton className='icon-btn'><FaBell size='16'/></IconButton>

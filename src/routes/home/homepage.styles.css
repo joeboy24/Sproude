@@ -31,7 +31,7 @@
 
 .pivoapps h4 {
     font-size: 0.5em;
-    @apply uppercase font-light tracking-wider;
+    @apply uppercase font-light tracking-wider text-gray-600;
 }
 
 .pivoapps {
@@ -49,6 +49,10 @@
 
 .sproude h4 {
     @apply text-xs uppercase font-light;
+}
+
+.upgrade {
+    @apply w-1/2 px-5 py-2 m-2 bg-gray-900 text-gray-300 rounded-sm text-xs uppercase hover:opacity-80 mx-[calc(50%/2)];
 }
 
 /* .home-sub-header {

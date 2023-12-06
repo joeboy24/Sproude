@@ -190,7 +190,7 @@ const CompanyPage = () => {
 
           <form id=''>
             <div className='items-input-group flex'>
-              <XformInput inIcon={<PiBuildingsBold />} onChange={handleCompanyChange} value={companyDisplayName} className='w-full' name='companyDisplayName' type='text' size='lg' label='Company Display Name' maxlength='12' required/>
+              <XformInput inIcon={<PiBuildingsBold />} onChange={handleCompanyChange} value={companyDisplayName} className='w-full' name='companyDisplayName' type='text' size='lg' label='Company Display Name' maxLength='12' required/>
             </div>
 
             <div className='items-input-group flex'>
