@@ -1,6 +1,6 @@
 
 .login-container-size {
-    @apply flex my-20 w-4/6 mx-[calc(33%/2)];
+    @apply flex my-24 w-1/2 mx-[calc(50%/2)];
 }
 
 .login-left {
@@ -24,7 +24,7 @@
 }
 
 .inner2 {
-    @apply bg-white/60 rounded-lg mx-20 my-28 py-10;
+    @apply bg-white/60 rounded-lg mx-20 my-20 py-10 px-4;
 }
 
 .sign-in {
@@ -57,6 +57,13 @@
         @apply flex my-20 w-4/6 mx-[calc(33%/2)];
     }
 } */
+
+
+@media (max-width: 1300px) {
+    .login-container-size {
+        @apply w-4/6 mx-[calc(33%/2)];
+    }
+}
 
 @media (max-width: 1100px) {
     .inner2 {

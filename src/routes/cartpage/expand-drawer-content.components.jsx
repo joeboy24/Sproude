@@ -61,7 +61,7 @@ const ExpandDrawer = ({ order }) => {
               </tr>
               <tr>
                   <td>Amount Paid<p className='item-description'>Change</p></td>
-                  <td>{amt_paid}<p className='item-description'>{total - amt_paid <= 0 ? total - amt_paid : null}</p></td>
+                  <td>{amt_paid}<p className='item-description'>{total - amt_paid <= 0 ? (total - amt_paid).toLocaleString() : null}</p></td>
               </tr>
           </tbody>
         </table>

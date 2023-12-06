@@ -1,6 +1,7 @@
 
 
 .menu-strip-container {
+    overflow: hidden;
     @apply w-full grid place-items-center shadow-md mb-3 bg-white/60;
 }
 

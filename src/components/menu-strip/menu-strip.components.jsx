@@ -1,5 +1,6 @@
 import React from 'react'
 import './menu-strip.styles.css'
+import '../../routes/other-styles.styles.css'
 import { IconButton } from '@material-tailwind/react'
 import { FaClipboard, FaClipboardList } from 'react-icons/fa'
 import { RiBarcodeBoxLine } from 'react-icons/ri'
@@ -15,27 +16,27 @@ const MenuStrip = () => {
             {/* <button><FaClipboardList size='30'/></button>
             <button><BsHandbag size='30'/></button> */}
             <a href="/"><div className='menu-link'>
-                <TiHomeOutline className='p-0 -mb-1.5' size='32'/>
+                <TiHomeOutline className='p-0 -mb-1.5' size='30'/>
                 <span>&nbsp;Home&nbsp;</span>
             </div></a>
             <a href="/stock"><div className='menu-link'>
-                <HiOutlineClipboardDocumentList className='p-0 -mb-1.5' size='32'/>
-                <span>&nbsp;Stock &nbsp;</span>
+                <HiOutlineClipboardDocumentList className='p-0 -mb-1.5' size='30'/>
+                <span>Stock</span>
             </div></a>
             <a href="/sales"><div className='menu-link'>
                 <BsCart4 className='p-0 -mb-1.5' size='32'/>
                 <span>Sales</span>
             </div></a>
             <a href="/expenses"><div className='menu-link'>
-                <LiaFileInvoiceDollarSolid className='p-0 -mb-1.5' size='32'/>
+                <LiaFileInvoiceDollarSolid className='p-0 -mb-1.5' size='30'/>
                 <span>Expenses</span>
             </div></a>
             <a href="/reports"><div className='menu-link'>
-                <BsFileEarmarkBarGraph className='p-0 -mb-1.5' size='32'/>
+                <BsFileEarmarkBarGraph className='p-0 -mb-1.5' size='30'/>
                 <span>Report</span>
             </div></a>
             <a href="/scan-doc"><div className='menu-link'>
-                <RiBarcodeBoxLine className='p-0 -mb-1.5' size='32'/>
+                <RiBarcodeBoxLine className='p-0 -mb-1.5' size='30'/>
                 <span>Scan</span>
             </div></a>
             {/* <IconButton className='icon-btn'><HiOutlineClipboardDocumentList size='24'/></IconButton>

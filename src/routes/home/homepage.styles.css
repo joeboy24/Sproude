@@ -25,6 +25,32 @@
     @apply text-xs uppercase text-blue-gray-600;
 }
 
+.pivoapps img {
+    @apply w-14;
+}
+
+.pivoapps h4 {
+    font-size: 0.5em;
+    @apply uppercase font-light tracking-wider;
+}
+
+.pivoapps {
+    @apply bottom-4 left-4 absolute;
+}
+
+.sproude {
+    @apply text-center mt-[calc(35vh-1px)];
+}
+
+.sproude h2 {
+    font-size: 2em;
+    @apply uppercase font-extrabold text-white tracking-tighter;
+}
+
+.sproude h4 {
+    @apply text-xs uppercase font-light;
+}
+
 /* .home-sub-header {
     @apply;
 } */

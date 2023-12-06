@@ -89,9 +89,9 @@ const PurchasesPage = () => {
         return infoToast('Select delivery status to proceed')
     }
     formFields['purchased_items'] = localCart;
-    console.log('------------')
-    console.log(formFields)
-    console.log('------------')
+    // console.log('------------')
+    // console.log(formFields)
+    // console.log('------------')
     addPurchases(formFields);
 
     // if (!formFields.category || formFields.category == '' || formFields.category == '-- Select --') {
@@ -120,6 +120,8 @@ const PurchasesPage = () => {
 
 
   useEffect(() => {
+
+    // localStorage.removeItem('localPurchases')
     const locPur = localStorage.getItem('localPurchases');
     const locPurItems = localStorage.getItem('locPurItems');
 
@@ -201,13 +203,13 @@ const PurchasesPage = () => {
 
   return (
     <>
-      <Card className='general-container-size'>
+      <Card className='general-container-size !p-2'>
 
         <CardBody>
 
 
           <p onClick={handleAddNewItem} className='change-date-link-inverse float-right'><LuUserPlus size='16' className='float-left mr-2 mt-0.5' /> Add Supplier</p>
-          <div className="relative flex w-2/3">
+          <div className="input-with-btn">
               <Input
                   type="text"
                   label="Search Purchases"
@@ -228,14 +230,14 @@ const PurchasesPage = () => {
               </Button>
           </div>
 
-          <div className='border py-3 mt-5 mb-2 rounded-md'>
+          <div className='border py-3 mt-5 mb-4 rounded-md'>
               <form onSubmit={handleSubmit}>
-                  <div className='flex w-full'>
+                  <div className='cart-cont1 w-full'>
                       <XformInput className='xform-input w-2/6' onChange={handleChange} value={supplier_name} name='supplier_name' type='text' size='md' label="Supplier's Name" required/>
                       <XformInput className='xform-input w-2/6' onChange={handleChange} value={supplier_contact} name='supplier_contact' type='number' min='0' size='md' label="Supplier's Contact" required/>
                       <XformInput className='xform-input w-2/6' onChange={handleChange} value={purchase_date} name='purchase_date' type='date' size='md' label='Purchase Date' required/>
                   </div>
-                  <div className='flex w-full'>
+                  <div className='cart-cont1 w-full'>
                       <XformInput className='xform-input w-2/6' onChange={handleChange} value={qty} name='qty' type='number' min='0' size='md' label='Total Qty' required/>
                       <XformInput className='xform-input w-2/6' onChange={handleChange} value={cost} name='cost' type='number' min='0' size='md' label='Total Cost' required/>
                       <select className='xform-input w-2/6 custom-select' size='lg' label="Select status" name='del_status' onChange={handleChange}>
@@ -293,44 +295,46 @@ const PurchasesPage = () => {
           </div> 
             
           { purchss.length > 0 ?
-            <table className="cart-tbl w-calc[100%-100px] min-w-max table-auto text-left">
-              <thead>
-                  <tr>
-                      <th>SUPPLIER</th>
-                      <th>STATUS</th>
-                      <th className='text-right'>COST/QTY</th>
-                      <th className='text-right'>DATE</th>
-                      <th className='text-right'>ACTIONS</th>
-                  </tr>
-              </thead>
+            <div className='tbl-container overflow-auto'>
+              <table className="cart-tbl w-calc[100%-100px] min-w-max table-auto text-left">
+                <thead>
+                    <tr>
+                        <th>SUPPLIER</th>
+                        <th>STATUS</th>
+                        <th className='text-right'>COST/QTY</th>
+                        <th className='text-right'>DATE</th>
+                        <th className='text-right'>ACTIONS</th>
+                    </tr>
+                </thead>
 
-              <tbody>
-                  {purchss.map((pur, index) => {
-                    var sendClass = '';
-                    const isLast = index === purchss.length - 1;
-                    const classes = isLast ? "p-4" : "p-4 border-blue-gray-50";
-                    if (pur.del === 'no') {
-                      sendClass = 'even:bg-blue-gray-50/30';
-                    } else {
-                      sendClass = 'bg-red-100/80 !border-b-4 border-b-white';
-                    }
-                    return(
-                      <PurchaseRow key={pur.id} getId={pull_id} i={i++} purchase={pur} getDrawerId={pullDrawerId} classes={classes} sendClass={sendClass} openDialog={handleOpen}/>
-                    );
-                  }).reverse()}
-                  {/* <tr>
-                      <td></td>
-                      <td className='px-4 text-right'>
-                          <p className='item-name'>Total :</p>
-                          <p className='item-description'>Records / Amount</p>
-                      </td>
-                      <td className='pl-14 py-3'><p className='item-description'>{cartCount}</p></td>
-                      <td className='pl-14 py-3'></td>
-                      <td className='px-4 text-center'><p className='item-name'>{(salesRecords.reduce((total, item) => total + item.total, 0)).toFixed(2).toLocaleString()}</p></td>
-                      <td></td>
-                  </tr> */}
-              </tbody>
-            </table>
+                <tbody>
+                    {purchss.map((pur, index) => {
+                      var sendClass = '';
+                      const isLast = index === purchss.length - 1;
+                      const classes = isLast ? "p-4" : "p-4 border-blue-gray-50";
+                      if (pur.del === 'no') {
+                        sendClass = 'even:bg-blue-gray-50/30';
+                      } else {
+                        sendClass = 'bg-red-100/80 !border-b-4 border-b-white';
+                      }
+                      return(
+                        <PurchaseRow key={pur.id} getId={pull_id} i={i++} purchase={pur} getDrawerId={pullDrawerId} classes={classes} sendClass={sendClass} openDialog={handleOpen}/>
+                      );
+                    }).reverse()}
+                    {/* <tr>
+                        <td></td>
+                        <td className='px-4 text-right'>
+                            <p className='item-name'>Total :</p>
+                            <p className='item-description'>Records / Amount</p>
+                        </td>
+                        <td className='pl-14 py-3'><p className='item-description'>{cartCount}</p></td>
+                        <td className='pl-14 py-3'></td>
+                        <td className='px-4 text-center'><p className='item-name'>{(salesRecords.reduce((total, item) => total + item.total, 0)).toFixed(2).toLocaleString()}</p></td>
+                        <td></td>
+                    </tr> */}
+                </tbody>
+              </table>
+            </div>
           : null
           // <p className='item-description text-center uppercase'>Oops..! No items found</p>
           }

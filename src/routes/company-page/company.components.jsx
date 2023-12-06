@@ -41,6 +41,7 @@ const CompanyPage = () => {
   const handleOpen = () => setOpen(!open);
 
   const defaultCompanyValues = {
+    companyDisplayName: '',
     companyName: '',
     slogan: '',
     address1: '',
@@ -54,7 +55,7 @@ const CompanyPage = () => {
   const { company, getCompany } = useContext(UserContext);
   // const [ company, setCompany ] = useState(defaultCompanyValues);
   const [ formFields, setFormFields ] = useState(defaultCompanyValues);
-  const { companyName, slogan, address1, address2, phone, email, country, logo } = formFields;
+  const { companyDisplayName, companyName, slogan, address1, address2, phone, email, country, logo } = formFields;
   // console.log(formFields)
 
   const [img, setImg] = useState('')
@@ -189,6 +190,10 @@ const CompanyPage = () => {
 
           <form id=''>
             <div className='items-input-group flex'>
+              <XformInput inIcon={<PiBuildingsBold />} onChange={handleCompanyChange} value={companyDisplayName} className='w-full' name='companyDisplayName' type='text' size='lg' label='Company Display Name' maxlength='12' required/>
+            </div>
+
+            <div className='items-input-group flex'>
               <XformInput inIcon={<PiBuildingsBold />} onChange={handleCompanyChange} value={companyName} className='w-full' name='companyName' type='text' size='lg' label='Company Name' required/>
             </div>
             
@@ -250,7 +255,7 @@ const CompanyPage = () => {
             </div>
             
             {/* <div className='items-input-group flex my-2'>
-              <img className='w-8 mx-2' src={logo} alt="Company Logo" />
+              <img className='w-8 h-8 mx-2' src={logo} alt="Company Logo" />
               <h4 className='blue-head text-xs'><Link to={logo}>{logo}</Link></h4>
             </div> */}
 
@@ -303,9 +308,9 @@ const CompanyPage = () => {
                   const isLast = index === curUsers.length - 1;
                   const classes = isLast ? "p-4 " : "p-4 border-blue-gray-50 ";
                   if (item.del === 'yes') {
-                    sendClass = 'bg-red-100/80 !border-b-4 border-b-white';
+                    sendClass = 'bg-red-100/80 !border-b-4 border-b-white flex-col';
                   } else {
-                    sendClass = 'even:bg-blue-gray-50/30';
+                    sendClass = 'even:bg-blue-gray-50/30 flex-col';
                   }
                   return (
                     <tr key={uid} className={sendClass}>

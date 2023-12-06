@@ -111,45 +111,47 @@ const NewItem = () => {
           <p onClick={handleAddNewItem} className='change-date-link-inverse float-left'><BsPlusCircle size='16' className='float-left mr-2 mt-0.5' /> Add New Item</p>
 
           { products.length > 0 ?
-            <table className="cart-tbl w-calc[100%-100px] min-w-max table-auto text-left">
-              <thead>
-                  <tr>
-                      <th className='text-center'>#</th>
-                      <th>PRODUCT DETAILS</th>
-                      <th>STATUS</th>
-                      <th>QUANTITY</th>
-                      <th className=' text-right'>PRICE GH₵</th>
-                      <th className='text-right'>ACTIONS</th>
-                  </tr>
-              </thead>
+            <div className='tbl-container overflow-auto'>
+              <table className="cart-tbl w-calc[100%-100px] min-w-max table-auto text-left">
+                <thead>
+                    <tr>
+                        <th className='text-center'>#</th>
+                        <th>PRODUCT DETAILS</th>
+                        <th>STATUS</th>
+                        <th>QUANTITY</th>
+                        <th className=' text-right'>PRICE GH₵</th>
+                        <th className='text-right'>ACTIONS</th>
+                    </tr>
+                </thead>
 
-              <tbody>
-                  {products.map((product, index) => {
-                    var sendClass = '';
-                    const isLast = index === products.length - 1;
-                    const classes = isLast ? "p-4" : "p-4 border-blue-gray-50";
-                    if (product.del === 'no') {
-                      sendClass = 'even:bg-blue-gray-50/30';
-                    } else {
-                      sendClass = 'bg-red-100/80 !border-b-4 border-b-white';
-                    }
-                    return(
-                      <InventoryRow key={product.id} getId={pull_id} i={i++} product={product} classes={classes} sendClass={sendClass} openDialog={handleOpen}/>
-                    );
-                  }).reverse()}
-                  {/* <tr>
-                      <td></td>
-                      <td className='px-4 text-right'>
-                          <p className='item-name'>Total :</p>
-                          <p className='item-description'>Records / Amount</p>
-                      </td>
-                      <td className='pl-14 py-3'><p className='item-description'>{cartCount}</p></td>
-                      <td className='pl-14 py-3'></td>
-                      <td className='px-4 text-center'><p className='item-name'>{(salesRecords.reduce((total, item) => total + item.total, 0)).toFixed(2).toLocaleString()}</p></td>
-                      <td></td>
-                  </tr> */}
-              </tbody>
-            </table>
+                <tbody>
+                    {products.map((product, index) => {
+                      var sendClass = '';
+                      const isLast = index === products.length - 1;
+                      const classes = isLast ? "p-4" : "p-4 border-blue-gray-50";
+                      if (product.del === 'no') {
+                        sendClass = 'even:bg-blue-gray-50/30';
+                      } else {
+                        sendClass = 'bg-red-100/80 !border-b-4 border-b-white';
+                      }
+                      return(
+                        <InventoryRow key={product.id} getId={pull_id} i={i++} product={product} classes={classes} sendClass={sendClass} openDialog={handleOpen}/>
+                      );
+                    }).reverse()}
+                    {/* <tr>
+                        <td></td>
+                        <td className='px-4 text-right'>
+                            <p className='item-name'>Total :</p>
+                            <p className='item-description'>Records / Amount</p>
+                        </td>
+                        <td className='pl-14 py-3'><p className='item-description'>{cartCount}</p></td>
+                        <td className='pl-14 py-3'></td>
+                        <td className='px-4 text-center'><p className='item-name'>{(salesRecords.reduce((total, item) => total + item.total, 0)).toFixed(2).toLocaleString()}</p></td>
+                        <td></td>
+                    </tr> */}
+                </tbody>
+              </table>
+            </div>
           : null
           // <p className='item-description text-center uppercase'>Oops..! No items found</p>
           }

@@ -33,6 +33,7 @@ const LoginPage = () => {
     const spinToggle = () => setSpinner(!spinner);
 
     const defaultFormFields = {
+        otp: '',
         displayName: '',
         email: '',
         password: '',
@@ -40,7 +41,7 @@ const LoginPage = () => {
     };
 
     const [ formFields, setFormfields ] = useState(defaultFormFields);
-    const { displayName, email, password, confirmPassword } = formFields;
+    const { otp, displayName, email, password, confirmPassword } = formFields;
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -260,6 +261,10 @@ const LoginPage = () => {
                                 <h4 className='blue-head text-xs mx-4 my-1 tracking-wide'><FcInfo size='16' className='float-left' /> &nbsp; Provide details to register</h4>
                             </div>
                 
+                            <div className='items-input-group flex'>
+                                <XformInput inIcon={<FaRegUser />} name='displayName' onChange={handleChange} type='text' value={otp} size='lg' labelProp='hidden' placeholder='Type OTP' elementClass='border-none px-5' className='bg-white/50 my-1§ w-full rounded-full shadow-md' required/>
+                            </div>
+                            
                             <div className='items-input-group flex'>
                                 <XformInput inIcon={<FaRegUser />} name='displayName' onChange={handleChange} type='text' value={displayName} size='lg' labelProp='hidden' placeholder='Username' elementClass='border-none px-5' className='bg-white/50 my-1§ w-full rounded-full shadow-md' required/>
                             </div>

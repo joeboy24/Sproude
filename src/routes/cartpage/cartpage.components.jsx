@@ -201,11 +201,12 @@ const XcartPage = () => {
                 
                 <div className='cart-top'>
                     <form onSubmit={handleItemSubmit}>
-                        <div className='flex w-full'>
+                        <div className='cart-cont1 w-full'>
                             <input type="hidden" name='id' onChange={()=>{}} value={expandProduct.id} />
                             <XformInput id='searchInput' onChange={handleSearch} value={newSearchKey} className='xform-input w-4/6' size='md' label={ expandProduct.name } required/>
                             <XformInput id='reference' onChange={()=>{}} value={ expandProduct.product_id } className='xform-input w-2/6' size='md' label='Reference' required/>
                         </div>
+
                         <div className='search-list'>
                             { isDropOpen === '' ? null :
                             <Card className='search-list-card relative'>
@@ -229,10 +230,11 @@ const XcartPage = () => {
                             </Card>
                             }
                         </div>
-                        <div className='flex w-full'>
+
+                        <div className='cart-cont1 mb-2 w-full'>
                             <XformInput className='xform-input w-2/6' size='md' onChange={()=>{}} label='Price' value={ purchaseType === 'RTL' ? expandProduct.rtl_price : expandProduct.whl_price }/>
                             <XformInput name='qty' className='xform-input w-2/6' type='number' onChange={handleQtyChange} min='1' max={ purchaseType === 'RTL' ? expandProduct.rtl_qty : expandProduct.whl_qty } size='md' label='Qty.' required/>
-                            <Button className='w-2/6 m-1 myBtn' type='submit'><BsPlusCircle size='18' className='float-left'/><span>Add to Cart</span></Button>
+                            <Button className='w-auto m-1 myBtn' type='submit'><BsPlusCircle size='18' className='float-left'/><span>&nbsp;&nbsp;&nbsp;Add to Cart</span></Button>
                         </div>
                         
                         { expandProduct.product_id === '' ? null :
@@ -255,37 +257,39 @@ const XcartPage = () => {
                 </div>
 
                 { cartItems.length > 0 ?
-                    <table className="cart-tbl w-full min-w-max table-auto text-left">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Item Details</th>
-                                <th>Quantity</th>
-                                <th className='text-center'>Price (Gh₵)</th>
-                                <th className='text-right'>Actions</th>
-                            </tr>
-                        </thead>
+                    <div className='tbl-container overflow-auto'>
+                        <table className="cart-tbl w-full min-w-max table-auto text-left">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Item Details</th>
+                                    <th>Quantity</th>
+                                    <th className='text-center'>Price (Gh₵)</th>
+                                    <th className='text-right'>Actions</th>
+                                </tr>
+                            </thead>
 
-                        <tbody>
-                        {cartItems.map((product, index) => {
-                            const isLast = index === cartItems.length - 1;
-                            const classes = isLast ? "p-4" : "p-4 border-blue-gray-50";
-                            return(
-                                <XcartItemRow c={c++} key={product.id} product={product} classes={classes} />
-                            );
-                        })}
-                        <tr>
-                            <td></td>
-                            <td className='px-4 text-right'>
-                                <p className='item-name'>Total :</p>
-                                <p className='item-description'>Qty. / Amount Payable</p>
-                            </td>
-                            <td className='pl-14 py-3'><p className='item-description'>{cartCount}</p></td>
-                            <td className='px-4 text-center'><p className='item-name'>{cartTotal.toLocaleString()}</p></td>
-                            <td></td>
-                        </tr>
-                        </tbody>
-                    </table>
+                            <tbody>
+                            {cartItems.map((product, index) => {
+                                const isLast = index === cartItems.length - 1;
+                                const classes = isLast ? "p-4" : "p-4 border-blue-gray-50";
+                                return(
+                                    <XcartItemRow c={c++} key={product.id} product={product} classes={classes} />
+                                );
+                            })}
+                            <tr>
+                                <td></td>
+                                <td className='px-4 text-right'>
+                                    <p className='item-name'>Total :</p>
+                                    <p className='item-description'>Qty. / Amount Payable</p>
+                                </td>
+                                <td className='pl-14 py-3'><p className='item-description'>{cartCount}</p></td>
+                                <td className='px-4 text-center'><p className='item-name'>{cartTotal.toLocaleString()}</p></td>
+                                <td></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     : null
                     // <p>No items in cart</p>
                 }
@@ -323,7 +327,7 @@ const XcartPage = () => {
 
 
         { salesRecords.length > 0 ?
-            <Card className='cartpage-content'>
+            <Card className='general-container-size'>
                 <CardBody>
                     <div className='table-container1 overflow-auto'>
                         {/* <p>{new Date('28-Nov-2023').getTime()} - {cur_dt.getTime()}</p> */}

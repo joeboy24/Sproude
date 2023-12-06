@@ -101,7 +101,7 @@ const ExpensesPage = () => {
 
           <form id='ensesForm' onSubmit={handleSubmit}>
             <div className='items-input-group flex'>
-              <div className='input-group-left'><p className='mt-2'>Date (Readonly)</p></div>  
+              <div className='input-group-left'><p>Date (Readonly)</p></div>  
               
               <div className='input-group-right'>
                 <XformInput name='created_at' id='date_today' value={cur_date.toLocaleDateString()+' '+cur_date.toLocaleString('en-IN').split(' ')[1]} type='text' min='0' size='lg' label='System Date' readOnly/>
@@ -120,7 +120,7 @@ const ExpensesPage = () => {
             </div>
             
             <div className='items-input-group flex'>
-              <div className='input-group-left'><p className='mt-2'>Expense Title</p></div>
+              <div className='input-group-left'><p>Expense Title</p></div>
               <div className='input-group-right'><XformInput name='exp_title' type='text' size='lg' label='Title' required/></div>
             </div>
   
@@ -130,7 +130,7 @@ const ExpensesPage = () => {
             </div>
 
             <div className='items-input-group flex'>
-              <div className='input-group-left'><p className='mt-2'>Amount spent</p></div>
+              <div className='input-group-left'><p>Amount spent</p></div>
               <div className='input-group-right'><XformInput name='cost' type='number' min='0' size='lg' label='Cost' required/></div>
             </div>
 
@@ -148,7 +148,7 @@ const ExpensesPage = () => {
       </Card>
 
       { expenses.length > 0 ?
-        <Card className='general-container-size'>
+        <Card className='general-container-size overflow-auto '>
           <CardBody>
             <table className="cart-tbl w-full min-w-max table-auto text-left">
               <thead>

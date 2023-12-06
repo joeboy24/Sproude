@@ -1,15 +1,14 @@
 
-.cartpage-content {
-    width: 800px;
-    @apply my-5;
-}
-
 .cartpage-content th {
     @apply text-sm;
 }
 
 .cart-top {
     @apply w-full border mb-10 rounded-t-lg;
+}
+
+.cart-cont1 {
+    @apply flex;
 }
 
 .xform-input {
@@ -51,7 +50,7 @@
     @apply mr-4;
 }
 
-.cart-tbl {
+/* .cart-tbl {
     @apply w-full;
 }
 
@@ -61,9 +60,8 @@
 
 .cart-tbl tr {
     @apply border-b hover:bg-blue-gray-50/20 hover:!border-b hover:border-b-orange-600/60
-    /* hover:border-b-2 hover:border-b-light-blue-300 */
     ;
-}
+} */
 
 .cart-text {
     @apply my-2 text-3xl font-extralight uppercase text-blue-gray-500 tracking-wide ;

@@ -264,9 +264,9 @@ const ScanPage = () => {
         </Card>
 
 
-        <Card className='cartpage-content no-print'>
+        <Card className='general-container-size no-print'>
             <CardBody>
-                <div className='table-container1 overflow-auto'>
+                <div className='tbl-container overflow-auto'>
                     <table className="cart-tbl w-calc[100%-100px] min-w-max table-auto text-left">
                         <thead>
                             <tr>

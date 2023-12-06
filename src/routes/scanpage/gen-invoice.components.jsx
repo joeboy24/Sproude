@@ -27,65 +27,67 @@ const GenInvoice = ({company, invoiceRecord}) => {
   return (
     <div className='invoice-container'>
 
-        <div className='invoice-top w-full flex pt-10'>
-            <div className='company-details-left w-2/3'>
-                <img 
-                src={logo}
-                // src="https://png.pngtree.com/template/20190119/ourmid/pngtree-water-logo-image_52770.jpg" 92 Cansas Street | Melbourne, Victoria | 001345894777
-                alt="" />
-                <h2>{companyName}</h2>
-                <p>Invoice</p>
+        <div className='tbl-container overflow-auto'>
+            <div className='invoice-top w-full flex pt-10'>
+                <div className='company-details-left w-2/3'>
+                    <img 
+                    src={logo}
+                    // src="https://png.pngtree.com/template/20190119/ourmid/pngtree-water-logo-image_52770.jpg" 92 Cansas Street | Melbourne, Victoria | 001345894777
+                    alt="" />
+                    <h2>{companyName}</h2>
+                    <p>Invoice</p>
+                </div>
+
+                <div className='company-details-right'>
+                    <table className='w-full'>
+                        <tbody>
+                            <tr><td>Address</td><td>{address1}</td></tr>
+                            <tr><td>& Contact</td><td>{address2}</td></tr>
+                            <tr><td></td><td>{phone}</td></tr>
+                            <tr><td></td><td>{country}</td></tr>
+                            {/* <tr><td>Address</td><td>Franco Estate</td></tr>
+                            <tr><td>& Contact</td><td>Kwabenya, Ghana</td></tr>
+                            <tr><td></td><td>0202622172</td></tr> */}
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
-            <div className='company-details-right'>
-                <table className='w-full'>
-                    <tbody>
-                        <tr><td>Address</td><td>{address1}</td></tr>
-                        <tr><td>& Contact</td><td>{address2}</td></tr>
-                        <tr><td></td><td>{phone}</td></tr>
-                        <tr><td></td><td>{country}</td></tr>
-                        {/* <tr><td>Address</td><td>Franco Estate</td></tr>
-                        <tr><td>& Contact</td><td>Kwabenya, Ghana</td></tr>
-                        <tr><td></td><td>0202622172</td></tr> */}
-                    </tbody>
-                </table>
-            </div>
+            <table className='w-full invoice-center-top'>
+                <tbody>
+                    <tr className='blue-head'>
+                        <td>Billed to</td>
+                        <td>Date of Issue</td>
+                        <td>Invoice Ref.</td>
+                        <td className='text-right'>Amount Due (GHS)</td>
+                    </tr>
+                    <tr className='relative'>
+                        <td>{buyer_name}</td>
+                        <td>{cur_date.toLocaleDateString()}</td>
+                        <td>{id.substring(2,15)}</td>
+                        <td className='amount-focus text-right'>₵{total.toLocaleString()}.00</td>
+                    </tr>
+                    <tr>
+                        <td>{buyer_contact}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Abelemkpe</td>
+                        <td className='blue-head'>Due Date</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Accra, Ghana</td>
+                        <td>{cur_date.toLocaleDateString()}</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-
-        <table className='w-full invoice-center-top'>
-            <tbody>
-                <tr className='blue-head'>
-                    <td>Billed to</td>
-                    <td>Date of Issue</td>
-                    <td>Invoice Ref.</td>
-                    <td className='text-right'>Amount Due (GHS)</td>
-                </tr>
-                <tr className='relative'>
-                    <td>{buyer_name}</td>
-                    <td>{cur_date.toLocaleDateString()}</td>
-                    <td>{id.substring(2,15)}</td>
-                    <td className='amount-focus text-right'>₵{total.toLocaleString()}.00</td>
-                </tr>
-                <tr>
-                    <td>{buyer_contact}</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>Abelemkpe</td>
-                    <td className='blue-head'>Due Date</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>Accra, Ghana</td>
-                    <td>{cur_date.toLocaleDateString()}</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
 
         <table className='w-full mt-16 invoice-center'>
             <tbody>

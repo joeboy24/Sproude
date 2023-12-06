@@ -124,6 +124,36 @@
     @apply my-5;
 }
 
+table {
+    @apply overflow-auto;
+}
+
+.input-group-left{
+    @apply w-[calc(30%-1px)] px-3 font-medium py-2;
+}
+
+.input-group-right {
+    @apply w-3/5 p-1;
+}
+ 
+.items-input-group {
+    @apply 
+    /* w-[calc(80%-1px)] mx-[calc(20%/2)]  */
+    my-3;
+}
+
+.items-input-group p {
+    @apply text-right text-xs font-light;
+}
+
+.input-with-btn {
+    @apply relative flex w-2/3 my-2;
+}
+
+.tbl-container {
+    @apply w-full
+}
+
 
 
 
@@ -134,7 +164,52 @@
 
 @media (max-width: 800px) {
     .general-container-size {
-        width: 100%;
-        @apply mx-2;
+        @apply w-[calc(100vw-32px)] mx-2;
     }
+}
+
+@media (max-width: 400px) {
+    .general-container-size {
+        @apply w-[calc(100vw-32px)] mx-4 p-0;
+    }
+
+    .menu-link {
+        @apply px-2 py-1 mx-1 hover:scale-110
+        ;
+    }
+
+    .menu-strip {
+        @apply py-2;
+    }
+
+    .input-group-left{
+        @apply hidden;
+    }
+ 
+    /* .items-input-group {
+        @apply w-2/5 bg-red-400;
+    } */
+    
+    .input-group-right {
+        @apply w-full p-1;
+    }
+
+    .cart-cont1 {
+        @apply flex-col;
+    }
+
+    .xform-input {
+        @apply w-[calc(100%-8px)];
+    }
+
+    .input-with-btn {
+        @apply w-full;
+    }
+
+    .home-container {
+        @apply w-[calc(100%-8px)] min-h-[calc(100vh-140px)];
+        background: url(https://firebasestorage.googleapis.com/v0/b/sproude-pos.appspot.com/o/files%2Fc1620365-bb82-4f9f-bb7e-f2d4294432f8?alt=media&token=0533247b-922f-4a98-a13a-4e23925b0e4b);
+        background-size: 100%;
+    }
+
 }

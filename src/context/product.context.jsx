@@ -194,6 +194,7 @@ export const ProductsProvider = ({children}) => {
         // setPurchss(getPurchases()),
         getPurchases(),
         successToast('Purchase record successfully saved'),
+        localStorage.removeItem('localPurchases')
         // localStorage.setItem('localCart', '')
         // localStorage.setItem('locPurItems', '')
       );
