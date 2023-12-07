@@ -8,7 +8,7 @@ import { Button, Spinner } from '@material-tailwind/react'
 import { FcInfo } from 'react-icons/fc'
 import { HiOutlineLockClosed } from 'react-icons/hi'
 import { OTPGen, createAuth, createUserDocumentFromAuth, errorToast, infoToast, 
-    logGoogleUser, searchOtp, signInAuthWithEmailAndPassword, successToast 
+    logGoogleUser, searchOtp, signInAuthWithEmailAndPassword, successToast, updateOTPDoc 
 } from '../../utils/firebase/firebase.utils'
 import { UserContext } from '../../context/user.context'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -26,7 +26,12 @@ const LoginPage = () => {
     // console.log('currentUser:');
     // var otpp = 'A'+Math.random()*107000;
     // console.log(otpp.substring(0, 5));
-
+    
+    var tempOTPstore = null;
+    if (localStorage.getItem('tempOTP')) {
+        tempOTPstore = JSON.parse(localStorage.getItem('tempOTP'));
+    }
+    const [tempOTP, setTempOTP] = useState(tempOTPstore);
     const [newUser, setNewUser] = useState(currentUser);
     const [register, setRegister] = useState(false);
     const [spinner, setSpinner] = useState(false);
@@ -90,36 +95,84 @@ const LoginPage = () => {
     }
 
 
+    // localStorage.removeItem('tempOTP')
     const handleRegister = async (event) => {
         event.preventDefault();
 
-        if (password !== confirmPassword) {
-            infoToast('Oops..! Passwords do not match');
-            return;
-        }
+        
+        // console.log(OTPfield);
+        // return
 
-        try {
-            spinToggle();
-            console.log('spinToggle: '+spinner);
-            // return;
-            const { user } = await createAuth(email, password);
-            await (user, { displayName });
-            await createUserDocumentFromAuth(user, {displayName});
-            setFormfields(defaultFormFields);
-            console.log('Registration successful. Welcome '+displayName);
-            successToast('Registration successful. Welcome '+displayName);
-            
-        } catch (error) {
-            // console.log('ErrMsg: ', error);
-            if (error.code === 'auth/email-already-in-use') {
-                errorToast('Oops..! Email already in use');
+        if (tempOTP) {
+                    
+            const otp = tempOTP.otp;
+            const displayName = event.target.displayName.value;
+            const phone = event.target.phone.value;
+            const email = event.target.email.value;
+            const password = event.target.password.value;
+            const confirmPassword = event.target.confirmPassword.value;
+
+            const registerFormFields = {
+                otp: otp,
+                displayName: displayName,
+                phone: phone,
+                email: email,
+                password: password,
+                confirmPassword: confirmPassword,
+            };
+            // console.log(registerFormFields)
+            // return 
+
+            if (password !== confirmPassword) {
+                infoToast('Oops..! Passwords do not match');
                 return;
-            } else if (error.code === 'auth/weak-password') {
-                return infoToast('Password should not be less than 8 characters')
             }
-            errorToast('Oops..! Unable to register. Check Email!')
-            console.log('User creation encountered an error: ', error);
+
+            try {
+                spinToggle();
+                console.log('spinToggle: '+spinner);
+                // return;
+                const { user } = await createAuth(email, password);
+                // await (user, { displayName });
+                await createUserDocumentFromAuth(user, {displayName, otp, phone});
+                // setFormfields(defaultFormFields);
+                // console.log(displayName)
+                // return;
+                console.log('Registration successful. Welcome '+displayName);
+                successToast('Registration successful. Welcome '+displayName);
+                localStorage.removeItem('tempOTP')
+                
+            } catch (error) {
+                // console.log('ErrMsg: ', error);
+                if (error.code === 'auth/email-already-in-use') {
+                    errorToast('Oops..! Email already in use');
+                    return;
+                } else if (error.code === 'auth/weak-password') {
+                    return infoToast('Password should not be less than 8 characters')
+                }
+                errorToast('Oops..! Unable to register. Check Email!')
+                console.log('User creation encountered an error: ', error);
+            }
+
+        } else { 
+
+            const OTPfield = event.target.otp.value;
+            const found = await searchOtp(OTPfield);
+            if (found && found.status === 'no') {
+                // A6893
+                successToast('OTP Verified')
+                found['status'] = 'yes';
+                await updateOTPDoc(found).then(
+                    localStorage.setItem('tempOTP', JSON.stringify(found)),
+                    setTempOTP(found)
+                );
+            } else {
+                errorToast('Oops..! Incorrect OTP');
+            }
         }
+        // console.log(found)
+
+
     }
 
 
@@ -263,34 +316,54 @@ const LoginPage = () => {
                         { spinner === true ? <Spinner className='w-8 h-8 mx-[calc((100%-64px)/2)]' /> : null }
 
                         <form onSubmit={handleRegister}>
+                
+                            { tempOTP ?
+                            <>
+                                <div className='items-input-group flex'>
+                                    <h4 className='blue-head text-xs mx-4 my-1 tracking-wide'><FcInfo size='16' className='float-left' /> &nbsp; Provide details to register</h4>
+                                </div>
 
-                            <div className='items-input-group flex'>
-                                <h4 className='blue-head text-xs mx-4 my-1 tracking-wide'><FcInfo size='16' className='float-left' /> &nbsp; Provide details to register</h4>
-                            </div>
-                
-                            <div className='items-input-group flex'>
-                                <XformInput inIcon={<FaRegUser />} name='displayName' onChange={handleChange} type='text' value={otp} size='lg' labelProp='hidden' placeholder='Type OTP' elementClass='border-none px-5' className='bg-white/50 my-1§ w-full rounded-full shadow-md' required/>
-                            </div>
+                                <div className='items-input-group flex'>
+                                    <input type='hidden' name='anyName' />
+                                    <XformInput inIcon={<FaRegUser />} name='displayName' type='text' size='lg' labelProp='hidden' placeholder='Username' elementClass='border-none px-5' className='bg-white/50 my-1§ w-full rounded-full shadow-md' required/>
+                                </div>
+                                
+                                <div className='items-input-group flex'>
+                                    <XformInput inIcon={<MdOutlineMail />} name='email' type='email' size='lg' labelProp='hidden' placeholder='Email' elementClass='border-none px-5' className='bg-white/50 my-1§ w-full rounded-full shadow-md' required/>
+                                </div>
+                                
+                                <div className='items-input-group flex'>
+                                    <XformInput inIcon={<MdOutlineMail />} name='phone' type='number' size='lg' labelProp='hidden' placeholder='Phone' min='0' elementClass='border-none px-5' className='bg-white/50 my-1§ w-full rounded-full shadow-md' required/>
+                                </div>
+                                
+                                <div className='items-input-group flex'>
+                                    <XformInput inIcon={<HiOutlineLockClosed />} name='password' type='password' size='lg' labelProp='hidden' placeholder='Password' elementClass='border-none px-5' className='bg-white/50 my-1 w-full rounded-full shadow-md' required/>
+                                </div>
+                                
+                                <div className='items-input-group flex'>
+                                    <XformInput inIcon={<HiOutlineLockClosed />} name='confirmPassword' type='password' size='lg' labelProp='hidden' placeholder='Confirm Password' elementClass='border-none px-5' className='bg-white/50 my-1 w-full rounded-full shadow-md' required/>
+                                </div>
+                    
+                                <div className='items-input-group'>
+                                    <Button type='submit' className='w-full float-center rounded-full' variant="outlined">&nbsp; Register &nbsp;<MdLogin size='18' className='float-right ml-2'/></Button>
+                                </div>
+                            </>
+                            :
+                            <>
+                                <div className='items-input-group flex'>
+                                    <h4 className='blue-head text-xs mx-4 my-1 tracking-wide'><FcInfo size='16' className='float-left' /> &nbsp; Enter OTP to proceed</h4>
+                                </div>
+
+                                <div className='items-input-group flex'>
+                                    <XformInput inIcon={<HiOutlineLockClosed />} name='otp' type='text' size='lg' labelProp='hidden' placeholder='Enter OTP' elementClass='border-none px-5' className='bg-white/50 my-1§ w-full rounded-full shadow-md' required/>
+                                </div>
+                    
+                                <div className='items-input-group'>
+                                    <Button type='submit' className='w-full float-center rounded-full' variant="outlined">&nbsp; Submit &nbsp;<MdLogin size='18' className='float-right ml-2'/></Button>
+                                </div>
+                            </>
+                            }
                             
-                            <div className='items-input-group flex'>
-                                <XformInput inIcon={<FaRegUser />} name='displayName' onChange={handleChange} type='text' value={displayName} size='lg' labelProp='hidden' placeholder='Username' elementClass='border-none px-5' className='bg-white/50 my-1§ w-full rounded-full shadow-md' required/>
-                            </div>
-                            
-                            <div className='items-input-group flex'>
-                                <XformInput inIcon={<MdOutlineMail />} name='email' onChange={handleChange} type='email' value={email} size='lg' labelProp='hidden' placeholder='Email' elementClass='border-none px-5' className='bg-white/50 my-1§ w-full rounded-full shadow-md' required/>
-                            </div>
-                            
-                            <div className='items-input-group flex'>
-                                <XformInput inIcon={<HiOutlineLockClosed />} name='password' onChange={handleChange} type='password' value={password} size='lg' labelProp='hidden' placeholder='Password' elementClass='border-none px-5' className='bg-white/50 my-1 w-full rounded-full shadow-md' required/>
-                            </div>
-                            
-                            <div className='items-input-group flex'>
-                                <XformInput inIcon={<HiOutlineLockClosed />} name='confirmPassword' onChange={handleChange} type='password' value={confirmPassword} size='lg' labelProp='hidden' placeholder='Confirm Password' elementClass='border-none px-5' className='bg-white/50 my-1 w-full rounded-full shadow-md' required/>
-                            </div>
-                
-                            <div className='items-input-group'>
-                                <Button type='submit' className='w-full float-center rounded-full' variant="outlined">&nbsp; Register &nbsp;<MdLogin size='18' className='float-right ml-2'/></Button>
-                            </div>
                         </form>
 
                         <div id='reg2' className='register-container'>

@@ -167,6 +167,15 @@ export const searchOtp = async (otp) => {
     return found[0];
 }
 
+export const updateOTPDoc = async (otp) => {
+    const upRefValue = doc(db, 'otpgen', otp.id);
+    try {
+        await updateDoc(upRefValue, otp);
+    } catch (error) {
+        console.log('Error occoured at OTP: ', error.message);
+    }
+}
+
 
 // Users
 

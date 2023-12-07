@@ -145,7 +145,7 @@ const XcartPage = () => {
 
         const payInputs = {
             id: orderId.toUpperCase(),
-            user: 'Code80',
+            user: currentUser.uid,
             item_details: [],
             total: tot,
             debt_bal: debt_bal,
