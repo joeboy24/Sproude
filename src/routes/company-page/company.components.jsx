@@ -106,13 +106,15 @@ const CompanyPage = () => {
   const handleUpdateCompany = async (event) => {
     event.preventDefault();
 
-    // successToast('Company details updated');
-    // console.log(formFields)
-    // return 
+    if (window.confirm("ClicK `OK` to confirm update")) { 
+      successToast('Company details updated');
+      // console.log(formFields)
+      // return 
 
-    await updateCompanyDoc(formFields);
-    const newComp = await getCompanyDoc();
-    setFormFields(newComp);
+      await updateCompanyDoc(formFields);
+      const newComp = await getCompanyDoc();
+      setFormFields(newComp);
+    }
   }
 
 
