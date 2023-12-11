@@ -157,7 +157,7 @@ table {
 .home-container {
     width: 800px;
     @apply min-h-[calc(100vh-140px)] shadow-lg rounded-lg my-5 relative bg-no-repeat;
-    background: url(https://firebasestorage.googleapis.com/v0/b/sproude-pos.appspot.com/o/files%2F01ea96d5-c72b-4de8-ab34-75207feed74d?alt=media&token=e40d5a1b-7890-4e8f-be19-3da2c41de7ba);
+    background: url(https://firebasestorage.googleapis.com/v0/b/spoude-pos.appspot.com/o/files%2F01ea96d5-c72b-4de8-ab34-75207feed74d?alt=media&token=e40d5a1b-7890-4e8f-be19-3da2c41de7ba);
     background-size: 100%;
 }
 
@@ -223,7 +223,7 @@ table {
 
     .home-container {
         @apply w-[calc(100%-8px)] min-h-[calc(100vh-140px)] bg-no-repeat;
-        background: url(https://firebasestorage.googleapis.com/v0/b/sproude-pos.appspot.com/o/files%2Fc1620365-bb82-4f9f-bb7e-f2d4294432f8?alt=media&token=0533247b-922f-4a98-a13a-4e23925b0e4b);
+        background: url(https://firebasestorage.googleapis.com/v0/b/spoude-pos.appspot.com/o/files%2Fc1620365-bb82-4f9f-bb7e-f2d4294432f8?alt=media&token=0533247b-922f-4a98-a13a-4e23925b0e4b);
         background-size: 100%;
     }
 }

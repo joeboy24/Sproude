@@ -38,16 +38,16 @@
     @apply bottom-4 left-4 absolute;
 }
 
-.sproude {
-    @apply text-center mt-[calc(35vh-1px)];
+.spoude {
+    @apply text-center mt-[calc(30vh-1px)];
 }
 
-.sproude h2 {
+.spoude h2 {
     font-size: 2em;
     @apply uppercase font-extrabold text-white tracking-tighter;
 }
 
-.sproude h4 {
+.spoude h4 {
     @apply text-xs uppercase font-light;
 }
 

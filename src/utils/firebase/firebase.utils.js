@@ -12,9 +12,9 @@ import { doc, getDoc , setDoc, getFirestore, collection, where, orderBy, addDoc,
 // Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCGO18AsLnyl0lP7rUb77t4OoPRX15d1nI",
-  authDomain: "sproude-pos.firebaseapp.com",
-  projectId: "sproude-pos",
-  storageBucket: "sproude-pos.appspot.com",
+  authDomain: "spoude-pos.firebaseapp.com",
+  projectId: "spoude-pos",
+  storageBucket: "spoude-pos.appspot.com",
   messagingSenderId: "729588805983",
   appId: "1:729588805983:web:607601d4ef77b744ca06ea"
 };

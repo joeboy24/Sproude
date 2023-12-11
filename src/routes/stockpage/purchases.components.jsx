@@ -167,7 +167,7 @@ const PurchasesPage = () => {
 
 
   const handleItemDoubleClick = (id) => {
-    // {id: 'XdavrMns3VLlARYQmojj', name: 'Sproude Sachet Water', description: 'Single Bag (1)'},
+    // {id: 'XdavrMns3VLlARYQmojj', name: 'Spoude Sachet Water', description: 'Single Bag (1)'},
     // {id: 'QBl5dhcbbusAlDE6wErN', name: 'Cranberry Juice', description: 'Single Package'} JSON.parse(localStorage.getItem('locPurItems'))
     const getCurLocItems = localCart;
     const itemToAdd = products.find(item => item.id == id);
@@ -267,16 +267,16 @@ const PurchasesPage = () => {
                               </p> :null 
                           )}
                           {/* <p><BiSolidCircle size='8' className='float-left' />&nbsp; Clips</p>
-                          <p><BiSolidCircle size='8' className='float-left' />&nbsp; Sproude Sachet</p>
-                          <p><BiSolidCircle size='8' className='float-left' />&nbsp; Sproude Bottle Water</p>
-                          <p><BiSolidCircle size='8' className='float-left' />&nbsp; Sproude Bottle Water</p>
+                          <p><BiSolidCircle size='8' className='float-left' />&nbsp; Spoude Sachet</p>
+                          <p><BiSolidCircle size='8' className='float-left' />&nbsp; Spoude Bottle Water</p>
+                          <p><BiSolidCircle size='8' className='float-left' />&nbsp; Spoude Bottle Water</p>
                           <p><BiSolidCircle size='8' className='float-left' />&nbsp; Clips</p>
-                          <p><BiSolidCircle size='8' className='float-left' />&nbsp; Sproude Sachet</p>
+                          <p><BiSolidCircle size='8' className='float-left' />&nbsp; Spoude Sachet</p>
                           <p><BiSolidCircle size='8' className='float-left' />&nbsp; Clips</p>
-                          <p><BiSolidCircle size='8' className='float-left' />&nbsp; Sproude Bottle Water</p>
+                          <p><BiSolidCircle size='8' className='float-left' />&nbsp; Spoude Bottle Water</p>
                           <p><BiSolidCircle size='8' className='float-left' />&nbsp; Clips</p>
-                          <p><BiSolidCircle size='8' className='float-left' />&nbsp; Sproude Sachet</p>
-                          <p><BiSolidCircle size='8' className='float-left' />&nbsp; Sproude Sachet</p> */}
+                          <p><BiSolidCircle size='8' className='float-left' />&nbsp; Spoude Sachet</p>
+                          <p><BiSolidCircle size='8' className='float-left' />&nbsp; Spoude Sachet</p> */}
                       </div>
                   :null}
                   

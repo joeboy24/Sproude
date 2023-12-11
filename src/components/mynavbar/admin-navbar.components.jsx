@@ -35,7 +35,7 @@ const AdminNavbar = () => {
       {/* <div className="flex ..."> */}
         <div className="nav-col-1">
           {/* 01 */}
-          {/* <p>Sproude</p>
+          {/* <p>Spoude</p>
           <span>Mineral Water</span> */}
         </div>
 
