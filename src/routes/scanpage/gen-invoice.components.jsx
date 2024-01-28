@@ -2,19 +2,16 @@
 import React, { useContext } from 'react'
 import './scanpage.styles.css'
 import { ProductsContext } from '../../context/product.context';
+import useAuth from '../../hooks/useAuth';
 
 
-const GenInvoice = ({company, invoiceRecord}) => {
+const GenInvoice = ({invoiceRecord}) => {
+    const { company } = useAuth()
     const { products } = useContext(ProductsContext);
     const { id, user, item_details, total, paid_debt, debt_bal, pay_mode, buyer_name, buyer_contact, discount, amt_paid, del_status, created_at, updated_at } = invoiceRecord;
     const { country, companyName, slogan, phone, email, logo, address1, address2 } = company;
 
-    // {cur_date.toLocaleDateString()+' '+cur_date.toLocaleString('en-IN').split(' ')[1]}
-    const secs = created_at.seconds;
-    const newDate = new Date(secs * 1000);
-    const cur_date = new Date(created_at.seconds);
-    // const findProduct = products.find(el => el.id === item_id);
-    // console.log(invoiceRecord.created_at.seconds)
+    const cur_date = new Date(created_at.seconds*1000);
     
     const tot_qty = item_details.reduce(
         (total, item) => total + item.quantity, 0
@@ -74,13 +71,13 @@ const GenInvoice = ({company, invoiceRecord}) => {
                         <td></td>
                     </tr>
                     <tr>
-                        <td>Abelemkpe</td>
+                        <td>Kumasi</td>
                         <td className='blue-head'>Due Date</td>
                         <td></td>
                         <td></td>
                     </tr>
                     <tr>
-                        <td>Accra, Ghana</td>
+                        <td>Ghana</td>
                         <td>{cur_date.toLocaleDateString()}</td>
                         <td></td>
                         <td></td>

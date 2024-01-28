@@ -4,9 +4,9 @@ import './stockpage.styles.css';
 import '../other-styles.styles.css';
 import AdminNavbar from '../../components/mynavbar/admin-navbar.components';
 import MenuStrip from '../../components/menu-strip/menu-strip.components';
-import { Button, Card, CardBody, Dialog, DialogBody, DialogFooter, DialogHeader, Option, Select, Textarea } from '@material-tailwind/react';
+import { Button, Card, CardBody, Dialog, DialogBody, DialogFooter, DialogHeader, Input, Option, Select, Textarea } from '@material-tailwind/react';
 import { BsBagPlus, BsCheck2Circle, BsCheckCircle, BsClipboardPlus, BsPlus, BsPlusCircle  } from 'react-icons/bs';
-import { FaPlusCircle } from 'react-icons/fa';
+import { FaPlusCircle, FaSearch } from 'react-icons/fa';
 import XformInput from '../../components/form/forminput.component';
 import { HiOutlineClipboardDocumentList } from 'react-icons/hi2';
 import { Tabs, TabsHeader, TabsBody, Tab, TabPanel, } from "@material-tailwind/react";
@@ -42,16 +42,29 @@ const NewItem = () => {
     publish: "no",
     barcode: "",
     expiry: "",
+    created_at: new Date(),
     del: "no",
   }
   const [ showHeader, setShowHeader ] = useState('new');
   const [ formFields, setFormFields ] = useState(defaultFormValues);
   const { products, addProduct, getProduct, updateProduct } = useContext(ProductsContext);
+  const [ productsHold, setProductsHold ] = useState(products);
   const [ updateID, setUpdateID ] = useState('');
   const { id, product_id, image, name, description, category, brand, qty, rtl_qty, whl_qty, price, rtl_price, whl_price, publish, barcode, expiry, del } = formFields;
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(!open);
+  const [ searchKey, setSearchKey ] = useState('');
+
+  const handlePurSearch = (event) => {
+    const skey = event.target.value; // || el.cost.toLowerCase().includes(skey.toLowerCase)
+    setSearchKey(skey)
+    const result = products.filter(el => el.name.toLowerCase().includes(skey))
+    setProductsHold(result)
+    console.log(skey)
+    // console.log(purchaseRecords)
+    // console.log(searchKey)
+  }
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -63,6 +76,7 @@ const NewItem = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     formFields['publish'] = event.target.publish.value;
+    formFields['created_at'] = new Date();
     // console.log(formFields);
     // return alert('done');
     if (!formFields.category || formFields.category == '' || formFields.category == '-- Select --') {
@@ -103,14 +117,35 @@ const NewItem = () => {
       <Card className='general-container-size'>
 
         <CardBody>
-          <div className='flex float-right mb-2'>
+          {/* <div className='flex float-right mb-2'>
             <BsPlus size='20' />
             <HiOutlineClipboardDocumentList size='40' />
+          </div> */}
+
+          <div className="input-with-btn float-left !mb-4">
+              <Input
+                  type="text"
+                  label="Search Item"
+                  value={searchKey}
+                  onChange={handlePurSearch}
+                  className="scan-input rounded-md"
+                  containerProps={{
+                  className: "min-w-0",
+                  }} autoFocus
+              />
+              <Button
+                  size="sm"
+                  // onClick={reloadInvoiceInSalesView}
+                  // disabled={!searchKey}
+                  className={`${products ? "bg-gray-200" : "bg-blue-gray-800"} !absolute right-1 top-1 rounded`} 
+                  >
+                  <FaSearch size='14' className='float-left' />
+              </Button>
           </div>
 
-          <p onClick={handleAddNewItem} className='change-date-link-inverse float-left'><BsPlusCircle size='16' className='float-left mr-2 mt-0.5' /> Add New Item</p>
+          <p onClick={handleAddNewItem} className='change-date-link-inverse float-right'><BsPlusCircle size='16' className='float-left mr-2 mt-0.5' /> Add New Item</p>
 
-          { products.length > 0 ?
+          { productsHold.length > 0 ?
             <div className='tbl-container overflow-auto'>
               <table className="cart-tbl w-calc[100%-100px] min-w-max table-auto text-left">
                 <thead>
@@ -125,9 +160,9 @@ const NewItem = () => {
                 </thead>
 
                 <tbody>
-                    {products.map((product, index) => {
+                    {productsHold.map((product, index) => {
                       var sendClass = '';
-                      const isLast = index === products.length - 1;
+                      const isLast = index === productsHold.length - 1;
                       const classes = isLast ? "p-4" : "p-4 border-blue-gray-50";
                       if (product.del === 'no') {
                         sendClass = 'even:bg-blue-gray-50/30';
@@ -137,7 +172,7 @@ const NewItem = () => {
                       return(
                         <InventoryRow key={product.id} getId={pull_id} i={i++} product={product} classes={classes} sendClass={sendClass} openDialog={handleOpen}/>
                       );
-                    }).reverse()}
+                    })}
                     {/* <tr>
                         <td></td>
                         <td className='px-4 text-right'>
@@ -205,6 +240,9 @@ const NewItem = () => {
                     <option>Wine</option>
                     <option>Sneaker</option>
                     <option>Dress</option>
+                    <option>Gadjet</option>
+                    <option>Instrument</option>
+                    <option>Others</option>
                   </select>
                 </div>
               </div>

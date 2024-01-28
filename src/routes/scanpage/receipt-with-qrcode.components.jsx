@@ -34,7 +34,7 @@ const ReceiptWithQrCode = ({ users, company, invoiceRecord, scanCode }) => {
         <h4 className='text-center text-xs font-semibold mt-3 mb-2 uppercase'>Purchase Receipt</h4>
         <table>
             <tbody>
-                <tr className='border-b border-b-gray-300'><td>Date:31 Oct 2023</td><td className='text-right'>Time:9:30 PM</td></tr>
+                <tr className='border-b border-b-gray-300'><td>Date:17 July, 2023</td><td className='text-right'>Time:3:30 PM</td></tr>
                 <tr><td className='pt-1'>Sales ATD:</td><td className='text-right pt-1'>{recUser[0].displayName}</td></tr>
                 <tr><td>Ref No:</td><td className='text-right'>{id.substring(2,15)}</td></tr>
                 {/* <tr><td>Batch No:</td><td className='text-right'>00273</td></tr>

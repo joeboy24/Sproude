@@ -78,7 +78,7 @@ const CompanyPage = () => {
 
   useEffect(()=>{
     listAll(ref(imageDb,"files")).then(imgs=>{
-        console.log(imgs)
+        // console.log(imgs)
         imgs.items.forEach(val=>{
             getDownloadURL(val).then(url=>{
                 setImgUrl(data=>[...data,url])

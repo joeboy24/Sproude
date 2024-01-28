@@ -1,8 +1,8 @@
 
 import { createContext, useEffect, useState } from 'react'
-import { createExpensesDoc, createProductDoc, createPurchasesDoc, deleteExpensesDoc, deleteProductDoc, getExpensesDocs, getProductsDocuments, 
+import { createExpensesDoc, createProductDoc, createPurchasesDoc, createSupplierDoc, deleteExpensesDoc, deleteProductDoc, getExpensesDocs, getProductsDocuments, 
   getPurchasesDocs, 
-  getSalesDocuments, infoToast, successToast, updateExpensesDoc, updateProductDoc, updateSalesDoc } from '../utils/firebase/firebase.utils';
+  getSalesDocuments, getSupplierDocs, infoToast, successToast, updateExpensesDoc, updateProductDoc, updateSalesDoc } from '../utils/firebase/firebase.utils';
 import { ItemsArray } from '../TestData.jsx'
 import { toast } from 'sonner';
 
@@ -56,6 +56,9 @@ export const ProductsContext = createContext({
   purchss: [],
   addPurchases: () => {},
   getPurchases: () => {},
+  supplier: [],
+  addSupplier: () => {},
+  getSupplier: () => {},
 });
 
 
@@ -65,6 +68,7 @@ export const ProductsProvider = ({children}) => {
   const [ expenses, setExpenses ] = useState([]);
   const [ purchss, setPurchss ] = useState([]);
   const [ toggleRefresh, setToggleRefresh ] = useState(false);
+  const [ supplier, setSupplier ] = useState([]);
 
   // console.log('----- Products and Sales context loaded -----');
 
@@ -74,6 +78,7 @@ export const ProductsProvider = ({children}) => {
       getProduct();
       getSales();
       getExpensesRecords();
+      getSupplier();
 
     },[]);
 
@@ -209,11 +214,27 @@ export const ProductsProvider = ({children}) => {
     }
 
 
+    // Supplier
+    const addSupplier = async (docToAdd) => {
+      await createSupplierDoc(docToAdd).then(
+        successToast('Successfully added '+docToAdd.supplier_name+' as supplier')
+      );
+      getSupplier();
+    }
+    
+    const getSupplier = async () => {
+      const supps = await getSupplierDocs();
+      setSupplier(supps);
+      // console.log(supps)
+    }
+
+
     const value = { 
       products, addProduct, getProduct, updateProduct, delProduct, 
       sales, getSales, updateSalesRecord, 
       expenses, addExpensesRecord, getExpensesRecords, updateExpensesRecord, delExpRecord,
-      purchss, addPurchases, getPurchases
+      purchss, addPurchases, getPurchases,
+      supplier, addSupplier, getSupplier
     };
   return (<ProductsContext.Provider value={value}>{children}</ProductsContext.Provider>)
 }

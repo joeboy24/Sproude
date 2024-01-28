@@ -1,4 +1,4 @@
-import { Drawer, Button, IconButton, Typography, Card, CardBody, MenuHandler, MenuList, MenuItem, Menu } from '@material-tailwind/react';
+import { Drawer, Button, IconButton, Typography, Card, CardBody, MenuHandler, MenuList, MenuItem, Menu, Popover, PopoverHandler, PopoverContent, Input } from '@material-tailwind/react';
 import React, { useContext, useEffect, useState } from 'react'
 import XformInput from '../../components/form/forminput.component';
 import './cartpage.styles.css'
@@ -71,6 +71,10 @@ const XcartPage = () => {
     const [ drawerRec, setDrawerRec ] = useState();
     // const [ newSearchArray, setNewSearchArray ] = useState([]);
 
+    const [dateChange, setDateChange] = useState("");
+    const onChangeSup = ({ target }) => setDateChange(target.value);
+
+
     const handleSearch = (event) => {
         const { name, value } = event.target;
         setNewSearchKey(value.toLowerCase());
@@ -121,12 +125,12 @@ const XcartPage = () => {
     const handlePay = (event) => {
         event.preventDefault();
         var orderId = 'M'+Math.random().toString(36).slice(2);
-        // var dis = event.target.discount.value;
+        var dis = event.target.discount.value;
         // var pay_mode = event.target.pay_mode.value;
         // var amt_paid = event.target.amt_paid.value;
         var del_status = event.target.del_status.value;
-        var tot = cartTotal;
-        // var tot = cartTotal - dis;
+        // var tot = cartTotal;
+        var tot = cartTotal - dis;
         // var paid_debt = tot;
         var debt_bal = 0;
 
@@ -153,7 +157,7 @@ const XcartPage = () => {
             // pay_mode: pay_mode,
             buyer_name: event.target.buyer_name.value,
             buyer_contact: event.target.buyer_contact.value,
-            discount: 0,
+            discount: dis,
             amt_paid: 0,
             del_status: del_status,
             count: salesRecords.reduce((t, c) => t + 1, 0),
@@ -188,14 +192,36 @@ const XcartPage = () => {
                     </div>
 
                     <div className='absolute right-7'>
-                        <Menu>
-                            <MenuHandler>
+                        <Popover>
+                            <PopoverHandler>
                                 <p className='change-date-link w-auto'><FaCalendarAlt size='16' className='float-left mr-2 mt-0.5' /> Change Date</p>
-                            </MenuHandler>
-                            <MenuList>
-                                <XformInput type='date' size='sm' label='Change Date'/>
-                            </MenuList>
-                        </Menu>
+                            </PopoverHandler>
+                            <PopoverContent>
+                                <div className="relative flex w-full max-w-[24rem]">
+                                    <Input
+                                        type="date"
+                                        label="Select Date"
+                                        value={dateChange}
+                                        onChange={onChangeSup}
+                                        className="pr-24"
+                                        containerProps={{
+                                        className: "min-w-0",
+                                        }}
+                                    /> 
+                                    {/* &nbsp;&nbsp;&nbsp; */}
+                                    <Button
+                                        size="sm"
+                                        color={dateChange ? "gray" : "blue-gray"}
+                                        disabled={!dateChange}
+                                        className="!absolute right-1 top-1 rounded"
+                                    > 
+                                    Change
+                                    </Button>
+                                </div>
+
+                            </PopoverContent>
+                        </Popover>
+
                     </div>
                 </div>
                 
@@ -305,7 +331,7 @@ const XcartPage = () => {
                             <option value="no">Not Delivered</option>
                         </select>
                     
-                        {/* <select name='pay_mode' className='xform-input myInput-dark'>
+                        <select name='pay_mode' className='xform-input myInput-dark'>
                             <option defaultValue="0">-- Payment Mode --</option>
                             <option value="cash">Cash</option>
                             <option value="cheque">Cheque</option>
@@ -313,7 +339,7 @@ const XcartPage = () => {
                             <option value="post_pay">Post Payment(Debt)</option>
                         </select>
                         <input type='number' min='0' className='xform-input myInput-dark' name='discount' placeholder="Discount eg. 10" required/>
-                        <input type='number' min='0' className='xform-input myInput-dark' name='amt_paid' placeholder="Amount Paid" required/> */}
+                        <input type='number' min='0' className='xform-input myInput-dark' name='amt_paid' placeholder="Amount Paid" required/>
                         
                     </div>  
                     { cartItems.length > 0 ?
@@ -351,7 +377,7 @@ const XcartPage = () => {
                                     return(
                                         <XcartSalesRow key={order.id} hideAction='yes' getDrawerId={pullDrawerId} i={i++} order={order} classes={classes} />
                                     );
-                                }).reverse()}
+                                })}
                                 {/* <tr key={order.id}>
                                     <td></td>
                                     <td className='px-4 text-right'>

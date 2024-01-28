@@ -19,7 +19,7 @@
 
 .change-date-link-inverse {
     font-size: 0.8em;
-    @apply w-auto border border-blue-gray-800 uppercase tracking-wider text-white px-3 m-0.5 py-1.5 
+    @apply w-auto border border-blue-gray-800 uppercase tracking-wider text-white px-3 m-0.5 mt-2 py-1.5 
     bg-blue-gray-800 rounded-md hover:opacity-80;
 }
 
@@ -41,6 +41,10 @@
 
 .added-items {
     @apply border border-green-300 min-w-max text-xs bg-green-300 rounded-md m-1 px-3 py-2 hover:border-green-500 hover:bg-green-400;
+}
+
+.added-items-clear {
+    @apply border border-red-300 min-w-max text-xs text-red-600 bg-none rounded-md m-1 px-3 py-2 hover:border-red-500 hover:bg-red-50;
 }
 
 .no-of-items-btn {

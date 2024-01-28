@@ -6,8 +6,9 @@ import vector2 from '../../assets/spoude-vector-02.png'
 import { HiOutlineClipboardDocumentList } from 'react-icons/hi2'
 import { BsCart4 } from 'react-icons/bs'
 import { LiaFileInvoiceDollarSolid } from 'react-icons/lia'
-import { UserContext } from '../../context/user.context'
+import { UserContext } from '../../context/user.context' 
 import { Button } from '@material-tailwind/react'
+import { OTPGen } from '../../utils/firebase/firebase.utils'
 
 const Homepage = () => {
   const { company } = useContext(UserContext);
@@ -16,14 +17,16 @@ const Homepage = () => {
   // console.log(company)
 
   // useState(() => {
-  //   // if (company !== null) {
-  //   //   // console.log(company)
-  //   //   setNewComp(company)
-  //   // }
-  //   setTimeout(() => {
-  //     console.log(company)
-  //     setNewComp(company)
-  //   }, 3000);
+    // if (company !== null) {
+    //   // console.log(company)
+    //   setNewComp(company)
+    // }
+    // setTimeout(() => {
+    //   console.log(company)
+    //   setNewComp(company)
+    // }, 3000);
+    // OTPGen(100)
+  //   console.log('OTP generatin done..!')
   // }, []);
 
   return (
@@ -40,7 +43,7 @@ const Homepage = () => {
           </>
         :
           <>
-            <img className='w-16 mx-[calc((100%-64px)/2)]' src="https://firebasestorage.googleapis.com/v0/b/spoude-pos.appspot.com/o/files%2Fec1084bc-1792-4b0a-85ad-feb6a35f7f60?alt=media&token=72532b5b-b67e-4e07-968a-b2a7a41eef61" alt="" />
+            <img className='w-16 mx-[calc((100%-64px)/2)]' src="https://firebasestorage.googleapis.com/v0/b/sproude-pos.appspot.com/o/files%2Fec1084bc-1792-4b0a-85ad-feb6a35f7f60?alt=media&token=72532b5b-b67e-4e07-968a-b2a7a41eef61" alt="" />
             <h2>PivoApps</h2> 
             <h4>Shaping Ideas</h4>
           </>
@@ -48,7 +51,7 @@ const Homepage = () => {
         <Button className='m-2'>Upgrade to Pro</Button>
       </div>
       <div className='pivoapps'>
-        <img src="https://firebasestorage.googleapis.com/v0/b/spoude-pos.appspot.com/o/files%2Fec1084bc-1792-4b0a-85ad-feb6a35f7f60?alt=media&token=72532b5b-b67e-4e07-968a-b2a7a41eef61" alt="" />
+        <img src="https://firebasestorage.googleapis.com/v0/b/sproude-pos.appspot.com/o/files%2Fec1084bc-1792-4b0a-85ad-feb6a35f7f60?alt=media&token=72532b5b-b67e-4e07-968a-b2a7a41eef61" alt="" />
         <h4>PivoApps Salestrack</h4>
       </div>
     </div>

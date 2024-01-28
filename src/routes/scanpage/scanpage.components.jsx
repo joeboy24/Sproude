@@ -18,6 +18,7 @@ import useAuth from '../../hooks/useAuth';
 const ScanPage = () => {
     var c = 1;
     var i = 1;
+    var r = 1;
     const [scanInput, setScanInput] = useState('');
     const onChange = ({ target }) => setScanInput(target.value);
 
@@ -254,8 +255,9 @@ const ScanPage = () => {
                 <div className='w-full float-right mt-7'>
                     {/* { invoiceRecord.del_status !== 'no' ? */}
                         <Button className='float-left no-print text-xs font-light m-1' size='sm' variant="outlined" onClick={() => {window.print()}}>&nbsp;<FaPrint size='12' className='float-left mr-2'/> Print Receipt &nbsp;</Button>
+                        <Button className='float-left no-print text-xs font-light m-1' size='sm' variant="outlined" onClick={() => {window.print()}}>&nbsp;<FaPrint size='12' className='float-left mr-2'/> Print Invoice &nbsp;</Button>
                     {/* :null} */}
-                    <GenInvoice company={company} invoiceRecord={invoiceRecord}/>
+                    <GenInvoice invoiceRecord={invoiceRecord}/>
                 </div>
                 </>
             :null}
@@ -294,7 +296,7 @@ const ScanPage = () => {
                                     return(
                                         <XcartSalesRow key={order.id} hideAction='no' getDialogId={pullDialogId} getDrawerId={pullDrawerId} i={i++} order={order} classes={classes} />
                                     );
-                                }).reverse()
+                                })
                             :null}
                             {/* <tr key={order.id}>
                                 <td></td>
@@ -310,14 +312,12 @@ const ScanPage = () => {
                         </tbody>
                     </table>
 
-
                     { openBottom == true ? 
                         <Drawer placement="bottom" open={openBottom} onClose={closeDrawerBottom} className="p-4 overflow-auto">
                             <ExpandDrawer order={drawerRec} />
                         </Drawer>
                     :null}
                     
-
                 </div>
             </CardBody>
         </Card>
@@ -325,12 +325,12 @@ const ScanPage = () => {
 
         { open == true ?
             <div className='receipt-cover p-2 rounded-md bg-white'>
-                {/* <GenInvoice invoiceRecord={invoiceRecord}/> */}
-                <Button className='float-left no-print' size='sm' variant="outlined" onClick={() => {window.print()}}>&nbsp;<FaPrint size='18' className='float-left mr-2'/> Print &nbsp;</Button>
+                <GenInvoice invoiceRecord={invoiceRecord}/>
+                {/* <Button className='float-left no-print' size='sm' variant="outlined" onClick={() => {window.print()}}>&nbsp;<FaPrint size='18' className='float-left mr-2'/> Print &nbsp;</Button>
                 <IconButton size='sm' className='del-btn float-right no-print' onClick={handleOpen}><FaTimes size='16'/></IconButton>
                 <div className='w-1/3 receipt-container pr-2'>
                     <ReceiptWithQrCode users={users} company={company} invoiceRecord={drawerRec} scanCode={scanInput} />
-                </div>
+                </div> */}
             </div>
         :null}
         

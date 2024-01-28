@@ -14,7 +14,7 @@ import { ProductsContext } from '../../context/product.context';
 
 
 
-const PurchaseRow = ({ purchase, getId, classes, sendClass, openDialog, getDrawerId }) => {
+const PurchaseRow = ({ supplier, purchase, getId, getPurDel, classes, sendClass, openDialog, getDrawerId }) => {
     const { id, supplier_name, supplier_contact, qty, cost, del_status, purchase_date, purchased_items, created_at, del } = purchase;
     const { cartItems, addItemsToCart, decreaseItemQty, removeCartItem } = useContext(CartContext);
     const { delProduct, getProduct } = useContext(ProductsContext);
@@ -23,16 +23,28 @@ const PurchaseRow = ({ purchase, getId, classes, sendClass, openDialog, getDrawe
     const openDrawerBottom = () => setOpenBottom(true);
     const closeDrawerBottom = () => setOpenBottom(false);
 
+    // console.log('-- Supp --')
+    // console.log(supplier.id)
+
     const removeFunc = () => {
         if (window.confirm("Are you sure you want to delete this record?")) { 
-            // delProduct(id, 'yes');
+            purchase['del'] = 'yes'
+            getPurDel(purchase, 'delete');
         }
     }
 
     const restoreFunc = () => {
 
         if (window.confirm("Are you sure you want to restore this record?")) { 
-            // delProduct(id, 'no');
+            purchase['del'] = 'no'
+            getPurDel(purchase, 'delete');
+        }
+    }
+
+    const pendingUpdate = () => {
+        if (window.confirm("Click ok to confirm status change")) { 
+            purchase['del_status'] = 'yes'
+            getPurDel(purchase, 'update');
         }
     }
 
@@ -51,17 +63,20 @@ const PurchaseRow = ({ purchase, getId, classes, sendClass, openDialog, getDrawe
         <>
         <tr key={id} className={sendClass}>
             <td className={classes}>
-                <p className='item-name'>{supplier_name}</p>
+                <p className='item-name'>{ supplier ? supplier.supplier_name :null}</p>
                 <p className='item-description'>{supplier_contact}</p>
             </td>
             <td className={classes}>
                 <Tooltip content='View Items' className='tooltip-style'>
                     <p className='item-description no-of-items-btn blue-head' onClick={handleDrawer}>{purchased_items.length} Items</p>
                 </Tooltip>
-                {
+                { del === 'no' ?
                     del_status !== 'no' 
                     ? <p className='item-description pb-2'><BsCheck2Circle size='14' className='float-left mt-0.5' />&nbsp;<span>Delivered</span></p> 
-                    : <p className='item-description warning-btn'><PiWarningOctagon size='18' className='float-left' />&nbsp;<span>Pending</span></p>
+                    : <p className='item-description warning-btn hover:opacity-80' onClick={pendingUpdate}><PiWarningOctagon size='18' className='float-left' />&nbsp;<span>Pending</span></p>
+                : del_status !== 'no' 
+                    ? <p className='item-description pb-2'><BsCheck2Circle size='14' className='float-left mt-0.5' />&nbsp;<span>Delivered</span></p> 
+                    : <p className='item-description warning-btn opacity-70'><PiWarningOctagon size='18' className='float-left' />&nbsp;<span>Pending</span></p>
                 }
             </td>
             <td className={classes}>

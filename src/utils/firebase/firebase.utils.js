@@ -6,17 +6,27 @@ import { getAuth, createUserWithEmailAndPassword,
     signInWithPopup, GoogleAuthProvider, sendPasswordResetEmail  
 } from "firebase/auth";
 import { Toaster, toast } from 'sonner'
-import { doc, getDoc , setDoc, getFirestore, collection, where, orderBy, addDoc, getDocs, query, updateDoc, deleteDoc } from "firebase/firestore";
+import { doc, getDoc , setDoc, getFirestore, collection, where, orderBy, addDoc, getDocs, query, updateDoc, deleteDoc, startAt, endAt } from "firebase/firestore";
 
 
 // Firebase configuration
+
+// const firebaseConfig = {
+//   apiKey: "AIzaSyCGO18AsLnyl0lP7rUb77t4OoPRX15d1nI",
+//   authDomain: "sproude-pos.firebaseapp.com",
+//   projectId: "sproude-pos",
+//   storageBucket: "sproude-pos.appspot.com",
+//   messagingSenderId: "729588805983",
+//   appId: "1:729588805983:web:607601d4ef77b744ca06ea"
+// };
+
 const firebaseConfig = {
-  apiKey: "AIzaSyCGO18AsLnyl0lP7rUb77t4OoPRX15d1nI",
-  authDomain: "spoude-pos.firebaseapp.com",
-  projectId: "spoude-pos",
-  storageBucket: "spoude-pos.appspot.com",
-  messagingSenderId: "729588805983",
-  appId: "1:729588805983:web:607601d4ef77b744ca06ea"
+    apiKey: "AIzaSyDGqkdmzpRUiTd7Arw-2MNiBG7K5JWEpok",
+    authDomain: "pivoapps-pos.firebaseapp.com",
+    projectId: "pivoapps-pos",
+    storageBucket: "pivoapps-pos.appspot.com",
+    messagingSenderId: "783982058023",
+    appId: "1:783982058023:web:bc493abaafba2723b5cc02"
 };
 
 // Initialize Firebase
@@ -194,7 +204,7 @@ export const searchUserDoc = async (email) => {
 
 export const getUsersDocuments = async () => {
     const usersReceiver = [];
-    const querySnapshot = await getDocs(query(collection(db, 'users')));
+    const querySnapshot = await getDocs(query(collection(db, 'users'), orderBy("createdAt", "desc")));
 
     const usersMap = () => querySnapshot.forEach((doc) => {
         usersReceiver.push({...doc.data()});
@@ -245,7 +255,7 @@ export const createSalesDoc = async (docToAdd) => {
 
 export const getSalesDocuments = async () => {
     const salesReceiver = [];
-    const querySnapshot = await getDocs(query(collection(db, 'sales'), orderBy("created_at", "asc")));
+    const querySnapshot = await getDocs(query(collection(db, 'sales'), orderBy("created_at", "desc")));
 
     const salesMap = () => querySnapshot.forEach((doc) => {
         salesReceiver.push({...doc.data(), id: doc.id});
@@ -283,7 +293,7 @@ export const createExpensesDoc = async (docToAdd) => {
 export const getExpensesDocs = async () => {
 
     const expReceiver = [];
-    const querySnapshot = await getDocs(query(collection(db, 'expenses')));
+    const querySnapshot = await getDocs(query(collection(db, 'expenses'), orderBy("created_at", "desc")));
 
     const expMap = () => querySnapshot.forEach((doc) => {
         expReceiver.push({...doc.data(), id: doc.id});
@@ -395,7 +405,7 @@ export const createPurchasesDoc = async (docToAdd) => {
     try {
         await addDoc(purRefValue, docToAdd);
     } catch (error) {
-        console.log('Error occoured at Expenses: ', error.message);
+        console.log('Error occoured at Purchases: ', error.message);
     }
     
 }
@@ -403,7 +413,7 @@ export const createPurchasesDoc = async (docToAdd) => {
 export const getPurchasesDocs = async () => {
 
     const purReceiver = [];
-    const querySnapshot = await getDocs(query(collection(db, 'purchases')));
+    const querySnapshot = await getDocs(query(collection(db, 'purchases'), orderBy("purchase_date", "desc")));
 
     const purMap = () => querySnapshot.forEach((doc) => {
         purReceiver.push({...doc.data(), id: doc.id});
@@ -414,6 +424,91 @@ export const getPurchasesDocs = async () => {
     return purReceiver;
 
 }
+
+export const deletePurchasesDoc = async (purDoc, action) => {
+    const upRefValue = doc(db, 'purchases', purDoc.id);
+    var actionMsg = "Update Successful";
+    if (action === 'delete') {
+        if (purDoc['del'] === 'yes') {
+            actionMsg = "Purchase record deleted";
+        } else {
+            actionMsg = "Purchase record restored";
+        }
+    }
+    try {
+        await updateDoc(upRefValue, purDoc).then(
+            successToast(actionMsg)
+        )
+    } catch (error) {
+        console.log('Error occoured at purchases: ', error.message);
+    }
+}
+
+// export const deletePurchasesDoc = async (docId) => {
+//     const purRef = doc(db, 'purchases', docId);
+//     await deleteDoc(purRef);
+// }
+
+
+// Supplier
+
+export const createSupplierDoc = async (docToAdd) => {
+    const supRefValue = collection(db, 'supplier');
+    try {
+        await addDoc(supRefValue, docToAdd);
+    } catch (error) {
+        console.log('Error occoured at Supplier: ', error.message);
+    }
+    
+}
+
+export const getSupplierDocs = async () => {
+
+    const supReceiver = [];
+    const querySnapshot = await getDocs(query(collection(db, 'supplier'), orderBy("created_at", "desc")));
+
+    const purMap = () => querySnapshot.forEach((doc) => {
+        supReceiver.push({...doc.data(), id: doc.id});
+    });
+    purMap();
+    return supReceiver;
+
+}
+
+
+
+
+
+// Reports
+
+export const FetchReports = async (dbName, from, to, order) => {
+    const found = [];
+    const repRef = collection(db, dbName);
+
+    const fectchRecs = await getDocs(query(repRef, where('secs', '>=', from), where('secs', '<=', to), orderBy("secs", order)));
+    const mapReports = () => fectchRecs.forEach((doc) => {
+        // if (doc.secs <= to) {
+            found.push({...doc.data(), id: doc.id});
+        // }
+    });
+    mapReports();
+
+    return found;
+}
+
+export const FetchReportsNoDate = async (dbName, order) => {
+    const found = [];
+    const repRef = collection(db, dbName);
+    const fectchRecs = await getDocs(query(repRef, orderBy("created_at", order)));
+    const mapReports = () => fectchRecs.forEach((doc) => {
+        found.push({...doc.data(), id: doc.id});
+    });
+    mapReports();
+
+    return found;
+}
+
+
 
 
 // Toasts

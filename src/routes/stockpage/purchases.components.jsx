@@ -3,7 +3,7 @@ import './stockpage.styles.css';
 import '../other-styles.styles.css';
 import AdminNavbar from '../../components/mynavbar/admin-navbar.components';
 import MenuStrip from '../../components/menu-strip/menu-strip.components';
-import { Button, Card, CardBody, Dialog, DialogBody, DialogFooter, DialogHeader, Drawer, Input, Option, Select, Textarea } from '@material-tailwind/react';
+import { Button, Card, CardBody, Dialog, DialogBody, DialogFooter, DialogHeader, Drawer, Input, Option, Popover, PopoverContent, PopoverHandler, Select, Textarea } from '@material-tailwind/react';
 import { BsBagPlus, BsCheck2Circle, BsCheckCircle, BsClipboardPlus, BsPlus, BsPlusCircle  } from 'react-icons/bs';
 import { FaPlusCircle, FaSearch } from 'react-icons/fa';
 import XformInput from '../../components/form/forminput.component';
@@ -13,11 +13,11 @@ import InventoryRow from './inventory-row.component';
 import { IoWarningOutline } from 'react-icons/io5';
 import { LuBaggageClaim, LuClipboardSignature, LuUserPlus } from 'react-icons/lu';
 import { Toaster, toast } from 'sonner'
-import { errorToast, infoToast, successToast } from '../../utils/firebase/firebase.utils';
+import { createSupplierDoc, deletePurchasesDoc, errorToast, getPurchasesDocs, getSupplierDocs, infoToast, successToast } from '../../utils/firebase/firebase.utils';
 import { TbShoppingBagPlus } from 'react-icons/tb';
 import { FcInfo } from 'react-icons/fc';
 import { MdAddTask } from 'react-icons/md';
-import { BiSolidCircle, BiSolidPlusSquare } from 'react-icons/bi';
+import { BiSolidCircle, BiSolidPlusSquare, BiTrash } from 'react-icons/bi';
 import { CartContext } from '../../context/cart.context';
 import PurchaseRow from './purchase-row.component';
 import PurchaseDrawer from './purchase-drawer.component';
@@ -42,10 +42,11 @@ const PurchasesPage = () => {
     updated_at: ''
   }
 
+
 //   const locPurItems = JSON.parse(localStorage.getItem('locPurItems'));
 //   const { } = useContext(CartContext);
   const [ showHeader, setShowHeader ] = useState('new');
-  const { products, expenses, getProduct, purchss, addPurchases, getPurchases } = useContext(ProductsContext);
+  const { products, expenses, getProduct, purchss, addPurchases, getPurchases, supplier, addSupplier, getSupplier } = useContext(ProductsContext);
   const [ updateID, setUpdateID ] = useState('');
   const [ formFields, setFormFields ] = useState(defaultFormValues);
   const { supplier_name, supplier_contact, purchase_date, del_status, qty, cost, del } = formFields;
@@ -53,8 +54,10 @@ const PurchasesPage = () => {
   const [ localCart, setLocalCart ] = useState(purchss);
   const [ searchItems, setSearchItems ] = useState([]);
   const [ searchItemValue, setSearchItemValue ] = useState('');
-  const [ purchaseRecords, setPurchaseshResult ] = useState(purchss);
-  const [toggleRefresh, setToggleRefresh] = useState(false);
+  const [ purchaseRecords, setPurchaseRecords ] = useState(purchss);
+  const [ toggleRefresh, setToggleRefresh ] = useState(false);
+  const [ searchKey, setSearchKey ] = useState('');
+  const [ recs, setRecs ] = useState(purchss);
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(!open);
@@ -63,6 +66,26 @@ const PurchasesPage = () => {
   const openDrawerBottom = () => setOpenBottom(true);
   const closeDrawerBottom = () => setOpenBottom(false);
   const [ drawerRec, setDrawerRec ] = useState();
+  const [ suppliers, setSuppliers ] = useState(supplier);
+
+  const [supName, setSupName] = useState("");
+  const onChangeSup = ({ target }) => setSupName(target.value);
+  const [addIndItem, setAddIndItem] = useState("");
+  const onchangeInd = ({ target }) => {
+    setAddIndItem(target.value);
+    var newQty = localCart.reduce((total, el) => total + (+el.qty), 0)
+    formFields['qty'] = newQty + (+target.value)
+    setFormFields(formFields)
+  }
+
+  const clearLocalCart = () => {
+    if (window.confirm("Click `OK` to empty items container")) { 
+      localStorage.removeItem('locPurItems')
+      setLocalCart([])
+    }
+  }
+
+  // console.log(purchaseRecords)
 
   const pullDrawerId = (id) => {
       openDrawerBottom();
@@ -89,20 +112,16 @@ const PurchasesPage = () => {
         return infoToast('Select delivery status to proceed')
     }
     formFields['purchased_items'] = localCart;
-    // console.log('------------')
-    // console.log(formFields)
-    // console.log('------------')
-    addPurchases(formFields);
+    addPurchases(formFields).then(
+      setSearchItems([]),
+      localStorage.removeItem('localCart'),
 
-    // if (!formFields.category || formFields.category == '' || formFields.category == '-- Select --') {
-    //   return infoToast('Attention..! Category field is required')
-    // }
+      localStorage.removeItem('locPurItems'),
+      setLocalCart([]),
+      formFields['qty'] = 0,
+      setFormFields(formFields)
+    );
 
-    // if (formFields.id) {
-    //   updateProduct(formFields).then(handleOpen);
-    // } else {
-    //   addProduct(formFields).then(handleOpen);
-    // }
   }
 
 
@@ -111,36 +130,22 @@ const PurchasesPage = () => {
     setFormFields(products.find(el => el.id == id));
   }
 
-
-  const handleAddNewItem = () => {
-    setShowHeader('new'); 
-    setFormFields({}); 
-    handleOpen();
+  const pull_purDel = (purDel, added) => {
+    // console.log(purDel)
+    // console.log(added)
+    deletePurchasesDoc(purDel, added).then(
+      getPurchases()
+    );
   }
 
 
-  useEffect(() => {
-
-    // localStorage.removeItem('localPurchases')
-    const locPur = localStorage.getItem('localPurchases');
-    const locPurItems = localStorage.getItem('locPurItems');
-
-    if (locPur) {
-        setFormFields(JSON.parse(locPur));
-    }
-    if (locPurItems) {
-        setLocalCart(JSON.parse(locPurItems));
-    }
-    // getPurchases();
-    // console.log(getPurchases())
-  },[]);
+  // const handleAddNewItem = () => {
+  //   setShowHeader('new'); 
+  //   setFormFields({}); 
+  //   handleOpen();
+  // }
 
 
-
-  useEffect(() => {
-    // console.log(purchss)
-    // console.log(getPurchases())
-  },[purchaseRecords]);
 
 
   // Search Item Add
@@ -162,11 +167,14 @@ const PurchasesPage = () => {
     // localStorage.setItem('locPurItems', JSON.stringify(result));
   }
 
-
   const handItemSubmit = () => {}
 
 
   const handleItemDoubleClick = (id) => {
+    
+    // const qtyToAdd = event.target.qtyToAdd.value;
+    // console.log(addIndItem)
+    // return
     // {id: 'XdavrMns3VLlARYQmojj', name: 'Spoude Sachet Water', description: 'Single Bag (1)'},
     // {id: 'QBl5dhcbbusAlDE6wErN', name: 'Cranberry Juice', description: 'Single Package'} JSON.parse(localStorage.getItem('locPurItems'))
     const getCurLocItems = localCart;
@@ -174,7 +182,7 @@ const PurchasesPage = () => {
     const existCheck = getCurLocItems.find(el => el.id == id);
 
     if (!existCheck) {
-        getCurLocItems.push({id: id, name: itemToAdd.name, description: itemToAdd.description});
+        getCurLocItems.push({id: id, name: itemToAdd.name, description: itemToAdd.description, qty: addIndItem});
         setLocalCart(getCurLocItems);
         localStorage.setItem('locPurItems', JSON.stringify(getCurLocItems));
         successToast('Item successfully added')
@@ -198,6 +206,75 @@ const PurchasesPage = () => {
     }
   }
 
+  
+  const handlePurSearch = (event) => {
+    const skey = event.target.value; // || el.cost.toLowerCase().includes(skey.toLowerCase)
+    setSearchKey(skey)
+    const result = purchss.filter(el => el.supplier_name.toLowerCase().includes(skey))
+    setPurchaseRecords(result)
+    console.log(skey)
+    // console.log(purchaseRecords)
+    // console.log(searchKey)
+  }
+
+
+  const addNewSupplier = async () => {
+    const docToAdd = {
+      supplier_name: supName,
+      created_at: new Date()
+    }
+    addSupplier(docToAdd).then(setSupName(''));
+    // await createSupplierDoc(docToAdd).then(successToast('Successfully added '+supName+' as supplier'))
+    // const supps = 
+    // getSupplier();
+    // console.log(supps)
+    // setSuppliers(supps);
+  }
+
+
+
+  useEffect(() => {
+    // setRecs(purchss)
+    setPurchaseRecords(purchss)
+    // console.log(getPurchases())
+  },[purchss]);
+
+  // console.log(1)
+
+  useEffect(() => {
+
+    // localStorage.removeItem('localPurchases')
+    const locPur = localStorage.getItem('localPurchases');
+    const locPurItems = localStorage.getItem('locPurItems');
+
+    if (locPur) {
+        setFormFields(JSON.parse(locPur));
+    }
+    if (locPurItems) {
+        setLocalCart(JSON.parse(locPurItems));
+    }
+    if (localCart) {
+      formFields['qty'] = localCart.reduce((total, el) => total + (+el.qty), 0)
+      setFormFields(formFields)
+    }
+
+    // getPurchases();
+    // console.log(getPurchases())
+  },[]);
+
+
+  useEffect(() => {
+    if (localCart) {
+      formFields['qty'] = localCart.reduce((total, el) => total + (+el.qty), 0)
+      setFormFields(formFields)
+    }
+  },[localCart]);
+
+
+  useEffect(() => {
+    setSuppliers(supplier);
+  },[supplier]);
+
 
 
 
@@ -205,16 +282,45 @@ const PurchasesPage = () => {
     <>
       <Card className='general-container-size !p-2'>
 
-        <CardBody>
+        <CardBody> 
 
+          
+          <Popover>
+            <PopoverHandler>
+              {/* <Button>Popover</Button> */}
+              <p className='change-date-link-inverse float-right'><LuUserPlus size='16' className='float-left mr-2 mt-0.5' /> Add Supplier</p>
+            </PopoverHandler>
+            <PopoverContent>
+              <div className="relative flex w-full max-w-[24rem]">
+                <Input
+                  type="email"
+                  label="Supplier Name"
+                  value={supName}
+                  onChange={onChangeSup}
+                  className="pr-20"
+                  containerProps={{
+                    className: "min-w-0",
+                  }}
+                />
+                <Button
+                  size="sm"
+                  color={supName ? "gray" : "blue-gray"}
+                  disabled={!supName}
+                  onClick={addNewSupplier}
+                  className="!absolute right-1 top-1 rounded"
+                > Add
+                </Button>
+              </div>
 
-          <p onClick={handleAddNewItem} className='change-date-link-inverse float-right'><LuUserPlus size='16' className='float-left mr-2 mt-0.5' /> Add Supplier</p>
+            </PopoverContent>
+          </Popover>
+
           <div className="input-with-btn">
               <Input
                   type="text"
                   label="Search Purchases"
-                  // value={newSearchKey}
-                  // onChange={handleSearch}
+                  value={searchKey}
+                  onChange={handlePurSearch}
                   className="scan-input rounded-md"
                   containerProps={{
                   className: "min-w-0",
@@ -223,7 +329,7 @@ const PurchasesPage = () => {
               <Button
                   size="sm"
                   // onClick={reloadInvoiceInSalesView}
-                  // disabled={!newSearchKey}
+                  // disabled={!searchKey}
                   className={`${products ? "bg-gray-200" : "bg-blue-gray-800"} !absolute right-1 top-1 rounded`} 
                   >
                   <FaSearch size='14' className='float-left' />
@@ -233,12 +339,18 @@ const PurchasesPage = () => {
           <div className='border py-3 mt-5 mb-4 rounded-md'>
               <form onSubmit={handleSubmit}>
                   <div className='cart-cont1 w-full'>
-                      <XformInput className='xform-input w-2/6' onChange={handleChange} value={supplier_name} name='supplier_name' type='text' size='md' label="Supplier's Name" required/>
-                      <XformInput className='xform-input w-2/6' onChange={handleChange} value={supplier_contact} name='supplier_contact' type='number' min='0' size='md' label="Supplier's Contact" required/>
-                      <XformInput className='xform-input w-2/6' onChange={handleChange} value={purchase_date} name='purchase_date' type='date' size='md' label='Purchase Date' required/>
+                    <select className='xform-input w-2/6 custom-select' size='lg' label="Select status" name='supplier_name' onChange={handleChange}>
+                      <option defaultValue='0'>-- Supplier Name --</option>
+                      { suppliers.map(supp => 
+                        <option key={supp.id} value={supp.id}>{supp.supplier_name}</option>
+                      )}
+                    </select>
+                    {/* <XformInput className='xform-input w-2/6' onChange={handleChange} value={supplier_name} name='supplier_name' type='text' size='md' label="Supplier's Name" required/> */}
+                    <XformInput className='xform-input w-2/6' onChange={handleChange} value={supplier_contact} name='supplier_contact' type='number' min='0' size='md' label="Supplier's Contact" required/>
+                    <XformInput className='xform-input w-2/6' onChange={handleChange} value={purchase_date} name='purchase_date' type='date' size='md' label='Purchase Date' required/>
                   </div>
                   <div className='cart-cont1 w-full'>
-                      <XformInput className='xform-input w-2/6' onChange={handleChange} value={qty} name='qty' type='number' min='0' size='md' label='Total Qty' required/>
+                      <XformInput className='xform-input w-2/6' onChange={handleChange} value={qty} name='qty' type='number' min='0' size='md' label='Total Qty' readOnly/>
                       <XformInput className='xform-input w-2/6' onChange={handleChange} value={cost} name='cost' type='number' min='0' size='md' label='Total Cost' required/>
                       <select className='xform-input w-2/6 custom-select' size='lg' label="Select status" name='del_status' onChange={handleChange}>
                           <>
@@ -250,40 +362,61 @@ const PurchasesPage = () => {
                   </div>
                   <hr className="my-3 border-blue-gray-100" />
 
-                  {/* <form onSubmit={handItemSubmit}> */}
-                      <p className='blue-head text-xs mx-4 my-1 tracking-wide'><FcInfo size='16' className='float-left' /> &nbsp; Add purchased items to record</p>
+                  <p className='blue-head text-xs mx-4 my-1 tracking-wide'><FcInfo size='16' className='float-left' /> &nbsp; Add purchased items to record</p>
 
-                      <div className='flex w-full px-1'>
-                          <XformInput className='xform-input w-2/3' onChange={handleSearchItems} value={searchItemValue} name='qty' type='text' min='0' size='md' label='Scan / Type Code'/>
-                          {/* <button onClick={handleAddNewItem} className='change-date-link !my-1.5'><BsPlusCircle size='16' className='float-left mr-2 mt-0.5' /> Add Item</button> */}
-                      </div>
-                  {/* </form> */}
+                  <div className='flex w-full px-1'>
+                      <XformInput className='xform-input w-2/3' onChange={handleSearchItems} value={searchItemValue} name='qty' type='text' min='0' size='md' label='Scan / Type Code'/>
+                      {/* <button onClick={handleAddNewItem} className='change-date-link !my-1.5'><BsPlusCircle size='16' className='float-left mr-2 mt-0.5' /> Add Item</button> */}
+                  </div>
 
                   { searchItems.length > 0 ? 
                       <div className='search-items-container'>
                           { searchItems.map(item => item.del == 'no' ?
-                              <p className='search-items' onDoubleClick={() => {handleItemDoubleClick(item.id)}} key={item.id}><BiSolidCircle size='8' className='float-left' />&nbsp; {item.name} &nbsp;
-                                  {/* <BiSolidPlusSquare size='30' className='float-right hover:opacity-70' /> */}
-                              </p> :null 
+                            <div key={item.id}>
+                              {/* <p className='search-items' onDoubleClick={() => {handleItemDoubleClick(item.id)}} key={item.id}>
+                                <BiSolidCircle size='8' className='float-left' />&nbsp; {item.name} &nbsp;
+                              </p> */}
+                              
+                              <Popover>
+                                <PopoverHandler>
+                                  <p className='search-items'><BiSolidCircle size='8' className='float-left' />&nbsp; {item.name} &nbsp;</p>
+                                  {/* <p className='change-date-link-inverse float-right'><LuUserPlus size='16' className='float-left mr-2 mt-0.5' /> Add Supplier</p> */}
+                                </PopoverHandler>
+                                <PopoverContent>
+                                  <div className="relative flex w-full max-w-[24rem]">
+                                    <Input
+                                      name='qtyToAdd'
+                                      type="number" min='1'
+                                      label="Quantity"
+                                      value={addIndItem}
+                                      onChange={onchangeInd}
+                                      className="pr-24"
+                                      containerProps={{
+                                        className: "min-w-0",
+                                      }}
+                                    />
+                                    <Button
+                                      size="sm"
+                                      onClick={() => {handleItemDoubleClick(item.id)}}
+                                      color={addIndItem ? "gray" : "blue-gray"}
+                                      disabled={addIndItem < 1}
+                                      className="!absolute right-1 top-1 rounded"
+                                    > Add Item
+                                    </Button>
+                                  </div>
+                                </PopoverContent>
+                              </Popover>
+                            </div>
+                               :null 
                           )}
-                          {/* <p><BiSolidCircle size='8' className='float-left' />&nbsp; Clips</p>
-                          <p><BiSolidCircle size='8' className='float-left' />&nbsp; Spoude Sachet</p>
-                          <p><BiSolidCircle size='8' className='float-left' />&nbsp; Spoude Bottle Water</p>
-                          <p><BiSolidCircle size='8' className='float-left' />&nbsp; Spoude Bottle Water</p>
-                          <p><BiSolidCircle size='8' className='float-left' />&nbsp; Clips</p>
-                          <p><BiSolidCircle size='8' className='float-left' />&nbsp; Spoude Sachet</p>
-                          <p><BiSolidCircle size='8' className='float-left' />&nbsp; Clips</p>
-                          <p><BiSolidCircle size='8' className='float-left' />&nbsp; Spoude Bottle Water</p>
-                          <p><BiSolidCircle size='8' className='float-left' />&nbsp; Clips</p>
-                          <p><BiSolidCircle size='8' className='float-left' />&nbsp; Spoude Sachet</p>
-                          <p><BiSolidCircle size='8' className='float-left' />&nbsp; Spoude Sachet</p> */}
                       </div>
                   :null}
                   
                   { localCart.length > 0 ? 
                       <div className='purchased-items-container'>
+                      <p className='added-items-clear' onClick={clearLocalCart}>&nbsp; CLEAR &nbsp;<BiTrash size='16' className='float-right' /></p>
                           { localCart.map(item => 
-                              <p className='added-items' onDoubleClick={() => {handleItemRemove(item.id)}} key={item.id}><BiSolidCircle size='8' className='float-left' />&nbsp; {item.name} &nbsp;</p>
+                              <p className='added-items' onDoubleClick={() => {handleItemRemove(item.id)}} key={item.id}><BiSolidCircle size='8' className='float-left' />&nbsp; {item.name+' / '+item.qty} &nbsp;</p>
                           )}
                       </div>
                   :null}
@@ -294,7 +427,7 @@ const PurchasesPage = () => {
               <p className='my-12'></p>
           </div> 
             
-          { purchss.length > 0 ?
+          { purchaseRecords.length > 0 ?
             <div className='tbl-container overflow-auto'>
               <table className="cart-tbl w-calc[100%-100px] min-w-max table-auto text-left">
                 <thead>
@@ -308,19 +441,20 @@ const PurchasesPage = () => {
                 </thead>
 
                 <tbody>
-                    {purchss.map((pur, index) => {
+                    {purchaseRecords.map((pur, index) => {
                       var sendClass = '';
-                      const isLast = index === purchss.length - 1;
+                      const isLast = index === 0;
                       const classes = isLast ? "p-4" : "p-4 border-blue-gray-50";
+                      const supp = suppliers.find(el => el.id == pur.supplier_name)
                       if (pur.del === 'no') {
                         sendClass = 'even:bg-blue-gray-50/30';
                       } else {
                         sendClass = 'bg-red-100/80 !border-b-4 border-b-white';
                       }
                       return(
-                        <PurchaseRow key={pur.id} getId={pull_id} i={i++} purchase={pur} getDrawerId={pullDrawerId} classes={classes} sendClass={sendClass} openDialog={handleOpen}/>
+                        <PurchaseRow key={pur.id} getId={pull_id} getPurDel={pull_purDel} i={i++} purchase={pur} supplier={supp} getDrawerId={pullDrawerId} classes={classes} sendClass={sendClass} openDialog={handleOpen}/>
                       );
-                    }).reverse()}
+                    })}
                     {/* <tr>
                         <td></td>
                         <td className='px-4 text-right'>

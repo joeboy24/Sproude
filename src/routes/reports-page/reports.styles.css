@@ -1,0 +1,17 @@
+
+
+.filter-note {
+    @apply border-2 border-gray-600 rounded-lg px-8 py-3 text-center text-xs;
+}
+
+
+
+@media print {
+    .no-print {
+        display: none!important;
+    }
+
+    .general-container-size {
+        @apply w-full h-full m-0 p-0;
+    }
+}

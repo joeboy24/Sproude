@@ -19,6 +19,7 @@ import LoginPage from './routes/auth/login.components';
 import { useContext } from 'react';
 import { UserContext } from './context/user.context';
 import RequireAuth from './components/RequireAuth';
+import ReportsPage from './routes/reports-page/reports.components';
 
 
 function App() { 
@@ -46,6 +47,7 @@ function App() {
           <Route path='sales' element={<XcartPage />}/>
           <Route path='expenses' element={<ExpensesPage />}/>
           <Route path='scan-doc' element={<ScanPage />}/>
+          <Route path='reports' element={<ReportsPage />}/>
           <Route path='profile' element={<UserProfile />}/>
           <Route path='company-setup' element={<CompanyPage />}/>
         </Route>

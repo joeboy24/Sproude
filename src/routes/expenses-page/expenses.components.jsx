@@ -188,7 +188,7 @@ const ExpensesPage = () => {
                         </td>
                       </tr>
                     )
-                  }).reverse()
+                  })
                 }
               </tbody>
             </table>
